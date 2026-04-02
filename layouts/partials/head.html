@@ -57,9 +57,7 @@
   {{ partial "seo" . }}
 
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css?family=Bree+Serif|Bungee+Shade" rel="stylesheet" />
-
-  <script src="{{ .Site.Params.staticPrefix }}{{ "js/theme.min.js" | relURL }}"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet" />
 
   {{ template "_internal/google_analytics.html" .}}
   {{ if .Site.Params.TwitterCards }}{{ template "_internal/twitter_cards.html" .}}{{ end }}

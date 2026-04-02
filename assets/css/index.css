@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap');
 
 :root {
     --bg-color: #ffffff;
@@ -7,8 +7,6 @@
     --border-color: #e5e7eb;
     --secondary-text: #6b7280;
     --code-bg: #f3f4f6;
-    --blockquote-color: #4f46e5;
-    --blockquote-border: #4f46e5;
     --disqus-bg: #ffffff;
     --accent-color: #4f46e5;
     --accent-hover: #4338ca;
@@ -24,8 +22,6 @@
     --border-color: #334155;
     --secondary-text: #94a3b8;
     --code-bg: #1e293b;
-    --blockquote-color: #818cf8;
-    --blockquote-border: #818cf8;
     --disqus-bg: #0f172a;
     --accent-color: #818cf8;
     --accent-hover: #6366f1;
@@ -99,7 +95,44 @@ nav {
 .nav-right {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
+}
+
+.nav-group {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    background: var(--link-color);
+    border: 1px solid var(--link-color);
+    color: var(--bg-color);
+}
+
+.nav-group .nav-link {
+    color: var(--bg-color);
+}
+
+.nav-group .nav-link:hover {
+    color: var(--bg-color);
+    opacity: 0.8;
+}
+
+.theme-toggle {
+    background: var(--link-color);
+    border: 1px solid var(--link-color);
+    color: var(--bg-color);
+    cursor: pointer;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+}
+
+.theme-toggle:hover {
+    opacity: 0.8;
+}
+
+.theme-toggle svg {
+    display: block;
 }
 
 .nav-link {
