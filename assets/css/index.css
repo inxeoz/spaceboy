@@ -125,6 +125,7 @@ nav {
 }
 
 .border-b {
+    width: 100%;
     border-bottom: 1px solid var(--border-color);
 }
 
@@ -140,12 +141,10 @@ main {
 }
 
 .post-year {
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-weight: 600;
     color: var(--secondary-text);
-    margin: 2rem 0 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border-color);
+    margin: 1.5rem 0 0.75rem;
 }
 
 .post-item {
