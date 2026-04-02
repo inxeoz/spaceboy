@@ -1,30 +1,23 @@
 {{ $curLanguageName := .Site.Language.LanguageName }}
-<header>
-  <div class="header-title">
-    <a href="{{ .Site.LanguagePrefix }}/"
-      >{{ or .Site.Params.headTitle .Site.Params.author.name }}</a
-    >
+<nav class="flex items-center justify-between py-4">
+  <div class="flex items-center gap-4">
+    <a href="{{ .Site.LanguagePrefix }}/" class="site-title">{{ or .Site.Params.headTitle .Site.Params.author.name }}</a>
   </div>
-  <div class="header-subtitle">{{ .Site.Params.Description }}</div>
-</header>
-<div class="row end-md header-items">
-  <div class="header-item-left">
+  
+  <div class="flex items-center gap-6">
     <button id="theme-toggle" onclick="toggleTheme()" class="theme-toggle">
-      🌙
+      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+      </svg>
     </button>
-  </div>
 
-  {{ range .Site.Params.socials }}
-  <div class="header-item">
-    <a href="{{ .link }}" target="_blank">{{ .name }}</a>
+    {{ range .Site.Params.socials }}
+    <a href="{{ .link }}" target="_blank" class="nav-link">{{ .name }}</a>
+    {{ end }}
+
+    {{ range .Site.Languages -}} {{ if ne .LanguageName $curLanguageName }}
+    <a href="/{{ .Lang }}/" class="nav-link">{{ .LanguageName }}</a>
+    {{ end }} {{ end }}
   </div>
-  {{ end }}
-</div>
-<div class="row">
-  {{ range .Site.Languages -}} {{ if ne .LanguageName $curLanguageName }}
-  <div class="lang-switch col-xs-3 col-xs-offset-9">
-    <a href="/{{ .Lang }}/">{{ .LanguageName }}</a>
-  </div>
-  {{ end }} {{ end }}
-</div>
-<div class="header-line"></div>
+</nav>
+<div class="border-b border-[var(--border-color)]"></div>

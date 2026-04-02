@@ -1,7 +1,23 @@
-{{ define "main"}}
-    <main id="main">
-      <div>
-       <h1 id="title"><a href="{{ "/" | relURL }}">Go Home</a></h1>
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}" prefix="og: http://ogp.me/ns#">
+{{ partial "head.html" . }}
+
+<body>
+  <div class="container">
+    {{ partial "header.html" . }}
+    
+    <main>
+      <div class="error-page">
+        <h1 class="error-title">404</h1>
+        <p class="error-message">Page not found</p>
+        <p><a href="{{ .Site.LanguagePrefix }}/" class="post-title-link">Go Home</a></p>
       </div>
     </main>
-{{ end }}
+
+    {{ partial "footer.html" . }}
+  </div>
+
+  {{ partial "scripts.html" . }}
+</body>
+
+</html>

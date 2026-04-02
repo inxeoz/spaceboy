@@ -1,24 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ .Site.LanguageCode }}" prefix="og: http://ogp.me/ns#">
 {{ partial "head.html" . }}
 
 <body>
-  <article class="post {{ .Site.Language.LanguageName }}" id="article">
-    <div class="row">
-      <div class="col-xs-12">
-        <div class="site-header">
-          {{ partial "header.html" . }}
-        </div>
+  <div class="container">
+    {{ partial "header.html" . }}
+    
+    <main>
+      <article class="post">
         <header class="post-header">
           <h1 class="post-title">{{ .Title }}</h1>
         </header>
 
-        <div class="post-content page-content markdown-body">
-          <div class="row gallery">
+        <div class="post-content">
+          <div class="gallery-grid">
             {{ range .Params.gallery }}
-            <div class="col-xs-6 gallery-img">
+            <div class="gallery-item">
               <img src="{{ .url }}" alt="{{ .name }}">
-              <span class="gallery-img-desc">{{ .name }}</span>
             </div>
             {{ end }}
           </div>
@@ -29,11 +27,11 @@
           {{ partial "disqus.html" . }}
         </div>
         {{ end }}
+      </article>
+    </main>
 
-        {{ partial "footer.html" . }}
-      </div>
-    </div>
-  </article>
+    {{ partial "footer.html" . }}
+  </div>
 
   {{ partial "scripts.html" . }}
   {{ if .Site.Params.extraBody }}

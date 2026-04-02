@@ -5,6 +5,23 @@
 </script>
 {{ end }}
 
+<script>
+(function() {
+  const theme = localStorage.getItem('theme');
+  const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (theme === 'dark' || (!theme && systemDark)) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+
+  window.toggleTheme = function() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const newTheme = isDark ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+  };
+})();
+</script>
+
 {{ if .Site.Params.disqus }}
 <div id="disqus_thread"></div>
 <script>

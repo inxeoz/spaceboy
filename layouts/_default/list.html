@@ -1,20 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ .Site.LanguageCode }}" prefix="og: http://ogp.me/ns#">
 {{ partial "head.html" . }}
 
 <body>
-  <article class="posts">
-    <div class="row">
-      <div class="col-xs-12">
-        {{ partial "header.html" . }}
-
-        <h1 class="taxonomy-term">{{.Data.Term}}</h1>
-        {{ partial "post-list.html" . }}
-
-        {{ partial "footer.html" . }}
-      </div>
-    </div>
-  </article>
+  <div class="container">
+    {{ partial "header.html" . }}
+    <main>
+      <h1 class="taxonomy-title">{{ .Data.Term }}</h1>
+      {{ partial "post-list.html" . }}
+    </main>
+    {{ partial "footer.html" . }}
+  </div>
 
   {{ partial "scripts.html" . }}
 </body>
