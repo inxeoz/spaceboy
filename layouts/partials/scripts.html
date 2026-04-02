@@ -37,6 +37,7 @@
 
     wrapper.addEventListener('click', e => {
       if (!e.target.closest('.copy-code-btn')) {
+        alert('Code block clicked!');
         wrapper.classList.remove('clicked');
       }
     });
@@ -76,8 +77,18 @@
   const update = () => modalImg.style.transform = `scale(${scale}) translate(${translateX}px, ${translateY}px)`;
   const pos = e => e.touches ? { x: e.touches[0].clientX, y: e.touches[0].clientY } : { x: e.clientX, y: e.clientY };
 
-  modal.addEventListener('mousedown', e => { if (e.target === modalImg) { isDrag = true; lastX = e.clientX; lastY = e.clientY; modalImg.style.cursor = 'grabbing'; }});
-  modal.addEventListener('touchstart', e => { if (e.target === modalImg) { isDrag = true; lastX = e.touches[0].clientX; lastY = e.touches[0].clientY; }});
+  const startDrag = e => {
+    if (e.target !== modalImg) return;
+    isDrag = true;
+    const p = pos(e);
+    lastX = p.x;
+    lastY = p.y;
+    modalImg.style.cursor = 'grabbing';
+    e.preventDefault();
+  };
+
+  modal.addEventListener('mousedown', startDrag);
+  modal.addEventListener('touchstart', startDrag, { passive: false });
 
   const move = e => {
     if (!isDrag) return;

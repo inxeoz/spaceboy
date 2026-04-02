@@ -511,6 +511,7 @@ pre {
     justify-content: center;
     align-items: center;
     cursor: zoom-out;
+    touch-action: none;
 }
 
 .image-modal.active {
@@ -528,8 +529,8 @@ pre {
     max-height: 90vh;
     object-fit: contain;
     cursor: grab;
-    transition: transform 0.05s ease-out;
     user-select: none;
+    touch-action: none;
 }
 
 .image-modal-close {
