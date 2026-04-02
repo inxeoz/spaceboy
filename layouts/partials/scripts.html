@@ -7,64 +7,119 @@
 
 <script>
 (function() {
-  const theme = localStorage.getItem('theme');
-  const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  if (theme === 'dark' || (!theme && systemDark)) {
-    document.documentElement.setAttribute('data-theme', 'dark');
-  }
+  const root = document.documentElement;
+  const themeKey = 'theme';
+  const copyIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+  const copiedIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>';
 
-  window.toggleTheme = function() {
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    const newTheme = isDark ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
+  // Theme
+  const saved = localStorage.getItem(themeKey);
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if (saved === 'dark' || (!saved && prefersDark)) root.setAttribute('data-theme', 'dark');
+
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    if (!localStorage.getItem(themeKey)) root.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+  });
+
+  window.toggleTheme = () => {
+    const isDark = root.getAttribute('data-theme') === 'dark';
+    root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    localStorage.setItem(themeKey, isDark ? 'light' : 'dark');
   };
+
+  // Code blocks
+  document.querySelectorAll('.post-content pre').forEach(pre => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'code-block-wrapper';
+    wrapper.innerHTML = '<button class="copy-code-btn" aria-label="Copy code"><span class="copy-icon">' + copyIcon + '</span><span class="copied-icon" style="display:none;">' + copiedIcon + '</span></button>';
+    pre.before(wrapper);
+    wrapper.appendChild(pre);
+
+    wrapper.addEventListener('click', e => {
+      if (!e.target.closest('.copy-code-btn')) {
+        wrapper.classList.remove('clicked');
+      }
+    });
+    wrapper.addEventListener('mouseenter', () => wrapper.classList.remove('clicked'));
+    wrapper.addEventListener('mouseleave', () => wrapper.classList.remove('clicked'));
+  });
+
+  // Copy handler
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.copy-code-btn');
+    if (!btn) return;
+    const code = btn.closest('.code-block-wrapper').querySelector('code, pre');
+    if (!code) return;
+
+    navigator.clipboard.writeText(code.textContent).then(() => {
+      const [copy, copied] = [btn.querySelector('.copy-icon'), btn.querySelector('.copied-icon')];
+      copy.style.display = 'none';
+      copied.style.display = 'inline';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        copy.style.display = 'inline';
+        copied.style.display = 'none';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+
+  // Image modal
+  const modal = document.createElement('div');
+  modal.className = 'image-modal';
+  modal.innerHTML = '<div class="image-modal-content"><img src="" alt=""><span class="image-modal-close">&times;</span></div>';
+  document.body.appendChild(modal);
+
+  const modalImg = modal.querySelector('img');
+  let scale = 1, translateX = 0, translateY = 0, isDrag = false, lastX, lastY;
+
+  const update = () => modalImg.style.transform = `scale(${scale}) translate(${translateX}px, ${translateY}px)`;
+  const pos = e => e.touches ? { x: e.touches[0].clientX, y: e.touches[0].clientY } : { x: e.clientX, y: e.clientY };
+
+  modal.addEventListener('mousedown', e => { if (e.target === modalImg) { isDrag = true; lastX = e.clientX; lastY = e.clientY; modalImg.style.cursor = 'grabbing'; }});
+  modal.addEventListener('touchstart', e => { if (e.target === modalImg) { isDrag = true; lastX = e.touches[0].clientX; lastY = e.touches[0].clientY; }});
+
+  const move = e => {
+    if (!isDrag) return;
+    e.preventDefault();
+    const p = pos(e);
+    translateX += p.x - lastX;
+    translateY += p.y - lastY;
+    lastX = p.x;
+    lastY = p.y;
+    update();
+  };
+
+  modal.addEventListener('mousemove', move);
+  modal.addEventListener('touchmove', move, { passive: false });
+  modal.addEventListener('mouseup', () => { isDrag = false; modalImg.style.cursor = 'grab'; });
+  modal.addEventListener('touchend', () => isDrag = false);
+  modal.addEventListener('mouseleave', () => isDrag = false);
+
+  modal.addEventListener('click', e => {
+    if (e.target !== modal && e.target !== modalImg && !e.target.classList.contains('image-modal-close')) return;
+    modal.classList.remove('active');
+    scale = 1; translateX = 0; translateY = 0;
+    update();
+  });
+
+  document.querySelectorAll('.post-content img').forEach(img => {
+    img.style.cursor = 'zoom-in';
+    img.addEventListener('click', () => { modalImg.src = img.src; scale = 1; translateX = 0; translateY = 0; update(); modal.classList.add('active'); });
+  });
+
+  modal.addEventListener('wheel', e => { e.preventDefault(); scale = Math.max(0.5, Math.min(3, scale - e.deltaY * 0.001)); update(); }, { passive: false });
 })();
 </script>
 
 {{ if .Site.Params.disqus }}
 <div id="disqus_thread"></div>
 <script>
-  window.addEventListener("load", function() {
-    var d = document, s = d.createElement("script");
-    s.src = "https://{{ .Site.Params.disqus }}.disqus.com/embed.js";
-    s.setAttribute("data-timestamp", +new Date());
+  window.addEventListener('load', () => {
+    const d = document, s = d.createElement('script');
+    s.src = 'https://{{ .Site.Params.disqus }}.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
     (d.head || d.body).appendChild(s);
   });
 </script>
 {{ end }}
-
-<script>
-(function() {
-  document.addEventListener('click', function(e) {
-    var btn = e.target.closest('.copy-code-btn');
-    if (!btn) return;
-    var wrapper = btn.closest('.code-block-wrapper');
-    var code = wrapper.querySelector('code') || wrapper.querySelector('pre');
-    if (!code) return;
-    navigator.clipboard.writeText(code.textContent).then(function() {
-      btn.textContent = 'Copied!';
-      btn.classList.add('copied');
-      setTimeout(function() {
-        btn.textContent = 'Copy';
-        btn.classList.remove('copied');
-      }, 2000);
-    });
-  });
-
-  document.querySelectorAll('.post-content pre').forEach(function(pre) {
-    var wrapper = document.createElement('div');
-    wrapper.className = 'code-block-wrapper';
-    wrapper.innerHTML = '<button class="copy-code-btn" aria-label="Copy code">Copy</button>';
-    pre.parentNode.insertBefore(wrapper, pre);
-    wrapper.insertBefore(pre, wrapper.firstChild);
-
-    wrapper.addEventListener('mouseenter', function() {
-      wrapper.classList.remove('clicked');
-    });
-    wrapper.addEventListener('mouseleave', function() {
-      wrapper.classList.remove('clicked');
-    });
-  });
-})();
-</script>
