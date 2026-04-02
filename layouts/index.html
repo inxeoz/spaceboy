@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}" prefix="og: http://ogp.me/ns#">
+{{ partial "head.html" . }}
+
+<body>
+  <article class="posts">
+    <div class="row">
+      <div class="col-xs-12">
+        {{ partial "header.html" . }}
+        {{ partial "post-list.html" (dict "Pages" (where site.RegularPages "Type" "in" site.Params.mainSections) "IsHome" .IsHome "Site" .Site) }}
+        {{ partial "footer.html" . }}
+      </div>
+    </div>
+  </article>
+
+  {{ partial "scripts.html" . }}
+</body>
+
+</html>

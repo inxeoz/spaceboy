@@ -1,0 +1,46 @@
+{{ if and .Site.Params.lazyImage (not .IsHome) }}
+<script src="{{ .Site.Params.staticPrefix }}{{ "js/lazyload.min.js" | relURL }}"></script>
+<script>
+  new LazyLoad({ container: document.getElementById('article') });
+</script>
+{{ end }}
+
+{{ if .Site.Params.disqus }}
+<div id="disqus_thread"></div>
+<script>
+  window.addEventListener("load", function() {
+    var d = document, s = d.createElement("script");
+    s.src = "https://{{ .Site.Params.disqus }}.disqus.com/embed.js";
+    s.setAttribute("data-timestamp", +new Date());
+    (d.head || d.body).appendChild(s);
+  });
+</script>
+{{ end }}
+
+{{ if or .Params.enableCopyCode .Site.Params.enableCopyCode }}
+<script>
+(function() {
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('.copy-code-btn');
+    if (!btn) return;
+    var code = btn.previousElementSibling.querySelector('code');
+    if (!code) return;
+    navigator.clipboard.writeText(code.textContent).then(function() {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  });
+  document.querySelectorAll('.markdown-body pre').forEach(function(pre) {
+    var wrapper = document.createElement('div');
+    wrapper.className = 'code-block-wrapper';
+    wrapper.innerHTML = '<button class="copy-code-btn" aria-label="Copy code">Copy</button>';
+    pre.parentNode.insertBefore(wrapper, pre);
+    wrapper.insertBefore(pre, wrapper.firstChild);
+  });
+})();
+</script>
+{{ end }}

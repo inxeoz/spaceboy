@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+{{ partial "head.html" . }}
+
+<body>
+  <article class="posts">
+    <div class="row">
+      <div class="col-xs-12">
+        {{ partial "header.html" . }}
+
+        <h1 class="taxonomy-term">{{.Data.Term}}</h1>
+        {{ partial "post-list.html" . }}
+
+        {{ partial "footer.html" . }}
+      </div>
+    </div>
+  </article>
+
+  {{ partial "scripts.html" . }}
+</body>
+
+</html>

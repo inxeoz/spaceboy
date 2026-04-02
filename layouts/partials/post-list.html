@@ -1,0 +1,36 @@
+{{ $pages := .Pages }}
+{{ if and (not $pages) .Data }}
+  {{ $pages = (where .Data.Pages "Type" "in" site.Params.mainSections) }}
+{{ end }}
+{{ with $pages.GroupByDate "2006" }}
+<div id="posts-list">
+  {{ range . }}
+  <section>
+    <h1 class="site-date-catalog">{{ .Key }}</h1>
+    {{ range .Pages }}
+    <div class="row posts-line">
+      <div class="posts-date {{ if $.IsHome }}col-xs-3 col-sm-2{{ else }}col-xs-2{{ end }}">
+        <time datetime="{{ .Date.Format "2006-01-02 15:04:05 MST" }}">{{ .Date.Format "Jan 02"}}</time>
+      </div>
+      <div class="posts-title {{ if $.IsHome }}col-xs-9 col-sm-10{{ else }}col-xs-10{{ end }}">
+        <div class="row">
+          <div class="col-xs-11 col-sm-10">
+            <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+          </div>
+          {{ if and $.IsHome $.Site.Params.showCategories }}
+          <div class="col-xs-1 col-sm-2 posts-categories">
+            {{ range .Params.categories }}
+            <div class="posts-category">
+              <a href="/categories/{{ lower . }}/"><strong>{{ . }}</strong></a>
+            </div>
+            {{ end }}
+          </div>
+          {{ end }}
+        </div>
+      </div>
+    </div>
+    {{ end }}
+  </section>
+  {{ end }}
+</div>
+{{ end }}
