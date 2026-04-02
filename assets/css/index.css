@@ -76,6 +76,16 @@ a:hover {
     color: var(--accent-color);
 }
 
+.back-btn {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+}
+
+.back-btn svg {
+    stroke-width: 2.5;
+}
+
 nav {
     display: flex;
     justify-content: space-between;
@@ -231,6 +241,18 @@ main {
 /* Post Single */
 .post-header {
     margin-bottom: 2rem;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--secondary-text);
+    margin-bottom: 1rem;
+    transition: color 0.2s ease;
+}
+
+.back-link:hover {
+    color: var(--link-color);
 }
 
 .post-title {

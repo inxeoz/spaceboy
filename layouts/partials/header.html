@@ -1,6 +1,11 @@
 {{ $curLanguageName := .Site.Language.LanguageName }}
 <nav>
   <div class="nav-left">
+    {{ if not .IsHome }}
+    <a href="javascript:history.back()" class="nav-link back-btn" title="Go back">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </a>
+    {{ end }}
     <a href="{{ .Site.LanguagePrefix }}/" class="site-title">{{ or .Site.Params.headTitle .Site.Params.author.name }}</a>
   </div>
   
