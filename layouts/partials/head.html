@@ -19,7 +19,7 @@
   <link rel="alternate" type="application/atom+xml" href="{{.Site.BaseURL}}index.xml" title="{{ .Site.Title }}" />
   <link rel="alternate" type="application/rss+xml" href="{{ .Site.Params.staticPrefix }}{{ "index.xml" | relURL }}" title="{{ .Site.Title }}">
 
-{{ $cssFiles := slice "css/index.css" "css/override.css" "css/flexboxgrid-6.3.1.min.css" }}
+{{ $cssFiles := slice "css/index.css" "css/override.css" }}
 {{ $css := slice }}
 {{ range $cssFiles }}
   {{ with resources.Get . }}
@@ -57,7 +57,6 @@
   {{ partial "seo" . }}
 
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet" />
 
   {{ template "_internal/google_analytics.html" .}}
   {{ if .Site.Params.TwitterCards }}{{ template "_internal/twitter_cards.html" .}}{{ end }}
