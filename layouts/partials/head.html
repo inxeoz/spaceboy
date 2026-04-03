@@ -19,7 +19,7 @@
   <link rel="alternate" type="application/atom+xml" href="{{.Site.BaseURL}}index.xml" title="{{ .Site.Title }}" />
   <link rel="alternate" type="application/rss+xml" href="{{ .Site.Params.staticPrefix }}{{ "index.xml" | relURL }}" title="{{ .Site.Title }}">
 
-{{ $cssFiles := slice "css/index.css" "css/override.css" }}
+{{ $cssFiles := slice "css/index.css"  }}
 {{ $css := slice }}
 {{ range $cssFiles }}
   {{ with resources.Get . }}
