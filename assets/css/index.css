@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap");
 
 :root {
-    /* Palette: Custom */
+    /* Palette: New (Light) */
     --bg-color: #f1dac4;
     --text-color: #161b33;
     --link-color: #474973;
@@ -28,19 +28,20 @@
 }
 
 [data-theme="dark"] {
-    --bg-color: #0d0c1d;
-    --text-color: #f1dac4;
-    --link-color: #a69cac;
-    --border-color: #474973;
-    --secondary-text: #a69cac;
-    --code-bg: #161b33;
-    --disqus-bg: #0d0c1d;
-    --accent-color: #f1dac4;
-    --accent-hover: #a69cac;
-    --surface-color: #161b33;
-    --blockquote-color: #f1dac4;
-    --blockquote-border: #474973;
-    --card-bg: #161b33;
+    /* Palette: Teal (Dark) */
+    --bg-color: #0f2f33;
+    --text-color: #edf6f9;
+    --link-color: #83c5be;
+    --border-color: #e29578;
+    --secondary-text: #bcdedc;
+    --code-bg: #1b4d52;
+    --disqus-bg: #0f2f33;
+    --accent-color: #e29578;
+    --accent-hover: #f4a261;
+    --surface-color: #1b4d52;
+    --blockquote-color: #cfeeee;
+    --blockquote-border: #83c5be;
+    --card-bg: #1e293b;
     --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
 }
 
