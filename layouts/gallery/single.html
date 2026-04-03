@@ -17,6 +17,7 @@
             {{ range .Params.gallery }}
             <div class="gallery-item">
               <img src="{{ .url }}" alt="{{ .name }}">
+              {{ if .name }}<p class="gallery-caption">{{ .name }}</p>{{ end }}
             </div>
             {{ end }}
           </div>
