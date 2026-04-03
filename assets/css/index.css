@@ -57,12 +57,14 @@ body {
     color: var(--text-color);
     line-height: var(--line-height-body);
     transition: background 0.3s ease, color 0.3s ease;
+    overflow-x: hidden;
 }
 
 .container {
     max-width: 800px;
     margin: 0 auto;
-    padding: 0 1.5rem;
+    padding: 0 1.25rem;
+    overflow-x: hidden;
 }
 
 a {
@@ -110,12 +112,14 @@ nav {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    flex: 1;
 }
 
 .nav-right {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    flex-shrink: 0;
 }
 
 .nav-group {
@@ -191,6 +195,7 @@ main {
     list-style: none;
     padding: 0;
     margin: 0;
+    overflow: hidden;
 }
 
 .post-year {
@@ -204,9 +209,10 @@ main {
     display: flex;
     align-items: baseline;
     gap: 1rem;
-    padding: 0.75rem 0;
+    padding: 0.75rem 0.5rem;
     transition: background-color 0.2s ease;
     border-radius: 0.5rem;
+    overflow: hidden;
 }
 
 .post-item:hover {
@@ -216,10 +222,11 @@ main {
 .post-date {
     color: var(--secondary-text);
     font-size: 0.875rem;
-    min-width: 80px;
+    min-width: 65px;
     font-feature-settings: "tnum";
     opacity: 0;
     transition: opacity 0.2s ease;
+    box-sizing: border-box;
 }
 
 .post-item:hover .post-date {
@@ -526,16 +533,6 @@ pre {
 
 /* Responsive */
 @media (max-width: 640px) {
-    nav {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .nav-right {
-        flex-wrap: wrap;
-        gap: 0.75rem;
-    }
-
     .post-item {
         flex-direction: column;
         gap: 0.25rem;
@@ -552,10 +549,6 @@ pre {
 
     .post-title {
         font-size: 1.5rem;
-    }
-
-    .post-content {
-        font-size: 1rem;
     }
 }
 
