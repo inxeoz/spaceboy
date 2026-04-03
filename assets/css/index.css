@@ -2,18 +2,18 @@
 
 :root {
     /* Palette: New (Light) */
-    --bg-color: #f1dac4;
-    --text-color: #161b33;
-    --link-color: #474973;
-    --border-color: #a69cac;
-    --secondary-text: #a69cac;
-    --code-bg: #e8dfd0;
-    --disqus-bg: #f1dac4;
-    --accent-color: #474973;
-    --accent-hover: #161b33;
-    --surface-color: #e8dfd0;
-    --blockquote-color: #474973;
-    --blockquote-border: #a69cac;
+    --bg-color: #dbe9ee;
+    --text-color: #166088;
+    --link-color: #166088;
+    --border-color: #c0d6df;
+    --secondary-text: #4f6d7a;
+    --code-bg: #c0d6df;
+    --disqus-bg: #dbe9ee;
+    --accent-color: #4a6fa5;
+    --accent-hover: #166088;
+    --surface-color: #c0d6df;
+    --blockquote-color: #166088;
+    --blockquote-border: #c0d6df;
     --card-bg: #ffffff;
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 
