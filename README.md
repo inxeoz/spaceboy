@@ -2,35 +2,43 @@
 
 A clean, modern Hugo blog theme with dark/light mode, code syntax highlighting, and responsive design.
 
-![Screenshot](./images/screenshot.png)
+![Screenshot](./images/homess.png)
 
 ## Features
 
 ### Core
-- **Dark/Light Mode** - Toggle between themes with system preference detection
+- **Dark/Light Mode** - Toggle between themes with system preference detection and localStorage persistence
 - **Responsive Design** - Mobile-friendly layout that adapts to all screen sizes
 - **Blog-Ready** - Optimized for blog content with post listings, tags, and categories
 - **SEO Optimized** - Built-in meta tags, Open Graph, Twitter Cards, and canonical URLs
+- **Back Navigation** - Smart back button that appears on non-home pages
 
 ### Content
-- **Code Blocks** - Syntax highlighting with one-click copy button
-- **Image Gallery** - Grid-based gallery layout with lightbox
-- **Image Modal** - Click-to-zoom with pan and scroll support
-- **Lazy Loading** - Optional lazy loading for images
-- **Related Posts** - Display related content at the end of articles
+- **Code Blocks** - Syntax highlighting with one-click copy button and visual feedback
+- **Image Gallery** - Grid-based gallery layout with hover zoom effects
+- **Image Modal** - Click-to-zoom with pan and scroll support (mouse drag and touch gestures)
+- **Lazy Loading** - Optional lazy loading for images on article pages
+- **Related Posts** - Automatically displays up to 3 related articles at the end of posts
+- **Post Tags** - Tag display with hover effects
+- **Post Categories** - Optional category display on home page
 
 ### Customization
-- **Navigation** - Customizable menu links
-- **Social Links** - GitHub and other social profiles in header
-- **Multi-Language** - Support for Hugo multilingual sites
-- **Comments** - Disqus integration
-- **Analytics** - Google Analytics support
-- **Custom CSS** - Override and extend styles
+- **Navigation** - Customizable menu links via `params.nav`
+- **Social Links** - GitHub and other social profiles with SVG icons in header
+- **Multi-Language** - Full support for Hugo multilingual sites with language switcher
+- **Comments** - Disqus integration with lazy loading
+- **Analytics** - Google Analytics support (automatic with Hugo)
+- **Custom CSS** - Override and extend styles via extraCSSFiles or asset overrides
+- **Custom JavaScript** - Inject extra JS via extraBody parameter
+- **Custom Favicon** - Configurable favicon with Apple touch icon support
+- **CDN Support** - Static prefix option for CDN hosting
 
 ### Technical
-- **RSS/Atom Feeds** - Automatic feed generation
+- **RSS/Atom Feeds** - Automatic feed generation with alternate link tags
 - **Hugo 0.50+** - Compatible with modern Hugo versions
 - **No Dependencies** - Vanilla JS, no framework required
+- **CSS Minification** - Automatic CSS bundling and minification
+- **Content Injection** - Pre/post content injection for posts
 
 ## Installation
 
@@ -190,9 +198,14 @@ title: "Photo Album"
 date: 2024-01-01
 type: gallery
 album: "/images/album-cover.jpg"
+gallery:
+  - url: "/images/photo1.jpg"
+    name: "Mountain View"
+  - url: "/images/photo2.jpg"
+    name: "Ocean Sunset"
+  - url: "/images/photo3.jpg"
+    name: "City Lights"
 ---
-
-Add gallery images using Hugo figure shortcodes or markdown images.
 ```
 
 ## Directory Structure
@@ -262,6 +275,26 @@ Add to your `hugo.toml`:
 [params]
   extraBody = '<script src="/js/custom.js"></script>'
 ```
+
+## Theme Colors
+
+### Light Mode
+- Background: `#dbe9ee`
+- Text: `#166088`
+- Accent: `#4a6fa5`
+- Code Background: `#c0d6df`
+
+### Dark Mode
+- Background: `#0f2f33`
+- Text: `#edf6f9`
+- Accent: `#e29578`
+- Code Background: `#1b4d52`
+
+## Browser Support
+
+- Modern browsers (Chrome, Firefox, Safari, Edge)
+- Mobile browsers (iOS Safari, Chrome for Android)
+- Touch gestures for image modal navigation
 
 ## License
 
