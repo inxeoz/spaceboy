@@ -1,19 +1,19 @@
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap");
 
 :root {
-    /* Palette: Readable Upgrade (Light) */
-    --bg-color: #edf6f9;
-    --text-color: #006d77;
-    --link-color: #006d77;
-    --border-color: #83c5be;
-    --secondary-text: #5c8f8f;
-    --code-bg: #ffddd2;
-    --disqus-bg: #edf6f9;
-    --accent-color: #e29578;
-    --accent-hover: #ffddd2;
-    --surface-color: #f9fafb;
-    --blockquote-color: #006d77;
-    --blockquote-border: #83c5be;
+    /* Palette: Custom */
+    --bg-color: #f1dac4;
+    --text-color: #161b33;
+    --link-color: #474973;
+    --border-color: #a69cac;
+    --secondary-text: #a69cac;
+    --code-bg: #e8dfd0;
+    --disqus-bg: #f1dac4;
+    --accent-color: #474973;
+    --accent-hover: #161b33;
+    --surface-color: #e8dfd0;
+    --blockquote-color: #474973;
+    --blockquote-border: #a69cac;
     --card-bg: #ffffff;
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 
@@ -21,6 +21,27 @@
     --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --font-heading: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --font-mono: "JetBrains Mono", "SF Mono", "Fira Code", monospace;
+
+    --line-height-body: 1.75;
+    --letter-spacing-body: 0.01em;
+    --letter-spacing-heading: -0.01em;
+}
+
+[data-theme="dark"] {
+    --bg-color: #0d0c1d;
+    --text-color: #f1dac4;
+    --link-color: #a69cac;
+    --border-color: #474973;
+    --secondary-text: #a69cac;
+    --code-bg: #161b33;
+    --disqus-bg: #0d0c1d;
+    --accent-color: #f1dac4;
+    --accent-hover: #a69cac;
+    --surface-color: #161b33;
+    --blockquote-color: #f1dac4;
+    --blockquote-border: #474973;
+    --card-bg: #161b33;
+    --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
 }
 
 [data-theme="dark"] {
