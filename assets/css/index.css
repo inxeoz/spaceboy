@@ -164,6 +164,12 @@ nav {
     fill: none;
 }
 
+.toggle-group {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
 .nav-link {
     color: var(--secondary-text);
     font: var(--font-weight-normal) 0.875rem var(--font-body);
