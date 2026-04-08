@@ -54,8 +54,8 @@
   if (savedLayout === 'list') document.body.classList.add('list-layout');
   updateLayoutIcons();
 
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-    if (!localStorage.getItem(themeKey)) root.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", e => {
+    if (!localStorage.getItem(themeKey)) root.setAttribute("data-theme", e.matches ? "dark" : "light");
     updateThemeIcons();
   });
 
@@ -150,18 +150,20 @@
     img.addEventListener('click', () => { modalImg.src = img.src; scale = 1; translateX = 0; translateY = 0; update(); modal.classList.add('active'); });
   });
 
-  modal.addEventListener('wheel', e => { e.preventDefault(); scale = Math.max(0.5, Math.min(3, scale - e.deltaY * 0.001)); update(); }, { passive: false });
+  // Mermaid initialization
+  document.addEventListener('DOMContentLoaded', () => {
+    const decodeHtml = (html) => {
+      const txt = document.createElement('textarea');
+      txt.innerHTML = html;
+      return txt.value;
+    };
+    document.querySelectorAll('.mermaid').forEach(el => {
+      if (el.innerHTML.trim()) {
+        el.innerHTML = decodeHtml(el.innerHTML.trim());
+      }
+    });
+    mermaid.initialize({ startOnLoad: true, theme: document.documentElement.hasAttribute('data-theme') ? 'dark' : 'default' });
+  });
+
 })();
 </script>
-
-{{ if .Site.Params.disqus }}
-<div id="disqus_thread"></div>
-<script>
-  window.addEventListener('load', () => {
-    const d = document, s = d.createElement('script');
-    s.src = 'https://{{ .Site.Params.disqus }}.disqus.com/embed.js';
-    s.setAttribute('data-timestamp', +new Date());
-    (d.head || d.body).appendChild(s);
-  });
-</script>
-{{ end }}

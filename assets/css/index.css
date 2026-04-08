@@ -193,68 +193,6 @@ main {
     min-height: 60vh;
 }
 
-.posts-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.post-year {
-    font: var(--font-weight-semibold) 1rem var(--font-body);
-    color: var(--secondary-text);
-    margin: 1.5rem 0 0.75rem;
-}
-
-.post-item {
-    display: flex;
-    align-items: baseline;
-    gap: 1rem;
-    padding: 0.75rem 0.5rem;
-    transition: background-color 0.2s ease;
-}
-.post-item:hover {
-    background-color: var(--surface-color);
-}
-
-.post-date {
-    color: var(--secondary-text);
-    font: var(--font-weight-normal) 0.875rem var(--font-body);
-    min-width: 65px;
-    font-feature-settings: "tnum";
-    opacity: 0;
-    transition: opacity 0.2s ease;
-}
-.post-item:hover .post-date {
-    opacity: 1;
-}
-
-.post-title-link {
-    font: var(--font-weight-semibold) 1.1rem var(--font-body);
-    color: var(--text-color);
-}
-.post-title-link:hover {
-    color: var(--link-color);
-    text-decoration: none;
-}
-
-.post-categories {
-    display: flex;
-    gap: 0.5rem;
-    margin-left: auto;
-}
-
-.post-category {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    border: 1px solid var(--border-color);
-    color: var(--secondary-text);
-    text-decoration: none !important;
-}
-.post-category:hover {
-    border-color: var(--link-color);
-    color: var(--link-color);
-}
-
 /* Post Single */
 .post-header {
     margin-bottom: 2rem;
@@ -687,6 +625,9 @@ pre {
     .post-card {
         padding: 1rem;
     }
+    .post-title {
+        font-size: 1.5rem;
+    }
 }
 
 /* Image Modal */
@@ -738,4 +679,16 @@ pre {
 }
 .image-modal-close:hover {
     opacity: 1;
+}
+
+/* Mermaid Diagrams */
+.mermaid {
+    display: flex;
+    justify-content: center;
+    margin: 1.5rem 0;
+}
+.mermaid svg {
+    max-width: 100%;
+    height: auto;
+    background: transparent;
 }

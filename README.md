@@ -21,6 +21,9 @@ A clean, modern Hugo blog theme with dark/light mode, code syntax highlighting, 
 - **Related Posts** - Automatically displays up to 3 related articles at the end of posts
 - **Post Tags** - Tag display with hover effects
 - **Post Categories** - Optional category display on home page
+- **Home Page Layouts** - Toggle between card grid and list views with persistent preference
+- **Card Colors** - 30 unique neutral background colors per card, adapting to light/dark themes
+- **Hover Tooltips** - Preview tooltips on post titles showing content snippets
 
 ### Customization
 - **Navigation** - Customizable menu links via `params.nav`
@@ -32,6 +35,8 @@ A clean, modern Hugo blog theme with dark/light mode, code syntax highlighting, 
 - **Custom JavaScript** - Inject extra JS via extraBody parameter
 - **Custom Favicon** - Configurable favicon with Apple touch icon support
 - **CDN Support** - Static prefix option for CDN hosting
+- **Layout Toggle** - Header button to switch between card grid and list views on home page
+- **Theme Toggle** - Seamless light/dark mode switching with localStorage persistence
 
 ### Technical
 - **RSS/Atom Feeds** - Automatic feed generation with alternate link tags
@@ -39,6 +44,30 @@ A clean, modern Hugo blog theme with dark/light mode, code syntax highlighting, 
 - **No Dependencies** - Vanilla JS, no framework required
 - **CSS Minification** - Automatic CSS bundling and minification
 - **Content Injection** - Pre/post content injection for posts
+- **Mermaid Diagrams** - Built-in support for rendering Mermaid diagrams using shortcodes
+
+## Mermaid Diagrams
+
+The theme includes built-in support for Mermaid diagrams.
+
+**Usage:**
+Use the Mermaid shortcode in your Hugo posts:
+
+```markdown
+{{< mermaid >}}
+graph TD;
+    A[Start] --> B{Is it working?};
+    B -- Yes --> C[Great!];
+    B -- No --> D[Check documentation];
+    D --> B;
+{{< /mermaid >}}
+```
+
+**Features:**
+- Supports all Mermaid diagram types (flowcharts, Gantt, sequence, etc.)
+- Automatically adapts to light/dark themes
+- Renders on page load
+- No additional configuration required
 
 ## Installation
 
@@ -278,17 +307,21 @@ Add to your `hugo.toml`:
 
 ## Theme Colors
 
+The theme features adaptive neutral color palettes with 30 unique card background variations for visual diversity. Colors automatically adjust between light and dark modes.
+
 ### Light Mode
-- Background: `#dbe9ee`
-- Text: `#166088`
-- Accent: `#4a6fa5`
-- Code Background: `#c0d6df`
+- **Backgrounds**: Soft neutral grays and subtle tinted whites
+- **Text**: Dark grays for optimal readability
+- **Accents**: Medium grays with teal highlights
+- **Cards**: 30 cycling neutral backgrounds with dark text
 
 ### Dark Mode
-- Background: `#0f2f33`
-- Text: `#edf6f9`
-- Accent: `#e29578`
-- Code Background: `#1b4d52`
+- **Backgrounds**: Deep neutral grays and charcoals
+- **Text**: Light grays for contrast
+- **Accents**: Light grays with teal highlights
+- **Cards**: 30 cycling darker neutral backgrounds with light text
+
+Colors are designed for accessibility and visual harmony across all content.
 
 ## Browser Support
 

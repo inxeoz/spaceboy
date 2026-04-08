@@ -34,9 +34,7 @@
       </button>
     </div>
 
-    {{ range .Site.Languages -}} {{ if ne .LanguageName $curLanguageName }}
-    <a href="/{{ .Lang }}/" class="nav-link">{{ .LanguageName }}</a>
-    {{ end }} {{ end }}
+
   </div>
 </nav>
 <div class="border-b"></div>
