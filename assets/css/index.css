@@ -1,21 +1,21 @@
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap");
 
 :root {
-    /* Palette: New (Light) */
-    --bg-color: #dbe9ee;
-    --text-color: #166088;
-    --link-color: #166088;
-    --border-color: #c0d6df;
-    --secondary-text: #4f6d7a;
-    --code-bg: #c0d6df;
-    --disqus-bg: #dbe9ee;
-    --accent-color: #4a6fa5;
-    --accent-hover: #166088;
-    --surface-color: #c0d6df;
-    --blockquote-color: #166088;
-    --blockquote-border: #c0d6df;
+    /* Palette: Spaceboy (Light) - Subtle off-white */
+    --bg-color: #f8fafc;
+    --text-color: #1e293b;
+    --link-color: #2563eb;
+    --border-color: #e2e8f0;
+    --secondary-text: #64748b;
+    --code-bg: #eef2f6;
+    --disqus-bg: #f8fafc;
+    --accent-color: #2563eb;
+    --accent-hover: #1d4ed8;
+    --surface-color: #f1f5f9;
+    --blockquote-color: #334155;
+    --blockquote-border: #2563eb;
     --card-bg: #ffffff;
-    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 
     /* Typography */
     --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -28,20 +28,20 @@
 }
 
 [data-theme="dark"] {
-    /* Palette: Teal (Dark) */
-    --bg-color: #0f2f33;
-    --text-color: #edf6f9;
-    --link-color: #83c5be;
-    --border-color: #e29578;
-    --secondary-text: #bcdedc;
-    --code-bg: #1b4d52;
-    --disqus-bg: #0f2f33;
-    --accent-color: #e29578;
-    --accent-hover: #f4a261;
-    --surface-color: #1b4d52;
-    --blockquote-color: #cfeeee;
-    --blockquote-border: #83c5be;
-    --card-bg: #1e293b;
+    /* Palette: Spaceboy (Dark) - Gray theme */
+    --bg-color: #404040;
+    --text-color: #fafafa;
+    --link-color: #818cf8;
+    --border-color: #525252;
+    --secondary-text: #d4d4d8;
+    --code-bg: #525252;
+    --disqus-bg: #404040;
+    --accent-color: #818cf8;
+    --accent-hover: #a5b4fc;
+    --surface-color: #525252;
+    --blockquote-color: #f4f4f5;
+    --blockquote-border: #818cf8;
+    --card-bg: #525252;
     --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
 }
 
