@@ -31,10 +31,28 @@
     }
   };
 
-  const saved = localStorage.getItem(themeKey);
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  if (saved === 'dark' || (!saved && prefersDark)) root.setAttribute('data-theme', 'dark');
-  updateThemeIcons();
+  window.toggleLayout = () => {
+    const isList = document.body.classList.contains('list-layout');
+    document.body.classList.toggle('list-layout', !isList);
+    localStorage.setItem('layout', !isList ? 'list' : 'card');
+    updateLayoutIcons();
+  };
+
+  const updateLayoutIcons = () => {
+    const btn = document.getElementById('layout-toggle');
+    if (!btn) return;
+    const gridIcon = btn.querySelector('.grid-icon');
+    const listIcon = btn.querySelector('.list-icon');
+    const isList = document.body.classList.contains('list-layout');
+    if (gridIcon && listIcon) {
+      gridIcon.style.display = isList ? 'none' : 'inline';
+      listIcon.style.display = isList ? 'inline' : 'none';
+    }
+  };
+
+  const savedLayout = localStorage.getItem('layout');
+  if (savedLayout === 'list') document.body.classList.add('list-layout');
+  updateLayoutIcons();
 
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
     if (!localStorage.getItem(themeKey)) root.setAttribute('data-theme', e.matches ? 'dark' : 'light');
