@@ -3,24 +3,29 @@
   {{ $pages = (where .Data.Pages "Type" "in" site.Params.mainSections) }}
 {{ end }}
 {{ with $pages.GroupByDate "2006" }}
-<ul class="posts-list">
+<div class="posts-grid">
   {{ range . }}
-  <li>
+  <div class="year-section">
     <h2 class="post-year">{{ .Key }}</h2>
-  </li>
-  {{ range .Pages }}
-  <li class="post-item">
-    <span class="post-date">{{ .Date.Format "Jan 02" }}</span>
-    <a href="{{ .RelPermalink }}" class="post-title-link">{{ .Title }}</a>
-    {{ if and $.IsHome $.Site.Params.showCategories }}
-    <div class="post-categories">
-      {{ range .Params.categories }}
-      <a href="/categories/{{ lower . }}/" class="post-category">{{ . }}</a>
+    <div class="posts-container">
+      {{ range .Pages }}
+      <article class="post-card">
+        <div class="post-card-content">
+          <span class="post-date">{{ .Date.Format "Jan 02" }}</span>
+          <h3><a href="{{ .RelPermalink }}" class="post-title-link">{{ .Title }}</a></h3>
+          <p class="post-excerpt">{{ .Content | plainify | truncate 150 }}</p>
+          {{ if and $.IsHome $.Site.Params.showCategories }}
+          <div class="post-categories">
+            {{ range .Params.categories }}
+            <a href="/categories/{{ lower . }}/" class="post-category">{{ . }}</a>
+            {{ end }}
+          </div>
+          {{ end }}
+        </div>
+      </article>
       {{ end }}
     </div>
-    {{ end }}
-  </li>
+  </div>
   {{ end }}
-  {{ end }}
-</ul>
+</div>
 {{ end }}
