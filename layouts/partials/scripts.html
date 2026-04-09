@@ -54,10 +54,15 @@
   if (savedLayout === 'list') document.body.classList.add('list-layout');
   updateLayoutIcons();
 
-  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", e => {
-    if (!localStorage.getItem(themeKey)) root.setAttribute("data-theme", e.matches ? "dark" : "light");
-    updateThemeIcons();
-  });
+  // Load saved theme or detect system preference
+  const savedTheme = localStorage.getItem(themeKey);
+  if (savedTheme) {
+    root.setAttribute('data-theme', savedTheme);
+  } else {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    root.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+  }
+  updateThemeIcons();
 
   // Code blocks
   document.querySelectorAll('.post-content pre').forEach(pre => {
