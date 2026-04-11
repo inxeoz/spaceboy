@@ -20,7 +20,7 @@
   <link rel="alternate" type="application/atom+xml" href="{{.Site.BaseURL}}index.xml" title="{{ .Site.Title }}" />
   <link rel="alternate" type="application/rss+xml" href="{{ .Site.Params.staticPrefix }}{{ "index.xml" | relURL }}" title="{{ .Site.Title }}">
 
-{{ $cssFiles := slice "css/index.css"  }}
+{{ $cssFiles := slice "css/index.css" }}
 {{ $css := slice }}
 {{ range $cssFiles }}
   {{ with resources.Get . }}
@@ -31,9 +31,7 @@
   <style>{{ .Content | safeCSS }}</style>
 {{ end }}
 
-  {{ range .Site.Params.extraCSSFiles -}}
-  <link rel="stylesheet" href="{{ $.Site.Params.staticPrefix }}{{ . | relURL }}" />
-  {{- end }}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1/dist/fancybox/fancybox.css" />
 
   {{- if .IsHome -}}
   <title>{{ .Site.Title }}</title>

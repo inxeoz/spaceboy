@@ -5,12 +5,25 @@
 </script>
 {{ end }}
 
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1/dist/fancybox/fancybox.umd.js"></script>
+<script>
+Fancybox.bind("[data-fancybox]", {
+  Toolbar: {
+    display: {
+      left: [],
+      middle: [],
+      right: ["zoomIn", "zoomOut", "close"],
+    },
+  },
+});
+</script>
+
 <script>
 (function() {
   const root = document.documentElement;
   const themeKey = 'theme';
-  const copyIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
-  const copiedIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+  const copyIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
+  const copiedIcon = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
 
   window.toggleTheme = () => {
     const isDark = root.getAttribute('data-theme') === 'dark';
@@ -68,7 +81,7 @@
   document.querySelectorAll('.post-content pre').forEach(pre => {
     const wrapper = document.createElement('div');
     wrapper.className = 'code-block-wrapper';
-    wrapper.innerHTML = '<button class="copy-code-btn" aria-label="Copy code"><span class="copy-icon">' + copyIcon + '</span><span class="copied-icon" style="display:none;">' + copiedIcon + '</span></button>';
+    wrapper.innerHTML = `<button class="copy-code-btn" aria-label="Copy code"><span class="copy-icon">${copyIcon}</span><span class="copied-icon" style="display:none;">${copiedIcon}</span></button>`;
     pre.before(wrapper);
     wrapper.appendChild(pre);
 
@@ -99,60 +112,6 @@
         btn.classList.remove('copied');
       }, 2000);
     });
-  });
-
-  // Image modal
-  const modal = document.createElement('div');
-  modal.className = 'image-modal';
-  modal.innerHTML = '<div class="image-modal-content"><img src="" alt=""><span class="image-modal-close">&times;</span></div>';
-  document.body.appendChild(modal);
-
-  const modalImg = modal.querySelector('img');
-  let scale = 1, translateX = 0, translateY = 0, isDrag = false, lastX, lastY;
-
-  const update = () => modalImg.style.transform = `scale(${scale}) translate(${translateX}px, ${translateY}px)`;
-  const pos = e => e.touches ? { x: e.touches[0].clientX, y: e.touches[0].clientY } : { x: e.clientX, y: e.clientY };
-
-  const startDrag = e => {
-    if (e.target !== modalImg) return;
-    isDrag = true;
-    const p = pos(e);
-    lastX = p.x;
-    lastY = p.y;
-    modalImg.style.cursor = 'grabbing';
-    e.preventDefault();
-  };
-
-  modal.addEventListener('mousedown', startDrag);
-  modal.addEventListener('touchstart', startDrag, { passive: false });
-
-  const move = e => {
-    if (!isDrag) return;
-    e.preventDefault();
-    const p = pos(e);
-    translateX += p.x - lastX;
-    translateY += p.y - lastY;
-    lastX = p.x;
-    lastY = p.y;
-    update();
-  };
-
-  modal.addEventListener('mousemove', move);
-  modal.addEventListener('touchmove', move, { passive: false });
-  modal.addEventListener('mouseup', () => { isDrag = false; modalImg.style.cursor = 'grab'; });
-  modal.addEventListener('touchend', () => isDrag = false);
-  modal.addEventListener('mouseleave', () => isDrag = false);
-
-  modal.addEventListener('click', e => {
-    if (e.target !== modal && e.target !== modalImg && !e.target.classList.contains('image-modal-close')) return;
-    modal.classList.remove('active');
-    scale = 1; translateX = 0; translateY = 0;
-    update();
-  });
-
-  document.querySelectorAll('.post-content img').forEach(img => {
-    img.style.cursor = 'zoom-in';
-    img.addEventListener('click', () => { modalImg.src = img.src; scale = 1; translateX = 0; translateY = 0; update(); modal.classList.add('active'); });
   });
 
   // Mermaid initialization

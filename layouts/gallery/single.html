@@ -7,7 +7,7 @@
     {{ partial "header.html" . }}
     
     <main>
-      <article class="post">
+      <article class="post" id="article">
         <header class="post-header">
           <h1 class="post-title">{{ .Title }}</h1>
         </header>
@@ -16,7 +16,9 @@
           <div class="gallery-grid">
             {{ range .Params.gallery }}
             <div class="gallery-item">
-              <img src="{{ .url }}" alt="{{ .name }}">
+              <a href="{{ .url }}" data-fancybox="gallery" data-caption="{{ .name }}">
+                <img src="{{ .url }}" alt="{{ .name }}">
+              </a>
               {{ if .name }}<p class="gallery-caption">{{ .name }}</p>{{ end }}
             </div>
             {{ end }}
