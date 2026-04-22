@@ -71,10 +71,8 @@ showToc: true
 ### Mermaid (markdown)
 
 ```mermaid
-
-  graph TD;
-      A --> B;
-
+graph TD;
+    A --> B;
 ```
 
 ### Mermaid (shortcode)
