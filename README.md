@@ -70,14 +70,16 @@ showToc: true
 
 ### Mermaid (markdown)
 
-> ```markdown
->   graph TD;
->       A --> B;
-> ```
+```mermaid
+
+  graph TD;
+      A --> B;
+
+```
 
 ### Mermaid (shortcode)
 
-```markdown
+```mermaid
 {{< mermaid >}}
 graph TD;
     A --> B;
