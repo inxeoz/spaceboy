@@ -77,7 +77,7 @@ graph TD;
 
 ### Mermaid (shortcode)
 
-```mermaid
+```markdown
 {{< mermaid >}}
 graph TD;
     A --> B;
