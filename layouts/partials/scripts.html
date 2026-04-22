@@ -1,0 +1,507 @@
+{{ $legacyMode := .Site.Params.legacyMode }}
+{{ $enableCopyCode := ne .Site.Params.enableCopyCode false }}
+{{ $needsFancybox := or (eq .Type "gallery") (and .IsPage (in .Content "data-fancybox")) }}
+{{ $needsMermaid := and .IsPage (or (.HasShortcode "mermaid") (in .RawContent "```mermaid")) }}
+{{ $needsKaTeX := and .IsPage (or (.HasShortcode "katex") (in .RawContent "$$") (in .RawContent "$")) }}
+{{ $enableCDNFallback := ne .Site.Params.enableCDNFallback false }}
+{{ $staticPrefix := default "" .Site.Params.staticPrefix }}
+{{ $fancyboxJSLocal := default "" .Site.Params.fancyboxJSLocal }}
+{{ $fancyboxJSCDN := default "https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1/dist/fancybox/fancybox.umd.js" .Site.Params.fancyboxJSCDN }}
+{{ $mermaidJSLocal := default "" .Site.Params.mermaidJSLocal }}
+{{ $mermaidJSCDN := default "https://cdn.jsdelivr.net/npm/mermaid@11.14.0/dist/mermaid.min.js" .Site.Params.mermaidJSCDN }}
+{{ $katexJSLocal := default "" .Site.Params.katexJSLocal }}
+{{ $katexJSCDN := default "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" .Site.Params.katexJSCDN }}
+{{ $katexAutoRenderJSLocal := default "" .Site.Params.katexAutoRenderJSLocal }}
+{{ $katexAutoRenderJSCDN := default "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" .Site.Params.katexAutoRenderJSCDN }}
+
+{{ if and .Site.Params.lazyImage (not .IsHome) (not $legacyMode) }}
+<script src="{{ $staticPrefix }}{{ "js/lazyload.min.js" | relURL }}"></script>
+<script>
+  if (typeof LazyLoad !== 'undefined') {
+    new LazyLoad({ container: document.getElementById('article') });
+  }
+</script>
+{{ end }}
+
+<script>
+(function() {
+  if (!document.querySelector || !document.addEventListener) {
+    return;
+  }
+
+  var root = document.documentElement;
+  var themeKey = 'theme';
+  var copyIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+  var copiedIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+
+  {{ $katexDelimiters := .Site.Params.katexDelimiters | default (slice
+    (dict "left" "$$" "right" "$$" "display" true)
+    (dict "left" "$" "right" "$" "display" false)
+    (dict "left" "\\(" "right" "\\)" "display" false)
+    (dict "left" "\\[" "right" "\\]" "display" true)
+  ) }}
+  window.katexDelimiters = {{ $katexDelimiters | jsonify }};
+
+  function safeGet(key) {
+    try {
+      if (window.localStorage) return window.localStorage.getItem(key);
+    } catch (_err) {}
+    return null;
+  }
+
+  function safeSet(key, value) {
+    try {
+      if (window.localStorage) window.localStorage.setItem(key, value);
+    } catch (_err) {}
+  }
+
+  function loadScriptWithFallback(localSrc, cdnSrc, done) {
+    if (!localSrc && !cdnSrc) {
+      if (done) done();
+      return;
+    }
+
+    function inject(src, onError) {
+      var script = document.createElement('script');
+      script.src = src;
+      script.async = true;
+      script.onload = function() { if (done) done(); };
+      script.onerror = onError || function() { if (done) done(); };
+      document.head.appendChild(script);
+    }
+
+    if (localSrc && cdnSrc && localSrc !== cdnSrc) {
+      inject(localSrc, function() { inject(cdnSrc); });
+    } else {
+      inject(localSrc || cdnSrc);
+    }
+  }
+
+  function matchesSelector(el, selector) {
+    var fn = el.matches || el.msMatchesSelector || el.webkitMatchesSelector;
+    return fn ? fn.call(el, selector) : false;
+  }
+
+  function closest(el, selector) {
+    while (el && el.nodeType === 1) {
+      if (matchesSelector(el, selector)) return el;
+      el = el.parentElement;
+    }
+    return null;
+  }
+
+  function updateThemeIcons() {
+    var btn = document.getElementById('theme-toggle');
+    if (!btn) return;
+    var moonIcon = btn.querySelector('.moon-icon');
+    var sunIcon = btn.querySelector('.sun-icon');
+    var isDark = root.getAttribute('data-theme') === 'dark';
+    if (moonIcon && sunIcon) {
+      moonIcon.style.display = isDark ? 'none' : 'inline';
+      sunIcon.style.display = isDark ? 'inline' : 'none';
+    }
+  }
+
+  function updateLayoutIcons() {
+    var btn = document.getElementById('layout-toggle');
+    if (!btn) return;
+    var gridIcon = btn.querySelector('.grid-icon');
+    var listIcon = btn.querySelector('.list-icon');
+    var isList = document.body.classList.contains('list-layout');
+    if (gridIcon && listIcon) {
+      gridIcon.style.display = isList ? 'none' : 'inline';
+      listIcon.style.display = isList ? 'inline' : 'none';
+    }
+  }
+
+  function decodeHtml(html) {
+    var txt = document.createElement('textarea');
+    txt.innerHTML = html;
+    return txt.value;
+  }
+
+  function renderMermaid() {
+    if (typeof mermaid === 'undefined') return;
+    var diagrams = document.querySelectorAll('.mermaid');
+    if (!diagrams.length) return;
+
+    for (var i = 0; i < diagrams.length; i++) {
+      var el = diagrams[i];
+      var raw = el.getAttribute('data-raw');
+      if (!raw) {
+        raw = decodeHtml((el.innerHTML || '').trim());
+        el.setAttribute('data-raw', raw);
+      }
+      el.removeAttribute('data-processed');
+      el.innerHTML = raw;
+    }
+
+    var themeName = root.getAttribute('data-theme') === 'dark' ? 'dark' : 'default';
+    mermaid.initialize({ startOnLoad: false, theme: themeName });
+    if (typeof mermaid.run === 'function') {
+      mermaid.run({ querySelector: '.mermaid' }).catch(function(err) { console.error('Mermaid render failed:', err); });
+    }
+  }
+
+  function renderKaTeX() {
+    if (typeof renderMathInElement === 'undefined') return;
+    try {
+      var delimiters = window.katexDelimiters;
+      if (typeof delimiters === 'string') {
+        delimiters = JSON.parse(delimiters);
+      }
+      if (!delimiters) {
+        delimiters = [
+          { left: '$$', right: '$$', display: true },
+          { left: '$', right: '$', display: false },
+          { left: '\\(', right: '\\)', display: false },
+          { left: '\\[', right: '\\]', display: true }
+        ];
+      }
+      renderMathInElement(document.body, {
+        delimiters: delimiters
+      });
+    } catch(err) {
+      console.error('KaTeX render failed:', err);
+    }
+  }
+
+  window.toggleTheme = function() {
+    var isDark = root.getAttribute('data-theme') === 'dark';
+    root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    safeSet(themeKey, isDark ? 'light' : 'dark');
+    updateThemeIcons();
+    renderMermaid();
+    renderKaTeX();
+  };
+
+  window.toggleLayout = function() {
+    var isList = document.body.classList.contains('list-layout');
+    document.body.classList.toggle('list-layout', !isList);
+    safeSet('layout', !isList ? 'list' : 'card');
+    updateLayoutIcons();
+  };
+
+  var savedLayout = safeGet('layout');
+  if (savedLayout === 'list') {
+    document.body.classList.add('list-layout');
+  }
+  updateLayoutIcons();
+
+  var savedTheme = safeGet(themeKey);
+  if (savedTheme) {
+    root.setAttribute('data-theme', savedTheme);
+  } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    root.setAttribute('data-theme', 'dark');
+  } else {
+    root.setAttribute('data-theme', 'light');
+  }
+  updateThemeIcons();
+
+  {{ if and $enableCopyCode (not $legacyMode) }}
+  function initCopyBlock(pre) {
+    var wrapper = document.createElement('div');
+    wrapper.className = 'code-block-wrapper';
+    wrapper.innerHTML = '<button class="copy-code-btn" aria-label="Copy code"><span class="copy-icon">' + copyIcon + '</span><span class="copied-icon" style="display:none;">' + copiedIcon + '</span></button>';
+    pre.parentNode.insertBefore(wrapper, pre);
+    wrapper.appendChild(pre);
+
+    wrapper.addEventListener('click', function(e) {
+      if (!closest(e.target, '.copy-code-btn')) {
+        wrapper.classList.remove('clicked');
+      }
+    });
+    wrapper.addEventListener('mouseenter', function() { wrapper.classList.remove('clicked'); });
+    wrapper.addEventListener('mouseleave', function() { wrapper.classList.remove('clicked'); });
+  }
+
+  var preBlocks = document.querySelectorAll('.post-content pre');
+  if (preBlocks.length) {
+    for (var pb = 0; pb < preBlocks.length; pb++) {
+      initCopyBlock(preBlocks[pb]);
+    }
+
+    document.addEventListener('click', function(e) {
+      var btn = closest(e.target, '.copy-code-btn');
+      if (!btn) return;
+      var block = closest(btn, '.code-block-wrapper');
+      if (!block) return;
+      var code = block.querySelector('code, pre');
+      if (!code) return;
+
+      function showCopied() {
+        var copy = btn.querySelector('.copy-icon');
+        var copied = btn.querySelector('.copied-icon');
+        if (!copy || !copied) return;
+        copy.style.display = 'none';
+        copied.style.display = 'inline';
+        btn.classList.add('copied');
+        setTimeout(function() {
+          copy.style.display = 'inline';
+          copied.style.display = 'none';
+          btn.classList.remove('copied');
+        }, 2000);
+      }
+
+      function fallbackCopy(text) {
+        var textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        try {
+          if (document.execCommand('copy')) showCopied();
+        } catch (_err) {}
+        document.body.removeChild(textarea);
+      }
+
+      var text = code.textContent || '';
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(showCopied, function() { fallbackCopy(text); });
+      } else {
+        fallbackCopy(text);
+      }
+    });
+  }
+  {{ end }}
+
+  document.addEventListener('DOMContentLoaded', function() {
+    {{ if and $needsFancybox (not $legacyMode) }}
+    loadScriptWithFallback(
+      '{{ $fancyboxJSLocal }}',
+      '{{ $fancyboxJSCDN }}',
+      function() {
+        if (window.Fancybox && typeof window.Fancybox.bind === 'function') {
+          window.Fancybox.bind('[data-fancybox]', {
+            Toolbar: { display: { left: [], middle: [], right: ['zoomIn', 'zoomOut', 'close'] } }
+          });
+        }
+      }
+    );
+    {{ end }}
+
+    {{ if and $needsMermaid (not $legacyMode) }}
+    loadScriptWithFallback(
+      '{{ $mermaidJSLocal }}',
+      '{{ $mermaidJSCDN }}',
+      renderMermaid
+    );
+    {{ end }}
+
+    {{ if and $needsKaTeX (not $legacyMode) }}
+    loadScriptWithFallback(
+      '{{ $katexJSLocal }}',
+      '{{ $katexJSCDN }}',
+      function() {
+        loadScriptWithFallback(
+          '{{ $katexAutoRenderJSLocal }}',
+          '{{ $katexAutoRenderJSCDN }}',
+          renderKaTeX
+        );
+      }
+    );
+    {{ end }}
+
+    // Initialize Table of Contents scroll tracking (dual TOC system)
+    initDualTableOfContents();
+
+    // Navigation hide/show on scroll
+    var header = document.getElementById('site-header');
+    if (header) {
+      var lastScrollY = window.pageYOffset || document.documentElement.scrollTop;
+      window.addEventListener('scroll', function() {
+        var currentScrollY = window.pageYOffset || document.documentElement.scrollTop;
+        
+        // Shadow toggle
+        if (currentScrollY > 10) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+
+        // Always show at the very top
+        if (currentScrollY <= 0) {
+          header.classList.remove('nav-hidden');
+          lastScrollY = currentScrollY;
+          return;
+        }
+
+        if (currentScrollY > lastScrollY && currentScrollY > 50) {
+          // Scrolling down - hide
+          header.classList.add('nav-hidden');
+        } else if (currentScrollY < lastScrollY) {
+          // Scrolling up - show
+          header.classList.remove('nav-hidden');
+        }
+        lastScrollY = currentScrollY;
+      }, { passive: true });
+    }
+  });
+
+  function initDualTableOfContents() {
+    var mainTocNav = document.getElementById('toc-nav');
+    var subTocNav = document.getElementById('toc-sub-nav');
+    
+    // If neither TOC exists, skip
+    if (!mainTocNav && !subTocNav) return;
+
+    function getHeadings() {
+      var headings = [];
+      var article = document.getElementById('article');
+      if (!article) return headings;
+      
+      var h2s = article.querySelectorAll('h2, h3, h4, h5, h6');
+      for (var i = 0; i < h2s.length; i++) {
+        var heading = h2s[i];
+        if (heading.id) {
+          headings.push({
+            id: heading.id,
+            element: heading,
+            level: parseInt(heading.tagName[1]),
+            text: heading.textContent
+          });
+        }
+      }
+      return headings;
+    }
+
+    function getMainHeadings() {
+      var headings = getHeadings();
+      return headings.filter(function(h) { return h.level === 2; });
+    }
+
+    function updateMainTOC() {
+      if (!mainTocNav) return;
+      var links = mainTocNav.querySelectorAll('a');
+      if (!links.length) return;
+
+      var scrollPosition = window.scrollY + 150;
+      var currentHeading = null;
+      var headings = getHeadings();
+
+      for (var i = 0; i < headings.length; i++) {
+        var heading = headings[i];
+        if (heading.element.offsetTop <= scrollPosition) {
+          currentHeading = heading;
+        } else {
+          break;
+        }
+      }
+
+      links.forEach(function(link) {
+        link.classList.remove('active');
+      });
+
+      if (currentHeading) {
+        for (var j = 0; j < links.length; j++) {
+          if (links[j].getAttribute('href') === '#' + currentHeading.id) {
+            links[j].classList.add('active');
+            break;
+          }
+        }
+      }
+    }
+
+    function updateSubTOC() {
+      if (!subTocNav) return;
+
+      var scrollPosition = window.scrollY + 150;
+      var headings = getHeadings();
+      var currentMainHeading = null;
+
+      // Find current main heading (h2)
+      for (var i = 0; i < headings.length; i++) {
+        var heading = headings[i];
+        if (heading.level === 2 && heading.element.offsetTop <= scrollPosition) {
+          currentMainHeading = heading;
+        }
+      }
+
+      // Get sub-headings (h3) for current main section
+      var subHeadings = [];
+      if (currentMainHeading) {
+        var mainIndex = headings.indexOf(currentMainHeading);
+        for (var i = mainIndex + 1; i < headings.length; i++) {
+          var heading = headings[i];
+          if (heading.level === 2) break; // Stop at next main heading
+          if (heading.level === 3) {
+            subHeadings.push(heading);
+          }
+        }
+      }
+
+      // Update header text
+      var header = document.getElementById('sub-toc-header');
+      if (header && currentMainHeading) {
+        header.textContent = currentMainHeading.text;
+      }
+
+      // Build sub-TOC HTML
+      var html = '';
+      if (subHeadings.length > 0) {
+        html += '<ul>';
+        for (var i = 0; i < subHeadings.length; i++) {
+          var heading = subHeadings[i];
+          html += '<li><a href="#' + heading.id + '">' + heading.text + '</a></li>';
+        }
+        html += '</ul>';
+      } else {
+        html = '<p style="color: var(--secondary-text); font-size: 0.85rem;">No sub-topics</p>';
+      }
+
+      subTocNav.innerHTML = html;
+
+      // Attach click handlers for smooth scroll
+      var links = subTocNav.querySelectorAll('a');
+      links.forEach(function(link) {
+        link.addEventListener('click', function(e) {
+          var href = this.getAttribute('href');
+          if (href && href.startsWith('#')) {
+            e.preventDefault();
+            var target = document.getElementById(href.substring(1));
+            if (target) {
+              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              window.history.pushState(null, '', href);
+            }
+          }
+        });
+      });
+    }
+
+    // Smooth scroll for main TOC links
+    if (mainTocNav) {
+      var mainLinks = mainTocNav.querySelectorAll('a');
+      mainLinks.forEach(function(link) {
+        link.addEventListener('click', function(e) {
+          var href = this.getAttribute('href');
+          if (href && href.startsWith('#')) {
+            e.preventDefault();
+            var target = document.getElementById(href.substring(1));
+            if (target) {
+              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              window.history.pushState(null, '', href);
+              updateMainTOC();
+            }
+          }
+        });
+      });
+    }
+
+    // Update on scroll
+    var scrollTimeout;
+    window.addEventListener('scroll', function() {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(function() {
+        updateMainTOC();
+        updateSubTOC();
+      }, 50);
+    }, false);
+
+    // Initial update
+    updateMainTOC();
+    updateSubTOC();
+  }
+})();
+</script>

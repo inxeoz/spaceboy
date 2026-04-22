@@ -1,0 +1,13 @@
+{{ if .IsNamedParams }}
+  {{ if and (.Get "block") (eq (.Get "block") "true") }}
+    <div class="katex-block">$${{ .Inner }}$$</div>
+  {{ else }}
+    <span class="katex-inline">${{ .Inner }}$</span>
+  {{ end }}
+{{ else }}
+  {{ if eq (.Get 0) "block" }}
+    <div class="katex-block">$${{ .Inner }}$$</div>
+  {{ else }}
+    <span class="katex-inline">${{ .Inner }}$</span>
+  {{ end }}
+{{ end }}

@@ -1,0 +1,7 @@
+{{ $rightContent := .Params.rightSidebarContent }}
+
+{{ if $rightContent }}
+<div class="sidebar-content">
+  {{ $rightContent | safeHTML }}
+</div>
+{{ end }}

@@ -1,0 +1,100 @@
+<head>
+  <meta charset="utf-8" />
+  {{ hugo.Generator }}
+
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="MobileOptimized" content="320" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="author" content="{{ .Site.Params.author.name }}" />
+  <meta property="og:url" content="{{ .Permalink }}" />
+  <link rel="canonical" href="{{ .Permalink }}" />
+
+  {{- if .Site.Params.staticPrefix -}}
+  <link rel="dns-prefetch" href="{{ .Site.Params.staticPrefix }}" />
+  {{- end -}}
+  {{- if .Site.Params.favicon -}}
+  <link rel="apple-touch-icon" href="{{ .Site.Params.favicon }}" />
+  <link rel="icon" href="{{ .Site.Params.favicon }}" />
+  <link rel="shortcut" href="{{ .Site.Params.favicon }}" />
+  {{- end -}}
+  <link rel="alternate" type="application/atom+xml" href="{{.Site.BaseURL}}index.xml" title="{{ .Site.Title }}" />
+  <link rel="alternate" type="application/rss+xml" href="{{ .Site.Params.staticPrefix }}{{ "index.xml" | relURL }}" title="{{ .Site.Title }}">
+
+{{ $cssFiles := slice "css/index.css" }}
+{{ range .Site.Params.extraCSSFiles }}
+  {{ $cssFiles = $cssFiles | append . }}
+{{ end }}
+{{ $css := slice }}
+{{ range $cssFiles }}
+  {{ with resources.Get . }}
+    {{ $css = $css | append . }}
+  {{ end }}
+{{ end }}
+{{ with $css | resources.Concat "css/bundle.css" | minify }}
+  <style>{{ .Content | safeCSS }}</style>
+{{ end }}
+
+  {{ $needsFancybox := or (eq .Type "gallery") (and .IsPage (in .Content "data-fancybox")) }}
+  {{ $fancyboxCSSLocal := default (default (printf "%s%s" .Site.Params.staticPrefix ("/vendor/fancybox/fancybox.css" | relURL)) .Site.Params.fancyboxCSS) .Site.Params.fancyboxCSSLocal }}
+  {{ $fancyboxCSSCDN := default "https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1/dist/fancybox/fancybox.css" .Site.Params.fancyboxCSSCDN }}
+  {{ $enableCDNFallback := ne .Site.Params.enableCDNFallback false }}
+  {{ if $needsFancybox }}
+  {{ $fancyboxCSSFinal := $fancyboxCSSLocal }}
+  {{ if and $enableCDNFallback (ne $fancyboxCSSLocal $fancyboxCSSCDN) }}
+    {{ $fancyboxCSSFinal = $fancyboxCSSCDN }}
+  {{ end }}
+  <link rel="stylesheet" href="{{ $fancyboxCSSFinal }}" />
+  {{ end }}
+
+  {{ $needsKaTeX := and .IsPage (or (.HasShortcode "katex") (in .RawContent "$$") (in .RawContent "$")) }}
+  {{ $katexCSSLocal := default (default (printf "%s%s" .Site.Params.staticPrefix ("/vendor/katex/katex.min.css" | relURL)) .Site.Params.katexCSS) .Site.Params.katexCSSLocal }}
+  {{ $katexCSSCDN := default "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" .Site.Params.katexCSSCDN }}
+  {{ if $needsKaTeX }}
+  {{ $katexCSSFinal := $katexCSSLocal }}
+  {{ if and $enableCDNFallback (ne $katexCSSLocal $katexCSSCDN) }}
+    {{ $katexCSSFinal = $katexCSSCDN }}
+  {{ end }}
+  <link rel="stylesheet" href="{{ $katexCSSFinal }}" />
+  {{ end }}
+
+  {{- if .IsHome -}}
+  <title>{{ .Site.Title }}</title>
+  <meta property="og:title" content="{{ .Site.Title }}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:description" content="{{ .Site.Params.description }}" />
+  <meta name="description" content="{{ .Site.Params.description }}" />
+  {{- else -}}
+  <title>{{ .Title }}</title>
+  <meta property="og:title" content="{{ .Title }}" />
+  <meta property="og:type" content="article" />
+  <meta property="og:description" content="{{ default .Summary .Description | plainify }}" />
+  <meta name="description" content="{{ default .Summary .Description | plainify }}" />
+  {{- end }}
+  <meta property="og:locale" content="{{ .Site.LanguageCode }}" />
+  {{- if .Params.album -}}
+  <meta property="og:image" content="{{ .Params.album }}" />
+  {{- else -}}
+  <meta property="og:image" content="{{ .Site.Params.favicon }}" />
+  {{- end -}}
+
+  {{ partial "seo" . }}
+
+  {{ if ne .Site.Params.enableRemoteFonts false }}
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+  {{ end }}
+  <noscript>
+    <style>
+      .toggle-group { display: none !important; }
+      .copy-code-btn { display: none !important; }
+    </style>
+  </noscript>
+
+  {{ template "_internal/google_analytics.html" .}}
+  {{ if .Site.Params.TwitterCards }}{{ template "_internal/twitter_cards.html" .}}{{ end }}
+  {{ .Site.Params.extraHead | safeHTML }}
+
+</head>

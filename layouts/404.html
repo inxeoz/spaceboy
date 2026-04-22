@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}" prefix="og: http://ogp.me/ns#">
+{{ partial "head.html" . }}
+
+<body>
+  <div class="container">
+    {{ partial "header.html" . }}
+    
+    <div class="main-content-section">
+    <main>
+      <div class="error-page">
+        <h1 class="error-title">404</h1>
+        <p class="error-message">Page not found</p>
+        <p><a href="{{ .Site.LanguagePrefix }}/" class="post-title-link">Go Home</a></p>
+      </div>
+    </main>
+
+    {{ partial "footer.html" . }}
+    </div>
+  </div>
+
+  {{ partial "scripts.html" . }}
+</body>
+
+</html>

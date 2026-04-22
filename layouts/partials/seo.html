@@ -1,0 +1,46 @@
+{{ $description := .Site.Params.description | plainify }}
+{{ if not .IsHome }}
+  {{ $description = (default .Summary .Description | plainify) }}
+{{ end }}
+
+{{ $schemaType := "WebPage" }}
+{{ if .IsHome }}
+  {{ $schemaType = "WebSite" }}
+{{ else if .IsPage }}
+  {{ $schemaType = "BlogPosting" }}
+{{ else if or .IsSection .IsNode }}
+  {{ $schemaType = "CollectionPage" }}
+{{ end }}
+
+{{ $jsonLd := dict
+  "@context" "https://schema.org"
+  "@type" $schemaType
+  "name" .Title
+  "headline" .Title
+  "description" $description
+  "inLanguage" .Site.LanguageCode
+  "url" .Permalink
+}}
+
+{{ with .Site.Params.author.name }}
+  {{ $jsonLd = merge $jsonLd (dict "author" . "publisher" . "creator" . "accountablePerson" . "copyrightHolder" .) }}
+{{ end }}
+
+{{ if .IsHome }}
+  {{ $jsonLd = merge $jsonLd (dict "name" .Site.Title "headline" .Site.Title) }}
+{{ end }}
+
+{{ if .IsPage }}
+  {{ $jsonLd = merge $jsonLd (dict
+    "datePublished" .Date
+    "dateModified" .Lastmod
+    "copyrightYear" (.Date.Format "2006")
+    "articleSection" .Section
+    "mainEntityOfPage" (dict "@type" "WebPage" "@id" .Permalink)
+  ) }}
+  {{ with .Params.tags }}
+    {{ $jsonLd = merge $jsonLd (dict "keywords" .) }}
+  {{ end }}
+{{ end }}
+
+<script type="application/ld+json">{{ $jsonLd | jsonify | safeJS }}</script>

@@ -1,0 +1,11 @@
+features = ["blog"]
+license = "MIT"
+min_version = "0.50"
+name = "spaceboy"
+
+[params]
+staticPrefix = ""
+# extraCSSFiles = ["css/foo.css", "css/bar.css"]
+extraCSSFiles = []
+
+[params.author]

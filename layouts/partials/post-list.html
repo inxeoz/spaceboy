@@ -1,0 +1,37 @@
+{{ $pages := .Pages }}
+{{ if and (not $pages) .Data }}
+  {{ $pages = (where .Data.Pages "Type" "in" site.Params.mainSections) }}
+{{ end }}
+{{ with $pages.GroupByDate "2006" }}
+{{ $cardIndex := 0 }}
+<div class="posts-grid">
+  {{ range . }}
+  <div class="year-section">
+    <h2 class="post-year">{{ .Key }}</h2>
+    <div class="posts-container">
+      {{ range .Pages }}
+      {{ $cardIndex = add $cardIndex 1 }}
+      <article class="post-card color-{{ mod $cardIndex 30 }}">
+        <div class="post-card-content">
+          {{ $excerpt := .Summary | plainify }}
+          {{ if not $excerpt }}
+            {{ $excerpt = .Content | plainify }}
+          {{ end }}
+          <span class="post-date">{{ .Date.Format "Jan 02" }}</span>
+          <h3><a href="{{ .RelPermalink }}" class="post-title-link" title="Read more: {{ $excerpt | truncate 100 }}">{{ .Title }}</a></h3>
+          <p class="post-excerpt">{{ $excerpt | truncate 150 }}</p>
+          {{ if and $.IsHome $.Site.Params.showCategories }}
+          <div class="post-categories">
+            {{ range .Params.categories }}
+            <a href="{{ (printf "categories/%s/" (. | urlize)) | relLangURL }}" class="post-category">{{ . }}</a>
+            {{ end }}
+          </div>
+          {{ end }}
+        </div>
+      </article>
+      {{ end }}
+    </div>
+  </div>
+  {{ end }}
+</div>
+{{ end }}

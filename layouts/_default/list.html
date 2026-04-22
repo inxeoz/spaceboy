@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}" prefix="og: http://ogp.me/ns#">
+{{ partial "head.html" . }}
+
+<body>
+  <div class="container">
+    {{ partial "header.html" . }}
+    <div class="main-content-section">
+    <main>
+      <h1 class="taxonomy-title">{{ if .Data.Term }}{{ .Data.Term }}{{ else }}{{ .Title }}{{ end }}</h1>
+      {{ $pages := .Pages }}
+      {{ if and (not $pages) .Data }}
+        {{ $pages = (where .Data.Pages "Type" "in" site.Params.mainSections) }}
+      {{ end }}
+      {{ $paginator := .Paginate $pages }}
+      {{ partial "post-list.html" (dict "Pages" $paginator.Pages "IsHome" .IsHome "Site" .Site "Data" .Data) }}
+      {{ partial "pagination.html" . }}
+    </main>
+    {{ partial "footer.html" . }}
+    </div>
+  </div>
+
+  {{ partial "scripts.html" . }}
+</body>
+
+</html>

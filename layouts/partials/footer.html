@@ -1,0 +1,11 @@
+<footer class="site-footer">
+  <p>
+    &copy; {{ now.Year }} {{ .Site.Params.author.name }}. All rights reserved.
+    {{ if .Site.Params.footerLinks }}
+    <span class="footer-sep">·</span>
+    {{ range .Site.Params.footerLinks }}
+    <a href="{{ .link }}" target="_blank" rel="noopener noreferrer">{{ .name }}</a>
+    {{ end }}
+    {{ end }}
+  </p>
+</footer>

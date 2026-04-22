@@ -1,0 +1,40 @@
+{{ with .Paginator }}
+  {{ if gt .TotalPages 1 }}
+  <nav class="pager" aria-label="Pagination">
+    <ul class="pager-list">
+      {{ if .HasPrev }}
+      <li>
+        <a class="pager-link pager-icon" href="{{ .First.URL }}" aria-label="First page" title="First page">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M17 18l-6-6 6-6"></path><path d="M11 18l-6-6 6-6"></path></svg>
+        </a>
+      </li>
+      <li>
+        <a class="pager-link pager-icon" href="{{ .Prev.URL }}" aria-label="Previous page" title="Previous page">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>
+        </a>
+      </li>
+      {{ end }}
+
+      {{ $current := .PageNumber }}
+      {{ range .Pagers }}
+      <li>
+        <a class="pager-link{{ if eq .PageNumber $current }} is-active{{ end }}" href="{{ .URL }}" aria-label="Page {{ .PageNumber }}">{{ .PageNumber }}</a>
+      </li>
+      {{ end }}
+
+      {{ if .HasNext }}
+      <li>
+        <a class="pager-link pager-icon" href="{{ .Next.URL }}" aria-label="Next page" title="Next page">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"></path></svg>
+        </a>
+      </li>
+      <li>
+        <a class="pager-link pager-icon" href="{{ .Last.URL }}" aria-label="Last page" title="Last page">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18l6-6-6-6"></path><path d="M13 18l6-6-6-6"></path></svg>
+        </a>
+      </li>
+      {{ end }}
+    </ul>
+  </nav>
+  {{ end }}
+{{ end }}

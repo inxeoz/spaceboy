@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}" prefix="og: http://ogp.me/ns#">
+{{ partial "head.html" . }}
+
+<body>
+  {{ $showTOC := .Params.showToc | default false }}
+  
+  {{ if $showTOC }}
+  <div class="toc-layout with-toc">
+    <aside class="toc-left-sidebar" id="toc-left-sidebar">
+      {{ partial "toc-main.html" . }}
+    </aside>
+    
+    <div class="main-content-wrapper">
+      <div class="container">
+        {{ partial "header.html" . }}
+        
+        <div class="main-content-section">
+        <main class="main-wrapper">
+          <article class="post" id="article">
+          {{ $showTitle := ne (index .Params "show-title") false }}
+          <header class="post-header">
+            {{ if $showTitle }}
+            <h1 class="post-title">{{ .Title }}</h1>
+            {{ end }}
+            
+            {{ if in .Site.Params.mainSections .Type }}
+            <div class="post-meta">
+              {{ if .Date }}
+              <time datetime="{{ .Date.Format "2006-01-02 15:04:05 MST" }}">
+                {{ .Date.Format "02 Jan 2006" }}
+              </time>
+              {{ end }}
+              
+              {{ if .Site.Params.author.name }}
+              <span>·</span>
+              {{ if .Params.author.homepage }}
+              <a href="{{ .Params.author.homepage }}" target="_blank" rel="noopener noreferrer">@{{ .Site.Params.author.name }}</a>
+              {{ else }}
+              <span>@{{ .Site.Params.author.name }}</span>
+              {{ end }}
+              {{ end }}
+            </div>
+            {{ end }}
+          </header>
+
+          <div class="post-content">
+            {{ .Site.Params.postHeaderContent | safeHTML }}
+            {{ .Content }}
+          </div>
+
+          {{ if .Params.tags }}
+          <div class="post-tags">
+            {{ range .Params.tags }}
+            <a href="{{ site.LanguagePrefix }}/tags/{{ lower . | urlize }}/" class="post-tag">
+              {{ . }}
+            </a>
+            {{ end }}
+          </div>
+          {{ end }}
+
+          {{ if in .Site.Params.mainSections .Type }}
+            {{ .Site.Params.postFooterContent | safeHTML }}
+
+            {{ partial "related.html" . }}
+
+            {{ if .Site.Params.postAds }}
+            <div class="post-ads">{{ .Site.Params.postAds | safeHTML }}</div>
+            {{ end }}
+
+            {{ if .Site.Params.disqus }}
+            <div class="post-comments">
+              {{ partial "disqus.html" . }}
+            </div>
+            {{ end }}
+          {{ end }}
+        </article>
+        </main>
+
+        {{ partial "footer.html" . }}
+        </div>
+      </div>
+    </div>
+    
+    <aside class="toc-right-sidebar" id="toc-right-sidebar">
+      {{ partial "toc-sub.html" . }}
+    </aside>
+  </div>
+  {{ else }}
+  <div class="container">
+    {{ partial "header.html" . }}
+    
+    <div class="main-content-section">
+    <main class="main-wrapper">
+      <article class="post" id="article">
+      {{ $showTitle := ne (index .Params "show-title") false }}
+      <header class="post-header">
+        {{ if $showTitle }}
+        <h1 class="post-title">{{ .Title }}</h1>
+        {{ end }}
+        
+        {{ if in .Site.Params.mainSections .Type }}
+        <div class="post-meta">
+          {{ if .Date }}
+          <time datetime="{{ .Date.Format "2006-01-02 15:04:05 MST" }}">
+            {{ .Date.Format "02 Jan 2006" }}
+          </time>
+          {{ end }}
+          
+          {{ if .Site.Params.author.name }}
+          <span>·</span>
+          {{ if .Params.author.homepage }}
+          <a href="{{ .Params.author.homepage }}" target="_blank" rel="noopener noreferrer">@{{ .Site.Params.author.name }}</a>
+          {{ else }}
+          <span>@{{ .Site.Params.author.name }}</span>
+          {{ end }}
+          {{ end }}
+        </div>
+        {{ end }}
+      </header>
+
+      <div class="post-content">
+        {{ .Site.Params.postHeaderContent | safeHTML }}
+        {{ .Content }}
+      </div>
+
+      {{ if .Params.tags }}
+      <div class="post-tags">
+        {{ range .Params.tags }}
+        <a href="{{ site.LanguagePrefix }}/tags/{{ lower . | urlize }}/" class="post-tag">
+          {{ . }}
+        </a>
+        {{ end }}
+      </div>
+      {{ end }}
+
+      {{ if in .Site.Params.mainSections .Type }}
+        {{ .Site.Params.postFooterContent | safeHTML }}
+
+        {{ partial "related.html" . }}
+
+        {{ if .Site.Params.postAds }}
+        <div class="post-ads">{{ .Site.Params.postAds | safeHTML }}</div>
+        {{ end }}
+
+        {{ if .Site.Params.disqus }}
+        <div class="post-comments">
+          {{ partial "disqus.html" . }}
+        </div>
+        {{ end }}
+      {{ end }}
+    </article>
+    </main>
+
+    {{ partial "footer.html" . }}
+    </div>
+  </div>
+  {{ end }}
+
+  {{ partial "scripts.html" . }}
+  {{ if .Site.Params.extraBody }}
+  {{ .Site.Params.extraBody | safeHTML }}
+  {{ end }}
+
+</body>
+
+</html>
+
