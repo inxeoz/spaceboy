@@ -70,7 +70,7 @@ showToc: true
 
 ### Mermaid (markdown)
 
-```mermaid
+```markdown
 graph TD;
     A --> B;
 ```
