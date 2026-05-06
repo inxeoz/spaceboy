@@ -72,3 +72,5 @@
 /* GenericOutput */ .chroma .go { color:#1f2328 }
 /* GenericUnderline */ .chroma .gl { text-decoration:underline }
 /* TextWhitespace */ .chroma .w { color:#fff }
+/* Name */ .chroma .n { color:#1f2328 }
+/* Text */ .chroma .x { color:#1f2328 }

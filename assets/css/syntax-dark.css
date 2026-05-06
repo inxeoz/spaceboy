@@ -70,3 +70,8 @@
 /* GenericStrong */ [data-theme="dark"] .chroma .gs { font-style:italic }
 /* GenericSubheading */ [data-theme="dark"] .chroma .gu { font-weight:bold }
 /* GenericUnderline */ [data-theme="dark"] .chroma .gl { text-decoration:underline }
+/* Name */ [data-theme="dark"] .chroma .n { color:#f8f8f2 }
+/* NameOther */ [data-theme="dark"] .chroma .nx { color:#f8f8f2 }
+/* Punctuation */ [data-theme="dark"] .chroma .p { color:#abb2bf }
+/* Text */ [data-theme="dark"] .chroma .x { color:#e2e4e5 }
+/* Whitespace */ [data-theme="dark"] .chroma .w { color:#e2e4e5 }
