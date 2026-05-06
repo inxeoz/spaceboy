@@ -59,6 +59,9 @@
     return null;
   }
 
+  window._closest_ = closest;
+  window._matchesSelector_ = matchesSelector;
+
   function updateThemeIcons() {
     var btn = document.getElementById('theme-toggle');
     if (!btn) return;
@@ -232,41 +235,6 @@
   }
 
   document.addEventListener('DOMContentLoaded', function() {
-    document.addEventListener('click', function(e) {
-      var exportBtn = closest(e.target, '.export-code-btn');
-      if (!exportBtn) return;
-      e.stopPropagation();
-
-      var wrapper = closest(exportBtn, '.code-block-wrapper');
-      if (!wrapper) return;
-      var mermaidEl = wrapper.querySelector('.mermaid');
-      if (mermaidEl) {
-        var svg = mermaidEl.querySelector('svg');
-        if (svg) {
-          var clone = svg.cloneNode(true);
-          var data = new XMLSerializer().serializeToString(clone);
-          var blob = new Blob([data], { type: 'image/svg+xml;charset=utf-8' });
-          var url = URL.createObjectURL(blob);
-          window.open(url, '_blank');
-          return;
-        }
-      }
-      var codeEl = wrapper.querySelector('code, pre');
-      if (codeEl) {
-        var text = codeEl.getAttribute('data-raw') || codeEl.textContent || '';
-        var html = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Code</title><style>' +
-          'body{margin:0;padding:2rem;font:14px/1.6 monospace;background:#1e1e1e;color:#d4d4d4;white-space:pre-wrap;word-break:break-all}' +
-          '</style></head><body>' + escHtml(text) + '</body></html>';
-        var blob2 = new Blob([html], { type: 'text/html;charset=utf-8' });
-        var url2 = URL.createObjectURL(blob2);
-        window.open(url2, '_blank');
-      }
-    });
-
-    function escHtml(s) {
-      return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-    }
-
     if (S.needsFancybox && !S.legacyMode) {
       loadScriptWithFallback(
         S.fancyboxJSLocal,

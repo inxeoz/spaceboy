@@ -26,5 +26,6 @@ window.__SPACEBOY__ = {
 
 {{ $lazyload := resources.Get "js/lazyload.js" }}
 {{ $theme := resources.Get "js/theme.js" }}
-{{ $js := slice $lazyload $theme | resources.Concat "js/theme.min.js" | minify | fingerprint }}
+{{ $export := resources.Get "js/export.js" }}
+{{ $js := slice $lazyload $theme $export | resources.Concat "js/theme.min.js" | minify | fingerprint }}
 <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>
