@@ -72,18 +72,10 @@
       '.preview{flex:1;display:flex;align-items:center;justify-content:center;padding:20px}' +
       '.preview svg{max-width:100%;height:auto;display:block}' +
       '</style><div class=toolbar>' +
-      '<button id=copyUrl>Copy URL</button>' +
       '<button id=downloadSvg>Download SVG</button>' +
       '<button id=downloadPng>Download PNG</button>' +
       '</div><div class=preview>' + svgContent + '</div>');
     doc.close();
-
-    doc.getElementById('copyUrl').onclick = function() {
-      var url = URL.createObjectURL(new Blob([svgContent], { type: 'image/svg+xml' }));
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(url).then(function() { doc.getElementById('copyUrl').textContent = 'Copied!'; });
-      }
-    };
 
     doc.getElementById('downloadSvg').onclick = function() {
       var anchor = doc.createElement('a');
