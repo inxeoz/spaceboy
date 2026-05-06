@@ -8,8 +8,6 @@
 
   var root = document.documentElement;
   var themeKey = 'theme';
-  var copyIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
-  var copiedIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>';
 
   window.katexDelimiters = S.katexDelimiters;
 
@@ -100,15 +98,22 @@
       var el = diagrams[i];
       var raw = el.getAttribute('data-raw');
       if (!raw) {
-        raw = decodeHtml((el.innerHTML || '').trim());
+        raw = (el.textContent || '').trim();
         el.setAttribute('data-raw', raw);
       }
       el.removeAttribute('data-processed');
       el.innerHTML = raw;
     }
 
-    var themeName = root.getAttribute('data-theme') === 'dark' ? 'dark' : 'default';
-    mermaid.initialize({ startOnLoad: false, theme: themeName });
+    var isDark = root.getAttribute('data-theme') === 'dark';
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: isDark ? 'dark' : 'default',
+      themeVariables: isDark ? {
+        background: '#46494c',
+        mainBkg: '#4c5c68'
+      } : {}
+    });
     if (typeof mermaid.run === 'function') {
       mermaid.run({ querySelector: '.mermaid' }).catch(function(err) { console.error('Mermaid render failed:', err); });
     }
@@ -170,72 +175,54 @@
   updateThemeIcons();
 
   if (S.enableCopyCode && !S.legacyMode) {
-    function initCopyBlock(pre) {
-      var wrapper = document.createElement('div');
-      wrapper.className = 'code-block-wrapper';
-      wrapper.innerHTML = '<button class="copy-code-btn" aria-label="Copy code"><span class="copy-icon">' + copyIcon + '</span><span class="copied-icon" style="display:none;">' + copiedIcon + '</span></button>';
-      pre.parentNode.insertBefore(wrapper, pre);
-      wrapper.appendChild(pre);
+    document.addEventListener('click', function(e) {
+      var btn = closest(e.target, '.copy-code-btn');
+      if (!btn) return;
 
-      wrapper.addEventListener('click', function(e) {
-        if (!closest(e.target, '.copy-code-btn')) {
-          wrapper.classList.remove('clicked');
+      var block = closest(btn, '.code-block-wrapper');
+      var text = '';
+
+      if (block) {
+        var code = block.querySelector('code, pre');
+        if (code) {
+          text = code.textContent || '';
+          if (!text && code.classList.contains('mermaid')) {
+            text = code.getAttribute('data-raw') || '';
+          }
+        } else {
+          var mermaid = block.querySelector('.mermaid');
+          if (mermaid) text = mermaid.getAttribute('data-raw') || mermaid.textContent || '';
         }
-      });
-      wrapper.addEventListener('mouseenter', function() { wrapper.classList.remove('clicked'); });
-      wrapper.addEventListener('mouseleave', function() { wrapper.classList.remove('clicked'); });
-    }
-
-    var preBlocks = document.querySelectorAll('.post-content pre');
-    if (preBlocks.length) {
-      for (var pb = 0; pb < preBlocks.length; pb++) {
-        initCopyBlock(preBlocks[pb]);
       }
 
-      document.addEventListener('click', function(e) {
-        var btn = closest(e.target, '.copy-code-btn');
-        if (!btn) return;
-        var block = closest(btn, '.code-block-wrapper');
-        if (!block) return;
-        var code = block.querySelector('code, pre');
-        if (!code) return;
+      if (!text) return;
 
-        function showCopied() {
-          var copy = btn.querySelector('.copy-icon');
-          var copied = btn.querySelector('.copied-icon');
-          if (!copy || !copied) return;
-          copy.style.display = 'none';
-          copied.style.display = 'inline';
-          btn.classList.add('copied');
-          setTimeout(function() {
-            copy.style.display = 'inline';
-            copied.style.display = 'none';
-            btn.classList.remove('copied');
-          }, 2000);
-        }
+      var origHTML = btn.innerHTML;
+      function showCopied() {
+        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+        setTimeout(function() {
+          btn.innerHTML = origHTML;
+        }, 2000);
+      }
 
-        function fallbackCopy(text) {
-          var textarea = document.createElement('textarea');
-          textarea.value = text;
-          textarea.style.position = 'fixed';
-          textarea.style.opacity = '0';
-          document.body.appendChild(textarea);
-          textarea.focus();
-          textarea.select();
-          try {
-            if (document.execCommand('copy')) showCopied();
-          } catch (_err) {}
-          document.body.removeChild(textarea);
-        }
+      function fallbackCopy(t) {
+        var ta = document.createElement('textarea');
+        ta.value = t;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        try { if (document.execCommand('copy')) showCopied(); } catch (_err) {}
+        document.body.removeChild(ta);
+      }
 
-        var text = code.textContent || '';
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(text).then(showCopied, function() { fallbackCopy(text); });
-        } else {
-          fallbackCopy(text);
-        }
-      });
-    }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(showCopied, function() { fallbackCopy(text); });
+      } else {
+        fallbackCopy(text);
+      }
+    });
   }
 
   if (S.lazyImage && !S.legacyMode) {
@@ -245,6 +232,41 @@
   }
 
   document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('click', function(e) {
+      var exportBtn = closest(e.target, '.export-code-btn');
+      if (!exportBtn) return;
+      e.stopPropagation();
+
+      var wrapper = closest(exportBtn, '.code-block-wrapper');
+      if (!wrapper) return;
+      var mermaidEl = wrapper.querySelector('.mermaid');
+      if (mermaidEl) {
+        var svg = mermaidEl.querySelector('svg');
+        if (svg) {
+          var clone = svg.cloneNode(true);
+          var data = new XMLSerializer().serializeToString(clone);
+          var blob = new Blob([data], { type: 'image/svg+xml;charset=utf-8' });
+          var url = URL.createObjectURL(blob);
+          window.open(url, '_blank');
+          return;
+        }
+      }
+      var codeEl = wrapper.querySelector('code, pre');
+      if (codeEl) {
+        var text = codeEl.getAttribute('data-raw') || codeEl.textContent || '';
+        var html = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Code</title><style>' +
+          'body{margin:0;padding:2rem;font:14px/1.6 monospace;background:#1e1e1e;color:#d4d4d4;white-space:pre-wrap;word-break:break-all}' +
+          '</style></head><body>' + escHtml(text) + '</body></html>';
+        var blob2 = new Blob([html], { type: 'text/html;charset=utf-8' });
+        var url2 = URL.createObjectURL(blob2);
+        window.open(url2, '_blank');
+      }
+    });
+
+    function escHtml(s) {
+      return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
     if (S.needsFancybox && !S.legacyMode) {
       loadScriptWithFallback(
         S.fancyboxJSLocal,

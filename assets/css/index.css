@@ -403,16 +403,36 @@ main {
     font-family: inherit;
     z-index: 10;
 }
+
+.export-code-btn {
+    position: absolute;
+    top: 36px;
+    right: 8px;
+    padding: 4px 8px;
+    background: var(--code-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-family: inherit;
+    z-index: 10;
+}
+
 .code-block-wrapper:hover .copy-code-btn,
-.code-block-wrapper.clicked .copy-code-btn {
+.code-block-wrapper:hover .export-code-btn,
+.code-block-wrapper.clicked .copy-code-btn,
+.code-block-wrapper.clicked .export-code-btn {
     opacity: 1;
 }
 @media (hover: none) {
-    .copy-code-btn {
+    .copy-code-btn,
+    .export-code-btn {
         opacity: 1;
     }
 }
-.copy-code-btn:hover {
+.copy-code-btn:hover,
+.export-code-btn:hover {
     opacity: 0.5 !important;
 }
 .copy-code-btn.copied {
@@ -1334,7 +1354,7 @@ pre {
 .mermaid {
     display: flex;
     justify-content: center;
-    margin: 1.5rem 0;
+    margin: 0;
 }
 .mermaid svg {
     max-width: 100%;
