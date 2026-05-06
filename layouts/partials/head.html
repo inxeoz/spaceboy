@@ -22,7 +22,12 @@
   <link rel="alternate" type="application/atom+xml" href="{{.Site.BaseURL}}index.xml" title="{{ .Site.Title }}" />
   <link rel="alternate" type="application/rss+xml" href="{{ .Site.Params.staticPrefix }}{{ "index.xml" | relURL }}" title="{{ .Site.Title }}">
 
-{{ $cssFiles := slice "css/index.css" }}
+{{ $cssFiles := slice "css/index.css" "css/syntax.css" }}
+
+{{ $fontNormal := resources.Get "fonts/JetBrainsMono-normal.woff2" | resources.Copy "fonts/JetBrainsMono-normal.woff2" }}
+{{ $fontItalic := resources.Get "fonts/JetBrainsMono-italic.woff2" | resources.Copy "fonts/JetBrainsMono-italic.woff2" }}
+<link rel="preload" href="{{ $fontNormal.RelPermalink }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ $fontItalic.RelPermalink }}" as="font" type="font/woff2" crossorigin>
 {{ range .Site.Params.extraCSSFiles }}
   {{ $cssFiles = $cssFiles | append . }}
 {{ end }}
@@ -81,11 +86,7 @@
 
   {{ partial "seo" . }}
 
-  {{ if ne .Site.Params.enableRemoteFonts false }}
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
-  {{ end }}
+
   <noscript>
     <style>
       .toggle-group { display: none !important; }
