@@ -22,7 +22,7 @@
   <link rel="alternate" type="application/atom+xml" href="{{.Site.BaseURL}}index.xml" title="{{ .Site.Title }}" />
   <link rel="alternate" type="application/rss+xml" href="{{ .Site.Params.staticPrefix }}{{ "index.xml" | relURL }}" title="{{ .Site.Title }}">
 
-{{ $cssFiles := slice "css/index.css" "css/syntax.css" }}
+{{ $cssFiles := slice "css/index.css" "css/syntax-light.css" "css/syntax-dark.css" }}
 
 {{ $fontNormal := resources.Get "fonts/JetBrainsMono-normal.woff2" | resources.Copy "fonts/JetBrainsMono-normal.woff2" }}
 {{ $fontItalic := resources.Get "fonts/JetBrainsMono-italic.woff2" | resources.Copy "fonts/JetBrainsMono-italic.woff2" }}
