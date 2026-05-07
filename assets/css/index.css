@@ -1,14 +1,16 @@
 :root {
     --bg-color: #e8e8e8;
     --text-color: #404040;
-    --link-color: #1e88e5;
+    --link-color: #0860b8;
     --border-color: #d0d0d0;
     --secondary-text: #5a5a5a;
     --code-bg: #d8d8d8;
     --surface-color: #d8d8d8;
-    --blockquote-border: #1e88e5;
+    --blockquote-border: #0860b8;
     --card-bg: #e8e8e8;
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    --nav-group-bg: #0860b8;
+    --nav-group-text: #e8e8e8;
 
     --font-body: 'JetBrains Mono', 'Fira Code', monospace;
     --font-mono: 'Fira Code', 'JetBrains Mono', monospace;
@@ -35,15 +37,15 @@
 [data-theme="dark"] {
     --bg-color: #46494c;
     --text-color: #dcdcdd;
-    --link-color: #1985a1;
+    --link-color: #4dd0e1;
     --border-color: #4c5c68;
     --secondary-text: #c5c3c6;
     --code-bg: #4c5c68;
     --surface-color: #4c5c68;
-    --blockquote-border: #1985a1;
+    --blockquote-border: #4dd0e1;
     --card-bg: #4c5c68;
     --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-    --nav-group-bg: #1985a1;
+    --nav-group-bg: #1a56db;
     --nav-group-text: #dcdcdd;
 }
 
@@ -93,7 +95,7 @@ body {
 }
 
 a {
-    color: #1e88e5;
+    color: #0860b8;
     color: var(--link-color);
     text-decoration: none;
     transition: color 0.2s ease;
@@ -153,7 +155,7 @@ nav {
     gap: 0.5rem;
     padding: 0.25rem 0.5rem;
     min-height: 32px;
-    background: #1e88e5;
+    background: #0860b8;
     background: var(--nav-group-bg, var(--link-color));
     color: #e8e8e8;
     color: var(--nav-group-text, var(--bg-color));
