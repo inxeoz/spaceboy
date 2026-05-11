@@ -817,6 +817,10 @@ pre {
 
 /* Responsive adjustments */
 @media (max-width: 640px) {
+    body {
+        font-size: 0.875rem;
+    }
+
     .container {
         padding: 0 0.75rem;
     }
@@ -853,12 +857,12 @@ pre {
 
 @media (max-width: 420px) {
     body {
-        font-size: 15px;
+        font-size: 0.8125rem;
         line-height: 1.6;
     }
 
     .post-content {
-        font-size: 0.95rem;
+        font-size: 0.85rem;
         line-height: 1.7;
     }
 
@@ -930,33 +934,33 @@ pre {
     }
 
     .post-content h2 {
-        font-size: 1.18rem;
+        font-size: 1.06rem;
     }
 
     .post-content h3 {
-        font-size: 1.05rem;
+        font-size: 0.95rem;
     }
 
     .post-content h1 {
-        font-size: 1.28rem;
+        font-size: 1.15rem;
     }
 
     .post-content h4 {
-        font-size: 0.98rem;
-    }
-
-    .post-content h5 {
         font-size: 0.9rem;
     }
 
-    .post-content h6 {
+    .post-content h5 {
         font-size: 0.84rem;
+    }
+
+    .post-content h6 {
+        font-size: 0.78rem;
     }
 }
 
 @media (max-width: 320px) {
     body {
-        font-size: 13px;
+        font-size: 0.75rem;
         line-height: 1.55;
     }
 
@@ -965,7 +969,7 @@ pre {
     }
 
     .post-content {
-        font-size: 0.9rem;
+        font-size: 0.8rem;
         line-height: 1.6;
     }
 
@@ -1007,27 +1011,27 @@ pre {
     }
 
     .post-content h2 {
-        font-size: 1.02rem;
+        font-size: 0.94rem;
     }
 
     .post-content h3 {
-        font-size: 0.95rem;
+        font-size: 0.88rem;
     }
 
     .post-content h1 {
-        font-size: 1.14rem;
+        font-size: 1.05rem;
     }
 
     .post-content h4 {
-        font-size: 0.9rem;
+        font-size: 0.82rem;
     }
 
     .post-content h5 {
-        font-size: 0.84rem;
+        font-size: 0.78rem;
     }
 
     .post-content h6 {
-        font-size: 0.78rem;
+        font-size: 0.72rem;
     }
 
     .post-card {
