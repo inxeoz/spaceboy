@@ -1,15 +1,15 @@
 {{ with .Paginator }}
   {{ if gt .TotalPages 1 }}
-  <nav class="pager" aria-label="Pagination">
-    <ul class="pager-list">
+  <nav class="pager" aria-label="Pagination" data-testid="pagination">
+    <ul class="pager-list" data-testid="pagination-list">
       {{ if .HasPrev }}
-      <li>
-        <a class="pager-link pager-icon" href="{{ .First.URL }}" aria-label="First page" title="First page">
+      <li data-testid="pagination-first-item">
+        <a class="pager-link pager-icon" href="{{ .First.URL }}" aria-label="First page" title="First page" data-testid="pagination-first">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M17 18l-6-6 6-6"></path><path d="M11 18l-6-6 6-6"></path></svg>
         </a>
       </li>
-      <li>
-        <a class="pager-link pager-icon" href="{{ .Prev.URL }}" aria-label="Previous page" title="Previous page">
+      <li data-testid="pagination-prev-item">
+        <a class="pager-link pager-icon" href="{{ .Prev.URL }}" aria-label="Previous page" title="Previous page" data-testid="pagination-prev">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg>
         </a>
       </li>
@@ -17,19 +17,19 @@
 
       {{ $current := .PageNumber }}
       {{ range .Pagers }}
-      <li>
-        <a class="pager-link{{ if eq .PageNumber $current }} is-active{{ end }}" href="{{ .URL }}" aria-label="Page {{ .PageNumber }}">{{ .PageNumber }}</a>
+      <li data-testid="pagination-page-item-{{ .PageNumber }}">
+        <a class="pager-link{{ if eq .PageNumber $current }} is-active{{ end }}" href="{{ .URL }}" aria-label="Page {{ .PageNumber }}" data-testid="pagination-page-{{ .PageNumber }}">{{ .PageNumber }}</a>
       </li>
       {{ end }}
 
       {{ if .HasNext }}
-      <li>
-        <a class="pager-link pager-icon" href="{{ .Next.URL }}" aria-label="Next page" title="Next page">
+      <li data-testid="pagination-next-item">
+        <a class="pager-link pager-icon" href="{{ .Next.URL }}" aria-label="Next page" title="Next page" data-testid="pagination-next">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"></path></svg>
         </a>
       </li>
-      <li>
-        <a class="pager-link pager-icon" href="{{ .Last.URL }}" aria-label="Last page" title="Last page">
+      <li data-testid="pagination-last-item">
+        <a class="pager-link pager-icon" href="{{ .Last.URL }}" aria-label="Last page" title="Last page" data-testid="pagination-last">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18l6-6-6-6"></path><path d="M13 18l6-6-6-6"></path></svg>
         </a>
       </li>

@@ -4,55 +4,55 @@
 
 <body>
   {{ $showTOC := .Params.showToc | default false }}
-  
+
   {{ if $showTOC }}
-  <div class="toc-layout with-toc">
-    <aside class="toc-left-sidebar" id="toc-left-sidebar">
+  <div class="toc-layout with-toc" data-testid="toc-layout">
+    <aside class="toc-left-sidebar" id="toc-left-sidebar" data-testid="toc-left-sidebar">
       {{ partial "toc-main.html" . }}
     </aside>
-    
-    <div class="main-content-wrapper">
-      <div class="container">
+
+    <div class="main-content-wrapper" data-testid="main-content-wrapper">
+      <div class="container" data-testid="post-container">
         {{ partial "header.html" . }}
-        
-        <div class="main-content-section">
-        <main class="main-wrapper">
-          <article class="post" id="article">
+
+        <div class="main-content-section" data-testid="post-content-section">
+        <main class="main-wrapper" id="main-content" data-testid="post-main">
+          <article class="post" id="article" data-testid="post-article">
           {{ $showTitle := ne (index .Params "show-title") false }}
-          <header class="post-header">
+          <header class="post-header" data-testid="post-header">
             {{ if $showTitle }}
-            <h1 class="post-title">{{ .Title }}</h1>
+            <h1 class="post-title" data-testid="post-title">{{ .Title }}</h1>
             {{ end }}
-            
+
             {{ if in .Site.Params.mainSections .Type }}
-            <div class="post-meta">
+            <div class="post-meta" data-testid="post-meta">
               {{ if .Date }}
-              <time datetime="{{ .Date.Format "2006-01-02 15:04:05 MST" }}">
+              <time datetime="{{ .Date.Format "2006-01-02 15:04:05 MST" }}" data-testid="post-date">
                 {{ .Date.Format "02 Jan 2006" }}
               </time>
               {{ end }}
-              
+
               {{ if .Site.Params.author.name }}
-              <span>·</span>
+              <span data-testid="post-meta-sep">·</span>
               {{ if .Params.author.homepage }}
-              <a href="{{ .Params.author.homepage }}" target="_blank" rel="noopener noreferrer">@{{ .Site.Params.author.name }}</a>
+              <a href="{{ .Params.author.homepage }}" target="_blank" rel="noopener noreferrer" data-testid="post-author">@{{ .Site.Params.author.name }}</a>
               {{ else }}
-              <span>@{{ .Site.Params.author.name }}</span>
+              <span data-testid="post-author">@{{ .Site.Params.author.name }}</span>
               {{ end }}
               {{ end }}
             </div>
             {{ end }}
           </header>
 
-          <div class="post-content">
+          <div class="post-content" data-testid="post-content">
             {{ .Site.Params.postHeaderContent | safeHTML }}
             {{ .Content }}
           </div>
 
           {{ if .Params.tags }}
-          <div class="post-tags">
+          <div class="post-tags" data-testid="post-tags">
             {{ range .Params.tags }}
-            <a href="{{ site.LanguagePrefix }}/tags/{{ lower . | urlize }}/" class="post-tag">
+            <a href="{{ site.LanguagePrefix }}/tags/{{ lower . | urlize }}/" class="post-tag" data-testid="post-tag">
               {{ . }}
             </a>
             {{ end }}
@@ -65,11 +65,11 @@
             {{ partial "related.html" . }}
 
             {{ if .Site.Params.postAds }}
-            <div class="post-ads">{{ .Site.Params.postAds | safeHTML }}</div>
+            <div class="post-ads" data-testid="post-ads">{{ .Site.Params.postAds | safeHTML }}</div>
             {{ end }}
 
             {{ if .Site.Params.disqus }}
-            <div class="post-comments">
+            <div class="post-comments" data-testid="post-comments">
               {{ partial "disqus.html" . }}
             </div>
             {{ end }}
@@ -81,53 +81,53 @@
         </div>
       </div>
     </div>
-    
-    <aside class="toc-right-sidebar" id="toc-right-sidebar">
+
+    <aside class="toc-right-sidebar" id="toc-right-sidebar" data-testid="toc-right-sidebar">
       {{ partial "toc-sub.html" . }}
     </aside>
   </div>
   {{ else }}
-  <div class="container">
+  <div class="container" data-testid="post-container">
     {{ partial "header.html" . }}
-    
-    <div class="main-content-section">
-    <main class="main-wrapper">
-      <article class="post" id="article">
+
+    <div class="main-content-section" data-testid="post-content-section">
+    <main class="main-wrapper" id="main-content" data-testid="post-main">
+      <article class="post" id="article" data-testid="post-article">
       {{ $showTitle := ne (index .Params "show-title") false }}
-      <header class="post-header">
+      <header class="post-header" data-testid="post-header">
         {{ if $showTitle }}
-        <h1 class="post-title">{{ .Title }}</h1>
+        <h1 class="post-title" data-testid="post-title">{{ .Title }}</h1>
         {{ end }}
-        
+
         {{ if in .Site.Params.mainSections .Type }}
-        <div class="post-meta">
+        <div class="post-meta" data-testid="post-meta">
           {{ if .Date }}
-          <time datetime="{{ .Date.Format "2006-01-02 15:04:05 MST" }}">
+          <time datetime="{{ .Date.Format "2006-01-02 15:04:05 MST" }}" data-testid="post-date">
             {{ .Date.Format "02 Jan 2006" }}
           </time>
           {{ end }}
-          
+
           {{ if .Site.Params.author.name }}
-          <span>·</span>
+          <span data-testid="post-meta-sep">·</span>
           {{ if .Params.author.homepage }}
-          <a href="{{ .Params.author.homepage }}" target="_blank" rel="noopener noreferrer">@{{ .Site.Params.author.name }}</a>
+          <a href="{{ .Params.author.homepage }}" target="_blank" rel="noopener noreferrer" data-testid="post-author">@{{ .Site.Params.author.name }}</a>
           {{ else }}
-          <span>@{{ .Site.Params.author.name }}</span>
+          <span data-testid="post-author">@{{ .Site.Params.author.name }}</span>
           {{ end }}
           {{ end }}
         </div>
         {{ end }}
       </header>
 
-      <div class="post-content">
+      <div class="post-content" data-testid="post-content">
         {{ .Site.Params.postHeaderContent | safeHTML }}
         {{ .Content }}
       </div>
 
       {{ if .Params.tags }}
-      <div class="post-tags">
+      <div class="post-tags" data-testid="post-tags">
         {{ range .Params.tags }}
-        <a href="{{ site.LanguagePrefix }}/tags/{{ lower . | urlize }}/" class="post-tag">
+        <a href="{{ site.LanguagePrefix }}/tags/{{ lower . | urlize }}/" class="post-tag" data-testid="post-tag">
           {{ . }}
         </a>
         {{ end }}
@@ -140,11 +140,11 @@
         {{ partial "related.html" . }}
 
         {{ if .Site.Params.postAds }}
-        <div class="post-ads">{{ .Site.Params.postAds | safeHTML }}</div>
+        <div class="post-ads" data-testid="post-ads">{{ .Site.Params.postAds | safeHTML }}</div>
         {{ end }}
 
         {{ if .Site.Params.disqus }}
-        <div class="post-comments">
+        <div class="post-comments" data-testid="post-comments">
           {{ partial "disqus.html" . }}
         </div>
         {{ end }}
@@ -165,4 +165,3 @@
 </body>
 
 </html>
-

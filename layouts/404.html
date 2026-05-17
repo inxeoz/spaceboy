@@ -3,15 +3,15 @@
 {{ partial "head.html" . }}
 
 <body>
-  <div class="container">
+  <div class="container" data-testid="error-container">
     {{ partial "header.html" . }}
-    
-    <div class="main-content-section">
-    <main>
-      <div class="error-page">
-        <h1 class="error-title">404</h1>
-        <p class="error-message">Page not found</p>
-        <p><a href="{{ .Site.LanguagePrefix }}/" class="post-title-link">Go Home</a></p>
+
+    <div class="main-content-section" data-testid="error-content-section">
+    <main id="main-content" data-testid="error-main">
+      <div class="error-page" data-testid="error-page">
+        <h1 class="error-title" data-testid="error-title">404</h1>
+        <p class="error-message" data-testid="error-message">Page not found</p>
+        <p><a href="{{ .Site.LanguagePrefix }}/" class="post-title-link" data-testid="error-home-link">Go Home</a></p>
       </div>
     </main>
 

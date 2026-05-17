@@ -1,9 +1,9 @@
-<div class="code-block-wrapper">
-  <button class="copy-code-btn" aria-label="Copy code">
+<div class="code-block-wrapper" data-testid="code-block">
+  <button class="copy-code-btn" aria-label="Copy code" data-testid="copy-code-btn">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
   </button>
-  <button class="export-code-btn" aria-label="Open as image" title="Open as image">
+  <button class="export-code-btn" aria-label="Open as image" title="Open as image" data-testid="export-code-btn">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
   </button>
-  <pre class="mermaid"><code>{{ .Inner }}</code></pre>
+  <pre class="mermaid" data-testid="mermaid-block"><code>{{ .Inner }}</code></pre>
 </div>

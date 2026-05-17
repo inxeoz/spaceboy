@@ -3,34 +3,34 @@
 {{ partial "head.html" . }}
 
 <body>
-  <div class="container">
+  <div class="container" data-testid="gallery-container">
     {{ partial "header.html" . }}
-    
-    <div class="main-content-section">
-    <main>
-      <article class="post" id="article">
+
+    <div class="main-content-section" data-testid="gallery-content-section">
+    <main id="main-content" data-testid="gallery-main">
+      <article class="post" id="article" data-testid="gallery-article">
         {{ $showTitle := ne (index .Params "show-title") false }}
         {{ if $showTitle }}
-        <header class="post-header">
-          <h1 class="post-title">{{ .Title }}</h1>
+        <header class="post-header" data-testid="gallery-header">
+          <h1 class="post-title" data-testid="gallery-title">{{ .Title }}</h1>
         </header>
         {{ end }}
 
-        <div class="post-content">
-          <div class="gallery-grid">
+        <div class="post-content" data-testid="gallery-content">
+          <div class="gallery-grid" data-testid="gallery-grid">
             {{ range .Params.gallery }}
-            <div class="gallery-item">
-              <a href="{{ .url }}" data-fancybox="gallery" data-caption="{{ .name }}">
-                <img src="{{ .url }}" alt="{{ .name }}">
+            <div class="gallery-item" data-testid="gallery-item">
+              <a href="{{ .url }}" data-fancybox="gallery" data-caption="{{ .name }}" data-testid="gallery-image-link">
+                <img src="{{ .url }}" alt="{{ .name }}" data-testid="gallery-image">
               </a>
-              {{ if .name }}<p class="gallery-caption">{{ .name }}</p>{{ end }}
+              {{ if .name }}<p class="gallery-caption" data-testid="gallery-caption">{{ .name }}</p>{{ end }}
             </div>
             {{ end }}
           </div>
         </div>
 
         {{ if .Site.Params.disqus }}
-        <div class="post-comments">
+        <div class="post-comments" data-testid="gallery-comments">
           {{ partial "disqus.html" . }}
         </div>
         {{ end }}

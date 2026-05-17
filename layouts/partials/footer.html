@@ -1,10 +1,10 @@
-<footer class="site-footer">
-  <p>
+<footer class="site-footer" data-testid="site-footer">
+  <p data-testid="footer-text">
     &copy; {{ now.Year }} {{ .Site.Params.author.name }}. All rights reserved.
     {{ if .Site.Params.footerLinks }}
-    <span class="footer-sep">·</span>
+    <span class="footer-sep" data-testid="footer-sep">·</span>
     {{ range .Site.Params.footerLinks }}
-    <a href="{{ .link }}" target="_blank" rel="noopener noreferrer">{{ .name }}</a>
+    <a href="{{ .link }}" target="_blank" rel="noopener noreferrer" data-testid="footer-link-{{ .name | urlize }}">{{ .name }}</a>
     {{ end }}
     {{ end }}
   </p>

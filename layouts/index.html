@@ -3,10 +3,10 @@
 {{ partial "head.html" . }}
 
 <body>
-  <div class="container">
+  <div class="container" data-testid="home-container">
     {{ partial "header.html" . }}
-    <div class="main-content-section">
-    <main>
+    <div class="main-content-section" data-testid="home-content-section">
+    <main id="main-content" data-testid="home-main">
       {{ $pages := where site.RegularPages "Type" "in" site.Params.mainSections }}
       {{ $paginator := .Paginate $pages }}
       {{ partial "post-list.html" (dict "Pages" $paginator.Pages "IsHome" .IsHome "Site" .Site) }}

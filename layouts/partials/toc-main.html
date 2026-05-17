@@ -1,9 +1,8 @@
 {{ if .TableOfContents }}
-<div class="toc-container">
-  <div class="toc-header">Contents</div>
-  <nav class="toc-nav toc-main" id="toc-nav">
+<div class="toc-container" data-testid="toc-container">
+  <div class="toc-header" data-testid="toc-header">Contents</div>
+  <nav class="toc-nav toc-main" id="toc-nav" data-testid="toc-nav">
     {{ .TableOfContents }}
   </nav>
 </div>
 {{ end }}
-

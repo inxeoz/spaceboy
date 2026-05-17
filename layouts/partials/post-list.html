@@ -4,26 +4,26 @@
 {{ end }}
 {{ with $pages.GroupByDate "2006" }}
 {{ $cardIndex := 0 }}
-<div class="posts-grid">
+<div class="posts-grid" data-testid="posts-grid">
   {{ range . }}
-  <div class="year-section">
-    <h2 class="post-year">{{ .Key }}</h2>
-    <div class="posts-container">
+  <div class="year-section" data-testid="year-section-{{ .Key }}">
+    <h2 class="post-year" data-testid="post-year-{{ .Key }}">{{ .Key }}</h2>
+    <div class="posts-container" data-testid="posts-container-{{ .Key }}">
       {{ range .Pages }}
       {{ $cardIndex = add $cardIndex 1 }}
-      <article class="post-card color-{{ mod $cardIndex 30 }}">
-        <div class="post-card-content">
+      <article class="post-card color-{{ mod $cardIndex 6 }}" data-testid="post-card">
+        <div class="post-card-content" data-testid="post-card-content">
           {{ $excerpt := .Summary | plainify }}
           {{ if not $excerpt }}
             {{ $excerpt = .Content | plainify }}
           {{ end }}
-          <span class="post-date">{{ .Date.Format "Jan 02" }}</span>
-          <h3><a href="{{ .RelPermalink }}" class="post-title-link" title="Read more: {{ $excerpt | truncate 100 }}">{{ .Title }}</a></h3>
-          <p class="post-excerpt">{{ $excerpt | truncate 150 }}</p>
+          <span class="post-date" data-testid="post-date">{{ .Date.Format "Jan 02" }}</span>
+          <h3><a href="{{ .RelPermalink }}" class="post-title-link" title="Read more: {{ $excerpt | truncate 100 }}" data-testid="post-title-link">{{ .Title }}</a></h3>
+          <p class="post-excerpt" data-testid="post-excerpt">{{ $excerpt | truncate 150 }}</p>
           {{ if and $.IsHome $.Site.Params.showCategories }}
-          <div class="post-categories">
+          <div class="post-categories" data-testid="post-categories">
             {{ range .Params.categories }}
-            <a href="{{ (printf "categories/%s/" (. | urlize)) | relLangURL }}" class="post-category">{{ . }}</a>
+            <a href="{{ (printf "categories/%s/" (. | urlize)) | relLangURL }}" class="post-category" data-testid="post-category">{{ . }}</a>
             {{ end }}
           </div>
           {{ end }}
