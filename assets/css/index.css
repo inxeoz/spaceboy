@@ -339,9 +339,6 @@ main {
 
 .post-content {
     font: var(--font-weight-normal) 1rem/1.85 var(--font-body);
-    max-width: 75ch;
-    margin-left: auto;
-    margin-right: auto;
     letter-spacing: var(--letter-spacing-normal);
 }
 .post-content p {
