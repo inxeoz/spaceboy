@@ -50,27 +50,40 @@
     }
 
     // ── Active index ──
+    // Returns the index of the last heading that has scrolled past the 90px
+    // threshold. Falls back to 0 (first heading) so there is always something
+    // highlighted — including when the page is at the very top.
     function getActiveIndex() {
       for (var i = headings.length - 1; i >= 0; i--) {
         if (headings[i].el.getBoundingClientRect().top <= 90) return i;
       }
-      return -1;
+      return 0;
     }
 
-    // ── Update main TOC ──
+    // ── Walk backwards from idx to find the nearest heading that has a
+    //    link in tocNav. This handles the case where the active heading is
+    //    an h3/h4 that only appears in the right TOC — we highlight its
+    //    nearest ancestor h1/h2 in the left TOC instead. ──
+    function findTocLink(tocNav, startIdx) {
+      for (var i = startIdx; i >= 0; i--) {
+        var link = tocNav.querySelector('a[href="#' + headings[i].id + '"]');
+        if (link) return link;
+      }
+      return null;
+    }
+
+    // ── Update main (left) TOC ──
     function updateMain(activeIdx) {
       if (!mainTocNav) return;
       mainTocNav.querySelectorAll('a').forEach(function(a) { a.classList.remove('active'); });
-      if (activeIdx >= 0) {
-        var link = mainTocNav.querySelector('a[href="#' + headings[activeIdx].id + '"]');
-        if (link) {
-          link.classList.add('active');
-          scrollTocToActive(mainTocNav, link);
-        }
+      var link = findTocLink(mainTocNav, activeIdx);
+      if (link) {
+        link.classList.add('active');
+        scrollTocToActive(mainTocNav, link);
       }
     }
 
-    // ── Update sub TOC ──
+    // ── Update sub (right) TOC ──
     function updateSub(activeIdx) {
       if (!subTocNav) return;
 
@@ -87,10 +100,8 @@
 
       if (hasH3) {
         var currentH2 = null;
-        if (activeIdx >= 0) {
-          for (var i = activeIdx; i >= 0; i--) {
-            if (headings[i].level === 2) { currentH2 = headings[i]; break; }
-          }
+        for (var i = activeIdx; i >= 0; i--) {
+          if (headings[i].level === 2) { currentH2 = headings[i]; break; }
         }
         header.textContent = currentH2 ? currentH2.text : 'In this section';
 
@@ -124,14 +135,12 @@
       subTocNav.innerHTML = html;
 
       subTocNav.querySelectorAll('a').forEach(function(a) { a.classList.remove('active'); });
-      if (activeIdx >= 0) {
-        subTocNav.querySelectorAll('a').forEach(function(a) {
-          if (a.getAttribute('href') === '#' + headings[activeIdx].id) {
-            a.classList.add('active');
-            scrollTocToActive(subTocNav, a);
-          }
-        });
-      }
+      subTocNav.querySelectorAll('a').forEach(function(a) {
+        if (a.getAttribute('href') === '#' + headings[activeIdx].id) {
+          a.classList.add('active');
+          scrollTocToActive(subTocNav, a);
+        }
+      });
     }
 
     function updateBoth() {
@@ -149,10 +158,23 @@
         e.preventDefault();
         var id = link.getAttribute('href').slice(1);
         var target = document.getElementById(id);
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          history.pushState(null, '', '#' + id);
+        if (!target) return;
+
+        // Force the active class immediately so there is no flash of
+        // un-highlighted state while the smooth scroll animates.
+        if (container === mainTocNav) {
+          mainTocNav.querySelectorAll('a').forEach(function(a) { a.classList.remove('active'); });
+          link.classList.add('active');
+        } else if (container === subTocNav) {
+          subTocNav.querySelectorAll('a').forEach(function(a) { a.classList.remove('active'); });
+          link.classList.add('active');
+          // Also update the left TOC to reflect the parent section
+          var idx = headings.findIndex(function(h) { return h.id === id; });
+          if (idx >= 0) updateMain(idx);
         }
+
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.pushState(null, '', '#' + id);
       });
     }
     setupSmoothScroll(mainTocNav);
