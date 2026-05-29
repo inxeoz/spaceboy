@@ -15,6 +15,8 @@
   {{ $showReadingTime := .Param "showReadingTime" | default .Site.Params.showReadingTime }}
   {{ $showLastModified := .Param "showLastModified" | default .Site.Params.showLastModified }}
 
+  {{ partial "header.html" . }}
+
   {{ if $showTOC }}
   <div class="page" data-testid="page-toc-layout">
     <aside class="toc-left" id="toc-left-sidebar" data-testid="toc-left-sidebar">
@@ -23,7 +25,6 @@
 
     <div class="main-content-wrapper" data-testid="main-content-wrapper">
       <div class="container" data-testid="post-container">
-        {{ partial "header.html" . }}
 
         <div class="main-content-section" data-testid="post-content-section">
         <main id="main-content" data-testid="post-main">
@@ -112,7 +113,6 @@
   </div>
   {{ else }}
   <div class="container" data-testid="post-container">
-    {{ partial "header.html" . }}
 
     <div class="main-content-section" data-testid="post-content-section">
     <main class="main-wrapper" id="main-content" data-testid="post-main">
