@@ -101,6 +101,20 @@
     }
   }
 
+  if (!S.legacyMode) {
+    var progressBar = document.getElementById('progress-bar');
+    if (progressBar) {
+      function updateProgress() {
+        var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        if (docHeight <= 0) return;
+        var pct = (window.pageYOffset / docHeight) * 100;
+        progressBar.style.width = Math.min(100, Math.max(0, pct)) + '%';
+      }
+      window.addEventListener('scroll', updateProgress, { passive: true });
+      updateProgress();
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', function() {
     if (S.needsFancybox && !S.legacyMode) {
       loadScriptWithFallback(

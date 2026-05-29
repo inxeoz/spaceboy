@@ -1,0 +1,4 @@
+<div class="callout callout-danger" role="alert">
+  <div class="callout-title">{{ with .Get "title" }}{{ . }}{{ else }}Danger{{ end }}</div>
+  <div class="callout-body">{{ .Inner | markdownify }}</div>
+</div>

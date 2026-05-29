@@ -91,6 +91,15 @@
   <style>:root{--hr-width:{{ if eq . "full" }}100%{{ else if eq . "small" }}4em{{ else }}{{ . }}{{ end }};}</style>
   {{- end }}
 
+  {{- $font := .Param "font" | default "mono" }}
+  {{- if ne $font "mono" }}
+  <style>:root{--font-body:{{ if eq $font "serif" }}Georgia,"Charter","Palatino Linotype","Book Antiqua",serif{{ else if eq $font "sans" }}system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif{{ else }}{{ $font | safeCSS }}{{ end }};{{ if eq $font "serif" }}--letter-spacing-normal:0.01em;--line-height-body:1.9;{{ else if eq $font "sans" }}--letter-spacing-normal:-0.01em;{{ end }}</style>
+  {{- end }}
+
+  {{- with .Param "contentWidth" }}
+  <style>:root{--content-max-width:{{ if eq . "narrow" }}65ch{{ else if eq . "wide" }}clamp(320px,95vw,1200px){{ else if eq . "full" }}100%{{ else }}{{ . | safeCSS }}{{ end }};}</style>
+  {{- end }}
+
   <noscript>
     <style>
       .toggle-group { display: none !important; }

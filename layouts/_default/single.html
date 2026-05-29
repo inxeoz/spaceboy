@@ -3,7 +3,14 @@
 {{ partial "head.html" . }}
 
 <body>
+  {{- if .Param "progressBar" }}
+  <div id="progress-bar" class="progress-bar" aria-hidden="true"></div>
+  {{- end }}
   {{ $showTOC := .Params.showToc | default false }}
+  {{ $dropCap := .Param "dropCap" | default false }}
+  {{ $numberedHeadings := .Param "numberedHeadings" | default false }}
+  {{ $showReadingTime := .Param "showReadingTime" | default .Site.Params.showReadingTime }}
+  {{ $showLastModified := .Param "showLastModified" | default .Site.Params.showLastModified }}
 
   {{ if $showTOC }}
   <div class="page" data-testid="page-toc-layout">
@@ -17,7 +24,7 @@
 
         <div class="main-content-section" data-testid="post-content-section">
         <main id="main-content" data-testid="post-main">
-          <article class="post" id="article" data-testid="post-article">
+          <article class="post" id="article"{{ if $dropCap }} data-drop-cap{{ end }}{{ if $numberedHeadings }} data-numbered-headings{{ end }} data-testid="post-article">
           {{ $showTitle := ne (index .Params "show-title") false }}
           <header class="post-header" data-testid="post-header">
             {{ if $showTitle }}
@@ -32,6 +39,11 @@
               </time>
               {{ end }}
 
+              {{ if and $showLastModified .Lastmod (ne (.Lastmod.Format "2006-01-02") (.Date.Format "2006-01-02")) }}
+              <span data-testid="post-meta-sep">·</span>
+              <span data-testid="post-lastmod">Updated {{ .Lastmod.Format "02 Jan 2006" }}</span>
+              {{ end }}
+
               {{ if .Site.Params.author.name }}
               <span data-testid="post-meta-sep">·</span>
               {{ if .Params.author.homepage }}
@@ -39,6 +51,11 @@
               {{ else }}
               <span data-testid="post-author">@{{ .Site.Params.author.name }}</span>
               {{ end }}
+              {{ end }}
+
+              {{ if and $showReadingTime .ReadingTime }}
+              <span data-testid="post-meta-sep">·</span>
+              <span data-testid="reading-time">{{ .ReadingTime }} min read</span>
               {{ end }}
             </div>
             {{ end }}
@@ -57,6 +74,7 @@
           </div>
 
           <div class="post-content" data-testid="post-content">
+            {{ with .Params.abstract }}<aside class="post-abstract" data-testid="post-abstract">{{ . }}</aside>{{ end }}
             {{ .Site.Params.postHeaderContent | safeHTML }}
             {{ .Content }}
           </div>
@@ -104,7 +122,7 @@
 
     <div class="main-content-section" data-testid="post-content-section">
     <main class="main-wrapper" id="main-content" data-testid="post-main">
-      <article class="post" id="article" data-testid="post-article">
+      <article class="post" id="article"{{ if $dropCap }} data-drop-cap{{ end }}{{ if $numberedHeadings }} data-numbered-headings{{ end }} data-testid="post-article">
       {{ $showTitle := ne (index .Params "show-title") false }}
       <header class="post-header" data-testid="post-header">
         {{ if $showTitle }}
@@ -119,6 +137,11 @@
           </time>
           {{ end }}
 
+          {{ if and $showLastModified .Lastmod (ne (.Lastmod.Format "2006-01-02") (.Date.Format "2006-01-02")) }}
+          <span data-testid="post-meta-sep">·</span>
+          <span data-testid="post-lastmod">Updated {{ .Lastmod.Format "02 Jan 2006" }}</span>
+          {{ end }}
+
           {{ if .Site.Params.author.name }}
           <span data-testid="post-meta-sep">·</span>
           {{ if .Params.author.homepage }}
@@ -127,11 +150,17 @@
           <span data-testid="post-author">@{{ .Site.Params.author.name }}</span>
           {{ end }}
           {{ end }}
+
+          {{ if and $showReadingTime .ReadingTime }}
+          <span data-testid="post-meta-sep">·</span>
+          <span data-testid="reading-time">{{ .ReadingTime }} min read</span>
+          {{ end }}
         </div>
         {{ end }}
       </header>
 
       <div class="post-content" data-testid="post-content">
+        {{ with .Params.abstract }}<aside class="post-abstract" data-testid="post-abstract">{{ . }}</aside>{{ end }}
         {{ .Site.Params.postHeaderContent | safeHTML }}
         {{ .Content }}
       </div>

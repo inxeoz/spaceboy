@@ -1,0 +1,4 @@
+<div class="callout callout-tip" role="note">
+  <div class="callout-title">{{ with .Get "title" }}{{ . }}{{ else }}Tip{{ end }}</div>
+  <div class="callout-body">{{ .Inner | markdownify }}</div>
+</div>

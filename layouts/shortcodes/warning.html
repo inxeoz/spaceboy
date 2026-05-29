@@ -1,0 +1,4 @@
+<div class="callout callout-warning" role="note">
+  <div class="callout-title">{{ with .Get "title" }}{{ . }}{{ else }}Warning{{ end }}</div>
+  <div class="callout-body">{{ .Inner | markdownify }}</div>
+</div>
