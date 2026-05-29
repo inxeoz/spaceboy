@@ -3,7 +3,7 @@
 <nav data-testid="nav">
   <div class="nav-left" data-testid="nav-left">
     {{ if not .IsHome }}
-    <a href="{{ .Parent.RelPermalink }}" class="nav-link back-btn" title="Go back" data-testid="nav-back-btn">
+    <a href="{{ .Site.LanguagePrefix }}/" onclick="if(history.length>1){event.preventDefault();history.back()}" class="nav-link back-btn" title="Go back" data-testid="nav-back-btn">
       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
       <span class="back-text">Back</span>
     </a>

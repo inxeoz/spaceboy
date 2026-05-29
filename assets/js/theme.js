@@ -41,7 +41,7 @@
     if (!btn) return;
     var gridIcon = btn.querySelector('.grid-icon');
     var listIcon = btn.querySelector('.list-icon');
-    var isList = document.body.classList.contains('list-layout');
+    var isList = document.documentElement.classList.contains('list-layout');
     if (gridIcon && listIcon) {
       gridIcon.style.display = isList ? 'none' : 'inline';
       listIcon.style.display = isList ? 'inline' : 'none';
@@ -114,16 +114,12 @@
   };
 
   window.toggleLayout = function() {
-    var isList = document.body.classList.contains('list-layout');
-    document.body.classList.toggle('list-layout', !isList);
+    var isList = document.documentElement.classList.contains('list-layout');
+    document.documentElement.classList.toggle('list-layout', !isList);
     safeSet('layout', !isList ? 'list' : 'card');
     updateLayoutIcons();
   };
 
-  var savedLayout = safeGet('layout');
-  if (savedLayout === 'list') {
-    document.body.classList.add('list-layout');
-  }
   updateLayoutIcons();
 
   var savedTheme = safeGet(themeKey);
