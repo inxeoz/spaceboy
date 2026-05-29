@@ -100,7 +100,7 @@
   {{- end }}
 
   {{- with .Param "contentWidth" }}
-  <style>:root{--content-max-width:{{ if eq . "narrow" }}65ch{{ else if eq . "wide" }}clamp(320px,95vw,1200px){{ else if eq . "full" }}100%{{ else }}{{ . | safeCSS }}{{ end }};}</style>
+  <style>:root{--content-max-width:{{ if eq . "normal" }}clamp(320px,95vw,1200px){{ else if eq . "wide" }}clamp(320px,95vw,calc((1200px + 100vw)/2)){{ else if eq . "full" }}100%{{ else }}{{ . | safeCSS }}{{ end }};}</style>
   {{- end }}
 
   {{- with .Param "codeMaxHeight" }}

@@ -36,7 +36,7 @@
     --spacing-lg: clamp(1.5rem, 4vw, 3rem);
     --spacing-xl: clamp(2rem, 5vw, 4rem);
 
-    --content-max-width: clamp(320px, 95vw, 980px);
+    --content-max-width: clamp(320px, 95vw, 1200px);
 }
 
 [data-theme="dark"] {
@@ -138,12 +138,20 @@ body {
 }
 
 .site-header-container.scrolled {
+    box-shadow: none;
+}
+
+.site-header-container.scrolled .container {
     box-shadow: var(--shadow);
 }
 
 .site-header-container.nav-hidden {
     transform: translateY(-100%);
     box-shadow: none;
+}
+
+.site-header-container .container {
+    transition: box-shadow 0.3s ease;
 }
 
 .container {
