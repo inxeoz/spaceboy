@@ -87,6 +87,10 @@
   {{ partial "seo" . }}
 
 
+  {{- with .Param "hrStyle" }}
+  <style>:root{--hr-width:{{ if eq . "full" }}100%{{ else if eq . "small" }}4em{{ else }}{{ . }}{{ end }};}</style>
+  {{- end }}
+
   <noscript>
     <style>
       .toggle-group { display: none !important; }
