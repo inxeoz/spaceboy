@@ -1,0 +1,5 @@
+<blockquote class="epigraph" role="figure">
+  {{ .Inner | markdownify }}
+  {{- with .Get "author" }}<footer class="epigraph-footer">— {{ . }}{{ with $.Get "source" }}, <cite>{{ . }}</cite>{{ end }}</footer>{{- end }}
+  {{- if and (not (.Get "author")) (.Get "source") }}<footer class="epigraph-footer"><cite>{{ .Get "source" }}</cite></footer>{{- end }}
+</blockquote>

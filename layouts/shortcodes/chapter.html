@@ -1,0 +1,4 @@
+<div class="chapter-title">
+  {{- with .Get "number" }}<span class="chapter-number">{{ . }}</span>{{ end }}
+  <span class="chapter-title-text">{{- .Inner | markdownify | plainify -}}</span>
+</div>

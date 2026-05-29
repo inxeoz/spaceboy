@@ -1,0 +1,4 @@
+<div class="poem">
+  {{- with .Get "title" }}<div class="poem-title">{{ . }}</div>{{ end -}}
+  {{ .Inner | markdownify }}
+</div>

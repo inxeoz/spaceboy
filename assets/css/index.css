@@ -489,7 +489,7 @@ main {
     background-color: var(--code-bg);
     padding: 1.25rem;
     overflow: auto;
-    max-height: 32rem;
+    max-height: var(--code-max-height, 32rem);
     margin: 1.75em 0;
     border-radius: 4px;
     line-height: 1.6;
@@ -2037,6 +2037,222 @@ pre {
 
     h1, h2, h3, h4 { page-break-after: avoid; }
     img, figure, table, .callout, .post-abstract { page-break-inside: avoid; }
+}
+
+/* ═══════════════════════════════════════
+   Justified Text (essays, formal docs)
+   ═══════════════════════════════════════ */
+[data-justify] .post-content p {
+    text-align: justify;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+}
+
+/* ═══════════════════════════════════════
+   Cover / Hero Image
+   ═══════════════════════════════════════ */
+.post-cover-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    display: block;
+    border-radius: 6px;
+    margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+/* ═══════════════════════════════════════
+   Full-Bleed Images (comics, photography)
+   ═══════════════════════════════════════ */
+[data-full-bleed] .post-content img {
+    width: 100vw;
+    max-width: 100vw;
+    position: relative;
+    left: 50%;
+    margin-left: -50vw;
+    right: 50%;
+    margin-right: -50vw;
+    border-radius: 0;
+    display: block;
+    height: auto;
+}
+
+/* ═══════════════════════════════════════
+   Epigraph (literary opening quote)
+   ═══════════════════════════════════════ */
+.epigraph {
+    text-align: center;
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    margin: 1.5rem auto 3rem;
+    max-width: 75%;
+    color: var(--secondary-text);
+    border-left: none;
+    background: none;
+    padding: 0;
+}
+.epigraph p { margin: 0 0 0.35em; }
+.epigraph-footer,
+.epigraph footer {
+    display: block;
+    font-style: normal;
+    font-size: 0.8rem;
+    margin-top: 0.75rem;
+    letter-spacing: 0.04em;
+    opacity: 0.7;
+}
+
+/* ═══════════════════════════════════════
+   Chapter Title (novels, long-form)
+   ═══════════════════════════════════════ */
+.chapter-title {
+    text-align: center;
+    margin: 1rem 0 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+}
+.chapter-number {
+    display: block;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--link-color);
+    opacity: 0.65;
+    margin-bottom: 0.85rem;
+    font-weight: var(--font-weight-normal);
+}
+.chapter-title-text {
+    display: block;
+    font-size: clamp(1.35rem, 4vw, 2.2rem);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--letter-spacing-tight);
+    line-height: 1.25;
+    color: var(--text-color);
+}
+
+/* ═══════════════════════════════════════
+   Spoiler / Collapsible reveal
+   ═══════════════════════════════════════ */
+.spoiler {
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    margin: 1.5rem 0;
+    overflow: hidden;
+}
+.spoiler > summary {
+    padding: 0.65rem 1rem;
+    cursor: pointer;
+    font-weight: var(--font-weight-semibold);
+    font-size: 0.82rem;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--secondary-text);
+    user-select: none;
+    -webkit-user-select: none;
+}
+.spoiler > summary::-webkit-details-marker { display: none; }
+.spoiler > summary::before {
+    content: '▸';
+    font-size: 0.65rem;
+    transition: transform 0.2s ease;
+    color: var(--link-color);
+}
+.spoiler[open] > summary::before { transform: rotate(90deg); }
+.spoiler[open] > summary { border-bottom: 1px solid var(--border-color); }
+.spoiler-body {
+    padding: 0.75rem 1rem 1rem;
+    font-size: 0.92rem;
+    line-height: 1.75;
+}
+.spoiler-body > *:last-child { margin-bottom: 0; }
+.spoiler-body > *:first-child { margin-top: 0; }
+
+/* ═══════════════════════════════════════
+   Keyboard Keys
+   ═══════════════════════════════════════ */
+kbd {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    padding: 0.1em 0.4em 0.15em;
+    font-size: 0.82em;
+    font-family: var(--font-mono);
+    box-shadow: 0 1px 0 1px var(--border-color);
+    white-space: nowrap;
+    vertical-align: 0.1em;
+}
+
+/* ═══════════════════════════════════════
+   Details / Accordion
+   ═══════════════════════════════════════ */
+.post-details {
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    margin: 1.25rem 0;
+    overflow: hidden;
+}
+.post-details > summary {
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    font-weight: var(--font-weight-medium);
+    font-size: 0.88rem;
+    user-select: none;
+    -webkit-user-select: none;
+    color: var(--text-color);
+}
+.post-details[open] > summary { border-bottom: 1px solid var(--border-color); }
+.post-details-body {
+    padding: 0.75rem 1rem 1rem;
+    font-size: 0.92rem;
+    line-height: 1.75;
+    background: var(--surface-color);
+}
+.post-details-body > *:last-child { margin-bottom: 0; }
+.post-details-body > *:first-child { margin-top: 0; }
+
+/* ═══════════════════════════════════════
+   Star Rating
+   ═══════════════════════════════════════ */
+.rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.05em;
+    line-height: 1;
+    vertical-align: middle;
+}
+.rating .star { font-size: 1.05rem; color: var(--border-color); }
+.rating .star.filled { color: #f59e0b; }
+.rating-text {
+    font-size: 0.78rem;
+    color: var(--secondary-text);
+    margin-left: 0.4em;
+    font-weight: var(--font-weight-normal);
+    font-family: var(--font-body);
+}
+
+/* ═══════════════════════════════════════
+   Poem
+   ═══════════════════════════════════════ */
+.poem {
+    text-align: center;
+    margin: 2rem auto;
+    max-width: 34em;
+    line-height: 2.1;
+    font-style: italic;
+}
+.poem p { margin-bottom: 0.5em; }
+.poem p + p { margin-top: 1.5em; }
+.poem-title {
+    font-style: normal;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--secondary-text);
+    margin-bottom: 1.5rem;
+    opacity: 0.7;
 }
 
 /* ── Responsive ── */

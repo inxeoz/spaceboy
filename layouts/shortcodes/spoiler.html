@@ -1,0 +1,4 @@
+<details class="spoiler">
+  <summary>{{ with .Get "title" }}{{ . }}{{ else }}Spoiler — click to reveal{{ end }}</summary>
+  <div class="spoiler-body">{{ .Inner | markdownify }}</div>
+</details>

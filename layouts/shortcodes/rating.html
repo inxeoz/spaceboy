@@ -1,0 +1,8 @@
+{{ $n := .Get 0 | default "0" | int }}
+{{ $max := .Get "max" | default "5" | int }}
+<span class="rating" title="{{ $n }}/{{ $max }}" aria-label="{{ $n }} out of {{ $max }} stars">
+  {{- range seq 1 $max -}}
+    {{- if le . $n -}}<span class="star filled" aria-hidden="true">★</span>{{- else -}}<span class="star" aria-hidden="true">☆</span>{{- end -}}
+  {{- end -}}
+  <span class="rating-text">{{ $n }}/{{ $max }}</span>
+</span>

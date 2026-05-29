@@ -1,0 +1,4 @@
+<details class="post-details">
+  <summary>{{ .Get "title" | default "Details" }}</summary>
+  <div class="post-details-body">{{ .Inner | markdownify }}</div>
+</details>

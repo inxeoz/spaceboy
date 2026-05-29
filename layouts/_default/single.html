@@ -6,9 +6,12 @@
   {{- if .Param "progressBar" }}
   <div id="progress-bar" class="progress-bar" aria-hidden="true"></div>
   {{- end }}
-  {{ $showTOC := .Params.showToc | default false }}
-  {{ $dropCap := .Param "dropCap" | default false }}
+  {{ $showTOC         := .Params.showToc | default false }}
+  {{ $dropCap         := .Param "dropCap"         | default false }}
   {{ $numberedHeadings := .Param "numberedHeadings" | default false }}
+  {{ $justify         := .Param "justify"         | default false }}
+  {{ $imageFullBleed  := .Param "imageFullBleed"  | default false }}
+  {{ $noMeta          := .Param "noMeta"          | default false }}
   {{ $showReadingTime := .Param "showReadingTime" | default .Site.Params.showReadingTime }}
   {{ $showLastModified := .Param "showLastModified" | default .Site.Params.showLastModified }}
 
@@ -24,26 +27,25 @@
 
         <div class="main-content-section" data-testid="post-content-section">
         <main id="main-content" data-testid="post-main">
-          <article class="post" id="article"{{ if $dropCap }} data-drop-cap{{ end }}{{ if $numberedHeadings }} data-numbered-headings{{ end }} data-testid="post-article">
+          <article class="post" id="article"{{ if $dropCap }} data-drop-cap{{ end }}{{ if $numberedHeadings }} data-numbered-headings{{ end }}{{ if $justify }} data-justify{{ end }}{{ if $imageFullBleed }} data-full-bleed{{ end }} data-testid="post-article">
+          {{ with .Params.coverImage }}<img src="{{ . }}" class="post-cover-image" alt="{{ $.Title }}" loading="lazy">{{ end }}
           {{ $showTitle := ne (index .Params "show-title") false }}
           <header class="post-header" data-testid="post-header">
             {{ if $showTitle }}
             <h1 class="post-title" data-testid="post-title">{{ .Title }}</h1>
             {{ end }}
 
-            {{ if in .Site.Params.mainSections .Type }}
+            {{ if and (in .Site.Params.mainSections .Type) (not $noMeta) }}
             <div class="post-meta" data-testid="post-meta">
               {{ if .Date }}
               <time datetime="{{ .Date.Format "2006-01-02 15:04:05 MST" }}" data-testid="post-date">
                 {{ .Date.Format "02 Jan 2006" }}
               </time>
               {{ end }}
-
               {{ if and $showLastModified .Lastmod (ne (.Lastmod.Format "2006-01-02") (.Date.Format "2006-01-02")) }}
               <span data-testid="post-meta-sep">·</span>
               <span data-testid="post-lastmod">Updated {{ .Lastmod.Format "02 Jan 2006" }}</span>
               {{ end }}
-
               {{ if .Site.Params.author.name }}
               <span data-testid="post-meta-sep">·</span>
               {{ if .Params.author.homepage }}
@@ -52,7 +54,6 @@
               <span data-testid="post-author">@{{ .Site.Params.author.name }}</span>
               {{ end }}
               {{ end }}
-
               {{ if and $showReadingTime .ReadingTime }}
               <span data-testid="post-meta-sep">·</span>
               <span data-testid="reading-time">{{ .ReadingTime }} min read</span>
@@ -74,6 +75,7 @@
           </div>
 
           <div class="post-content" data-testid="post-content">
+            {{ with .Params.epigraph }}<blockquote class="epigraph"><p>{{ . }}</p></blockquote>{{ end }}
             {{ with .Params.abstract }}<aside class="post-abstract" data-testid="post-abstract">{{ . }}</aside>{{ end }}
             {{ .Site.Params.postHeaderContent | safeHTML }}
             {{ .Content }}
@@ -82,31 +84,23 @@
           {{ if .Params.tags }}
           <div class="post-tags" data-testid="post-tags">
             {{ range .Params.tags }}
-            <a href="{{ site.LanguagePrefix }}/tags/{{ lower . | urlize }}/" class="post-tag" data-testid="post-tag">
-              {{ . }}
-            </a>
+            <a href="{{ site.LanguagePrefix }}/tags/{{ lower . | urlize }}/" class="post-tag" data-testid="post-tag">{{ . }}</a>
             {{ end }}
           </div>
           {{ end }}
 
           {{ if in .Site.Params.mainSections .Type }}
             {{ .Site.Params.postFooterContent | safeHTML }}
-
             {{ partial "related.html" . }}
-
             {{ if .Site.Params.postAds }}
             <div class="post-ads" data-testid="post-ads">{{ .Site.Params.postAds | safeHTML }}</div>
             {{ end }}
-
             {{ if .Site.Params.disqus }}
-            <div class="post-comments" data-testid="post-comments">
-              {{ partial "disqus.html" . }}
-            </div>
+            <div class="post-comments" data-testid="post-comments">{{ partial "disqus.html" . }}</div>
             {{ end }}
           {{ end }}
         </article>
         </main>
-
         {{ partial "footer.html" . }}
         </div>
       </div>
@@ -122,26 +116,25 @@
 
     <div class="main-content-section" data-testid="post-content-section">
     <main class="main-wrapper" id="main-content" data-testid="post-main">
-      <article class="post" id="article"{{ if $dropCap }} data-drop-cap{{ end }}{{ if $numberedHeadings }} data-numbered-headings{{ end }} data-testid="post-article">
+      <article class="post" id="article"{{ if $dropCap }} data-drop-cap{{ end }}{{ if $numberedHeadings }} data-numbered-headings{{ end }}{{ if $justify }} data-justify{{ end }}{{ if $imageFullBleed }} data-full-bleed{{ end }} data-testid="post-article">
+      {{ with .Params.coverImage }}<img src="{{ . }}" class="post-cover-image" alt="{{ $.Title }}" loading="lazy">{{ end }}
       {{ $showTitle := ne (index .Params "show-title") false }}
       <header class="post-header" data-testid="post-header">
         {{ if $showTitle }}
         <h1 class="post-title" data-testid="post-title">{{ .Title }}</h1>
         {{ end }}
 
-        {{ if in .Site.Params.mainSections .Type }}
+        {{ if and (in .Site.Params.mainSections .Type) (not $noMeta) }}
         <div class="post-meta" data-testid="post-meta">
           {{ if .Date }}
           <time datetime="{{ .Date.Format "2006-01-02 15:04:05 MST" }}" data-testid="post-date">
             {{ .Date.Format "02 Jan 2006" }}
           </time>
           {{ end }}
-
           {{ if and $showLastModified .Lastmod (ne (.Lastmod.Format "2006-01-02") (.Date.Format "2006-01-02")) }}
           <span data-testid="post-meta-sep">·</span>
           <span data-testid="post-lastmod">Updated {{ .Lastmod.Format "02 Jan 2006" }}</span>
           {{ end }}
-
           {{ if .Site.Params.author.name }}
           <span data-testid="post-meta-sep">·</span>
           {{ if .Params.author.homepage }}
@@ -150,7 +143,6 @@
           <span data-testid="post-author">@{{ .Site.Params.author.name }}</span>
           {{ end }}
           {{ end }}
-
           {{ if and $showReadingTime .ReadingTime }}
           <span data-testid="post-meta-sep">·</span>
           <span data-testid="reading-time">{{ .ReadingTime }} min read</span>
@@ -160,6 +152,7 @@
       </header>
 
       <div class="post-content" data-testid="post-content">
+        {{ with .Params.epigraph }}<blockquote class="epigraph"><p>{{ . }}</p></blockquote>{{ end }}
         {{ with .Params.abstract }}<aside class="post-abstract" data-testid="post-abstract">{{ . }}</aside>{{ end }}
         {{ .Site.Params.postHeaderContent | safeHTML }}
         {{ .Content }}
@@ -168,41 +161,30 @@
       {{ if .Params.tags }}
       <div class="post-tags" data-testid="post-tags">
         {{ range .Params.tags }}
-        <a href="{{ site.LanguagePrefix }}/tags/{{ lower . | urlize }}/" class="post-tag" data-testid="post-tag">
-          {{ . }}
-        </a>
+        <a href="{{ site.LanguagePrefix }}/tags/{{ lower . | urlize }}/" class="post-tag" data-testid="post-tag">{{ . }}</a>
         {{ end }}
       </div>
       {{ end }}
 
       {{ if in .Site.Params.mainSections .Type }}
         {{ .Site.Params.postFooterContent | safeHTML }}
-
         {{ partial "related.html" . }}
-
         {{ if .Site.Params.postAds }}
         <div class="post-ads" data-testid="post-ads">{{ .Site.Params.postAds | safeHTML }}</div>
         {{ end }}
-
         {{ if .Site.Params.disqus }}
-        <div class="post-comments" data-testid="post-comments">
-          {{ partial "disqus.html" . }}
-        </div>
+        <div class="post-comments" data-testid="post-comments">{{ partial "disqus.html" . }}</div>
         {{ end }}
       {{ end }}
     </article>
     </main>
-
     {{ partial "footer.html" . }}
     </div>
   </div>
   {{ end }}
 
   {{ partial "scripts.html" . }}
-  {{ if .Site.Params.extraBody }}
-  {{ .Site.Params.extraBody | safeHTML }}
-  {{ end }}
+  {{ if .Site.Params.extraBody }}{{ .Site.Params.extraBody | safeHTML }}{{ end }}
 
 </body>
-
 </html>
