@@ -20,12 +20,14 @@ window.__SPACEBOY__ = {
   katexAutoRenderJSLocal: {{ default "" .Site.Params.katexAutoRenderJSLocal }},
   katexAutoRenderJSCDN: {{ default "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" .Site.Params.katexAutoRenderJSCDN }},
   lazyImage: {{ and .Site.Params.lazyImage (not .IsHome) }},
-  staticPrefix: {{ default "" .Site.Params.staticPrefix | jsonify }}
+  staticPrefix: "{{ default "" .Site.Params.staticPrefix }}"
 };
 </script>
 
 {{ $lazyload := resources.Get "js/lazyload.js" }}
+{{ $features := resources.Get "js/features.js" }}
+{{ $toc := resources.Get "js/toc.js" }}
 {{ $theme := resources.Get "js/theme.js" }}
 {{ $export := resources.Get "js/export.js" }}
-{{ $js := slice $lazyload $theme $export | resources.Concat "js/theme.min.js" | minify | fingerprint }}
+{{ $js := slice $lazyload $features $toc $theme $export | resources.Concat "js/theme.min.js" | minify | fingerprint }}
 <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>

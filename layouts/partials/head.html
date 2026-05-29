@@ -77,7 +77,7 @@
   <meta property="og:description" content="{{ default .Summary .Description | plainify }}" />
   <meta name="description" content="{{ default .Summary .Description | plainify }}" />
   {{- end }}
-  <meta property="og:locale" content="{{ .Site.LanguageCode }}" />
+  <meta property="og:locale" content="{{ .Site.Language.Locale }}" />
   {{- if .Params.album -}}
   <meta property="og:image" content="{{ .Params.album }}" />
   {{- else -}}

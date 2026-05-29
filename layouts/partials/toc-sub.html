@@ -1,6 +1,6 @@
-<div class="toc-container" data-testid="toc-sub-container">
-  <div class="toc-header" id="sub-toc-header" data-testid="toc-sub-header">Sub Topics</div>
-  <nav class="toc-nav toc-sub" id="toc-sub-nav" data-testid="toc-sub-nav">
-    <!-- Populated by JavaScript based on current scroll position -->
+<div class="toc-card" data-testid="toc-sub-card">
+  <div class="toc-header" id="sub-toc-header" data-testid="toc-sub-header">{{ .Param "tocSubTitle" | default "In this section" }}</div>
+  <nav class="toc-nav toc-sub-nav" id="toc-sub-nav" data-testid="toc-sub-nav">
+    <p class="sub-toc-empty" data-testid="toc-sub-empty">Scroll to a section</p>
   </nav>
 </div>

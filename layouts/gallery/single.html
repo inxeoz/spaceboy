@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ .Site.LanguageCode }}" prefix="og: http://ogp.me/ns#">
+<html lang="{{ .Site.Language.Locale }}" prefix="og: http://ogp.me/ns#">
 {{ partial "head.html" . }}
 
 <body>
@@ -21,7 +21,7 @@
             {{ range .Params.gallery }}
             <div class="gallery-item" data-testid="gallery-item">
               <a href="{{ .url }}" data-fancybox="gallery" data-caption="{{ .name }}" data-testid="gallery-image-link">
-                <img src="{{ .url }}" alt="{{ .name }}" data-testid="gallery-image">
+                <img src="{{ .url }}" alt="{{ .name }}" loading="lazy" data-testid="gallery-image">
               </a>
               {{ if .name }}<p class="gallery-caption" data-testid="gallery-caption">{{ .name }}</p>{{ end }}
             </div>

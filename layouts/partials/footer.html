@@ -1,6 +1,6 @@
 <footer class="site-footer" data-testid="site-footer">
   <p data-testid="footer-text">
-    &copy; {{ now.Year }} {{ .Site.Params.author.name }}. All rights reserved.
+    &copy; {{ now.Year }}{{ with .Site.Params.author.name }} {{ . }}{{ end }}. All rights reserved.
     {{ if .Site.Params.footerLinks }}
     <span class="footer-sep" data-testid="footer-sep">·</span>
     {{ range .Site.Params.footerLinks }}

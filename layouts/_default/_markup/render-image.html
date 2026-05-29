@@ -1,3 +1,3 @@
 <a href="{{ .Destination | safeURL }}" data-fancybox data-caption="{{ .Text }}" data-testid="image-link">
-  <img src="{{ .Destination | safeURL }}" alt="{{ .Text }}" {{ with .Title}} title="{{ . }}"{{ end }} data-testid="content-image" />
+  <img src="{{ .Destination | safeURL }}" alt="{{ .Text }}" {{ with .Title}} title="{{ . }}"{{ end }} loading="lazy" data-testid="content-image" />
 </a>

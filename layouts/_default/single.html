@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="{{ .Site.LanguageCode }}" prefix="og: http://ogp.me/ns#">
+<html lang="{{ .Site.Language.Locale }}" prefix="og: http://ogp.me/ns#">
 {{ partial "head.html" . }}
 
 <body>
   {{ $showTOC := .Params.showToc | default false }}
 
   {{ if $showTOC }}
-  <div class="toc-layout with-toc" data-testid="toc-layout">
-    <aside class="toc-left-sidebar" id="toc-left-sidebar" data-testid="toc-left-sidebar">
+  <div class="page" data-testid="page-toc-layout">
+    <aside class="toc-left" id="toc-left-sidebar" data-testid="toc-left-sidebar">
       {{ partial "toc-main.html" . }}
     </aside>
 
@@ -16,7 +16,7 @@
         {{ partial "header.html" . }}
 
         <div class="main-content-section" data-testid="post-content-section">
-        <main class="main-wrapper" id="main-content" data-testid="post-main">
+        <main id="main-content" data-testid="post-main">
           <article class="post" id="article" data-testid="post-article">
           {{ $showTitle := ne (index .Params "show-title") false }}
           <header class="post-header" data-testid="post-header">
@@ -43,6 +43,18 @@
             </div>
             {{ end }}
           </header>
+
+          <div class="toc-mobile" id="toc-mobile" data-testid="toc-mobile">
+            <button class="toc-mobile-toggle" id="toc-mobile-toggle" aria-expanded="false" data-testid="toc-mobile-toggle">
+              <span data-testid="toc-mobile-label">{{ .Param "tocTitle" | default "Contents" }}</span>
+              <span class="icon" data-testid="toc-mobile-icon">▾</span>
+            </button>
+            <div class="toc-mobile-content" id="toc-mobile-content" hidden data-testid="toc-mobile-content">
+              <nav class="toc-nav toc-main" data-testid="toc-mobile-nav">
+                {{ .TableOfContents }}
+              </nav>
+            </div>
+          </div>
 
           <div class="post-content" data-testid="post-content">
             {{ .Site.Params.postHeaderContent | safeHTML }}
@@ -82,7 +94,7 @@
       </div>
     </div>
 
-    <aside class="toc-right-sidebar" id="toc-right-sidebar" data-testid="toc-right-sidebar">
+    <aside class="toc-right" id="toc-right-sidebar" data-testid="toc-right-sidebar">
       {{ partial "toc-sub.html" . }}
     </aside>
   </div>

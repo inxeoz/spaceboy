@@ -1,7 +1,7 @@
 {{ if .TableOfContents }}
-<div class="toc-container" data-testid="toc-container">
-  <div class="toc-header" data-testid="toc-header">Contents</div>
-  <nav class="toc-nav toc-main" id="toc-nav" data-testid="toc-nav">
+<div class="toc-card" data-testid="toc-card">
+  <div class="toc-header" data-testid="toc-header">{{ .Param "tocTitle" | default "Contents" }}</div>
+<nav class="toc-nav toc-main" id="toc-nav" data-testid="toc-nav">
     {{ .TableOfContents }}
   </nav>
 </div>
