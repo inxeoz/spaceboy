@@ -3,14 +3,12 @@
   {{ $pages = (where .Data.Pages "Type" "in" site.Params.mainSections) }}
 {{ end }}
 {{ with $pages.GroupByDate "2006" }}
-{{ $cardIndex := 0 }}
 <div class="posts-grid" data-testid="posts-grid">
   {{ range . }}
   <div class="year-section" data-testid="year-section-{{ .Key }}">
     <h2 class="post-year" data-testid="post-year-{{ .Key }}">{{ .Key }}</h2>
     <div class="posts-container" data-testid="posts-container-{{ .Key }}">
       {{ range .Pages }}
-      {{ $cardIndex = add $cardIndex 1 }}
       {{ $catThumb := "" }}{{ $listThumb := "" }}
       {{ if or (.Param "showThumbnailInCatalog") (.Param "showThumbnailInList") }}
         {{ $imgMatch := findRE `!\[.*?\]\(.*?\)` .RawContent 1 }}
@@ -22,7 +20,7 @@
           {{ if .Param "showThumbnailInList" }}{{ $listThumb = $u }}{{ end }}
         {{ end }}
       {{ end }}
-      <article class="post-card color-{{ mod $cardIndex 6 }}{{ if $catThumb }} has-thumbnail{{ end }}"{{ if $catThumb }} style="background-image:url('{{ $catThumb }}')"{{ end }} data-testid="post-card">
+      <article class="post-card{{ if $catThumb }} has-thumbnail{{ end }}"{{ if $catThumb }} style="background-image:url('{{ $catThumb }}')"{{ end }} data-testid="post-card">
         {{ if $listThumb }}<div class="post-list-thumb"><img src="{{ $listThumb }}" alt="" loading="lazy"></div>{{ end }}
         <div class="post-card-content" data-testid="post-card-content">
           {{ $excerpt := .Summary | plainify }}

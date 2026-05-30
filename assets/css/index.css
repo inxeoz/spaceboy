@@ -48,7 +48,7 @@
     --code-bg: #4c5c68;
     --surface-color: #4c5c68;
     --blockquote-border: #4dd0e1;
-    --card-bg: #4c5c68;
+    --card-bg: #33415c;
     --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
     --nav-group-bg: #1a56db;
     --nav-group-text: #dcdcdd;
@@ -1204,6 +1204,14 @@ pre {
     transform: translateY(-2px);
 }
 
+[data-theme="dark"] .post-card {
+    border-color: rgba(151, 157, 172, 0.2);
+    box-shadow: none;
+}
+[data-theme="dark"] .post-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
 /* List Layout */
 .list-layout .posts-container {
     display: block;
@@ -1324,57 +1332,15 @@ pre {
     text-decoration: underline;
 }
 
-/* Card color tints — 6 clearly distinct groups (decorative, not informational) */
-/* Light theme */
-.post-card.color-1 {
-    --card-bg: #ffffff;
-    --card-text: #1e293b;
-}
-.post-card.color-2 {
-    --card-bg: #eef4fd;
-    --card-text: #1e293b;
-}
-.post-card.color-3 {
-    --card-bg: #fdf7ee;
-    --card-text: #1e293b;
-}
-.post-card.color-4 {
-    --card-bg: #eefaf3;
-    --card-text: #1e293b;
-}
-.post-card.color-5 {
-    --card-bg: #f5eefa;
-    --card-text: #1e293b;
-}
-.post-card.color-0 {
-    --card-bg: #f8f8f8;
+/* Neutral card colors */
+.post-card {
+    --card-bg: #f3f4f6;
     --card-text: #1e293b;
 }
 
-/* Dark theme */
-[data-theme="dark"] .post-card.color-1 {
-    --card-bg: #1e2a3a;
-    --card-text: #f0f4f8;
-}
-[data-theme="dark"] .post-card.color-2 {
-    --card-bg: #1a2030;
-    --card-text: #f0f4f8;
-}
-[data-theme="dark"] .post-card.color-3 {
-    --card-bg: #2a2218;
-    --card-text: #f0f4f8;
-}
-[data-theme="dark"] .post-card.color-4 {
-    --card-bg: #182a20;
-    --card-text: #f0f4f8;
-}
-[data-theme="dark"] .post-card.color-5 {
-    --card-bg: #221828;
-    --card-text: #f0f4f8;
-}
-[data-theme="dark"] .post-card.color-0 {
-    --card-bg: #1f2937;
-    --card-text: #f0f4f8;
+[data-theme="dark"] .post-card {
+    --card-bg: #1e293b;
+    --card-text: #e2e8f0;
 }
 
 .post-card .post-card-content {
