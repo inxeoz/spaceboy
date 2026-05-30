@@ -120,8 +120,6 @@
     updateLayoutIcons();
   };
 
-  updateLayoutIcons();
-
   var savedTheme = safeGet(themeKey);
   if (savedTheme) {
     root.setAttribute('data-theme', savedTheme);
@@ -131,6 +129,14 @@
     root.setAttribute('data-theme', 'light');
   }
   updateThemeIcons();
+
+  var savedLayout = safeGet('layout');
+  if (savedLayout === 'list') {
+    root.classList.add('list-layout');
+  } else if (savedLayout === null) {
+    root.classList.add('list-layout');
+  }
+  updateLayoutIcons();
 
   document.addEventListener('DOMContentLoaded', function() {
     window.initDualTableOfContents();
