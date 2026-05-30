@@ -50,8 +50,8 @@
     --blockquote-border: #4dd0e1;
     --card-bg: #33415c;
     --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-    --nav-group-bg: #1a56db;
-    --nav-group-text: #dcdcdd;
+    --nav-group-bg: #8e9aaf;
+    --nav-group-text: #1e293b;
 
     --toc-bg: rgba(0, 0, 0, 0.15);
     --toc-active-bg: rgba(77, 208, 225, 0.08);
@@ -258,7 +258,6 @@ nav {
 .layout-toggle {
     background: transparent;
     border: none;
-    color: var(--link-color);
     cursor: pointer;
     padding: 0.25rem 0.5rem;
     display: flex;
@@ -1334,13 +1333,13 @@ pre {
 
 /* Neutral card colors */
 .post-card {
-    --card-bg: #f3f4f6;
-    --card-text: #1e293b;
+    --card-bg: #eef1ef;
+    --card-text: #1c2321;
 }
 
 [data-theme="dark"] .post-card {
-    --card-bg: #1e293b;
-    --card-text: #e2e8f0;
+    --card-bg: #555c69;
+    --card-text: #eef1ef;
 }
 
 .post-card .post-card-content {
@@ -1360,6 +1359,13 @@ pre {
 .post-card .post-category {
     background: rgba(0, 0, 0, 0.1);
     color: var(--card-text, var(--text-color));
+}
+
+/* List-layout (hamburger icon active) — use muted slate text in dark theme */
+[data-theme="dark"].list-layout .post-card-content,
+[data-theme="dark"].list-layout .post-card-content .post-title-link,
+[data-theme="dark"].list-layout .post-card-content .post-title-link:hover {
+    color: #eef1ef;
 }
 
 /* ── Thumbnail cards (showThumbnailInCatalog) ── */
@@ -1431,8 +1437,8 @@ pre {
     line-height: 1.35;
 }
 
-.post-title-link:hover {
-    color: var(--link-color);
+.post-card .post-title-link:hover {
+    color: var(--card-text);
     text-decoration: underline;
 }
 
