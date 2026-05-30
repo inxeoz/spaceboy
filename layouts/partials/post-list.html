@@ -11,7 +11,19 @@
     <div class="posts-container" data-testid="posts-container-{{ .Key }}">
       {{ range .Pages }}
       {{ $cardIndex = add $cardIndex 1 }}
-      <article class="post-card color-{{ mod $cardIndex 6 }}" data-testid="post-card">
+      {{ $catThumb := "" }}{{ $listThumb := "" }}
+      {{ if or (.Param "showThumbnailInCatalog") (.Param "showThumbnailInList") }}
+        {{ $imgMatch := findRE `!\[.*?\]\(.*?\)` .RawContent 1 }}
+        {{ if $imgMatch }}
+          {{ $url := index $imgMatch 0 }}
+          {{ $url = replaceRE `^!\[.*?\]\(` "" $url }}
+          {{ $u := replaceRE `\)\s*$` "" $url }}
+          {{ if .Param "showThumbnailInCatalog" }}{{ $catThumb = $u }}{{ end }}
+          {{ if .Param "showThumbnailInList" }}{{ $listThumb = $u }}{{ end }}
+        {{ end }}
+      {{ end }}
+      <article class="post-card color-{{ mod $cardIndex 6 }}{{ if $catThumb }} has-thumbnail{{ end }}"{{ if $catThumb }} style="background-image:url('{{ $catThumb }}')"{{ end }} data-testid="post-card">
+        {{ if $listThumb }}<div class="post-list-thumb"><img src="{{ $listThumb }}" alt="" loading="lazy"></div>{{ end }}
         <div class="post-card-content" data-testid="post-card-content">
           {{ $excerpt := .Summary | plainify }}
           {{ if not $excerpt }}

@@ -90,13 +90,62 @@
   {{ partial "seo" . }}
 
 
+  {{- $viewMode := .Param "viewMode" -}}
+  {{- if and $viewMode (ne $viewMode "custom") }}
+  <style>:root{
+  {{- if eq $viewMode "goofy" }}
+    --font-body:Georgia,"Charter","Palatino Linotype","Book Antiqua",serif;
+    --font-size-base:clamp(1.2rem,3.5vw,1.5rem);
+    --line-height-body:2.1;
+    --content-max-width:clamp(320px,95vw,880px);
+    --letter-spacing-normal:0.015em;
+  {{- else if eq $viewMode "research" }}
+    --font-body:Georgia,"Charter","Palatino Linotype","Book Antiqua",serif;
+    --font-size-base:clamp(0.85rem,2.5vw,1.05rem);
+    --line-height-body:1.9;
+    --content-max-width:clamp(320px,95vw,1000px);
+    --letter-spacing-normal:0.01em;
+  {{- else if eq $viewMode "news" }}
+    --font-body:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --font-size-base:clamp(0.85rem,2.5vw,1.1rem);
+    --line-height-body:1.7;
+    --content-max-width:clamp(320px,95vw,1000px);
+    --letter-spacing-normal:-0.01em;
+  {{- else if eq $viewMode "docs" }}
+    --code-max-height:48rem;
+  {{- else if eq $viewMode "prose" }}
+    --font-body:Georgia,"Charter","Palatino Linotype","Book Antiqua",serif;
+  {{- else if eq $viewMode "list" }}
+    --font-body:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  {{- else if eq $viewMode "media" }}
+    --content-max-width:100%;
+  {{- else if eq $viewMode "poem" }}
+    --font-body:Georgia,"Charter","Palatino Linotype","Book Antiqua",serif;
+  {{- end }}
+  }
+  {{- if eq $viewMode "goofy" }}
+  .post-content{font-size:var(--font-size-base);line-height:var(--line-height-body);font-weight:400}
+  .post-meta,.post-tags,.related-content,.related-posts,.post-comments,.post-ads,.site-footer{display:none!important}
+  .site-header-container{position:static!important}
+  main{padding:2rem 0}
+  .post-title{font-size:clamp(2rem,6vw,3rem)!important;margin-bottom:0.5rem}
+  .post-header{margin-bottom:2.5rem}
+  @media(max-width:640px){.post-title{font-size:1.6rem!important}}
+  {{- end }}
+  {{- if eq $viewMode "poem" }}
+  .post-content{text-align:center}
+  {{- end }}
+  </style>
+  {{- end }}
+
+  {{- /* ── Per-param overrides (beat viewMode) ── */ -}}
   {{- with .Param "hrStyle" }}
   <style>:root{--hr-width:{{ if eq . "full" }}100%{{ else if eq . "small" }}4em{{ else }}{{ . }}{{ end }};}</style>
   {{- end }}
 
-  {{- $font := .Param "font" | default "mono" }}
-  {{- if ne $font "mono" }}
-  <style>:root{--font-body:{{ if eq $font "serif" }}Georgia,"Charter","Palatino Linotype","Book Antiqua",serif{{ else if eq $font "sans" }}system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif{{ else }}{{ $font | safeCSS }}{{ end }};{{ if eq $font "serif" }}--letter-spacing-normal:0.01em;--line-height-body:1.9;{{ else if eq $font "sans" }}--letter-spacing-normal:-0.01em;{{ end }}</style>
+  {{- $font := .Params.font }}
+  {{- if $font }}
+  <style>:root{--font-body:{{ if eq $font "serif" }}Georgia,"Charter","Palatino Linotype","Book Antiqua",serif{{ else if eq $font "sans" }}system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif{{ else }}"JetBrains Mono","Fira Code",monospace{{ end }};{{ if eq $font "serif" }}--letter-spacing-normal:0.01em;--line-height-body:1.9;{{ else if eq $font "sans" }}--letter-spacing-normal:-0.01em;{{ end }}</style>
   {{- end }}
 
   {{- with .Param "contentWidth" }}
