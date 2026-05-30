@@ -8,6 +8,19 @@
     <div class="main-content-section" data-testid="list-content-section">
     <main id="main-content" data-testid="list-main">
       <h1 class="taxonomy-title" data-testid="taxonomy-title">{{ if .Data.Term }}{{ .Data.Term }}{{ else }}{{ .Title }}{{ end }}</h1>
+      {{ if and (not .Data.Term) .Data.Plural }}
+      {{ $terms := index .Site.Taxonomies .Data.Plural }}
+      {{ if $terms }}
+      <div class="tag-cloud" data-testid="tag-cloud">
+        {{ range $name, $pages := $terms }}
+        <a class="tag-cloud-item"
+           href="{{ (printf "%s/%s/" $.Data.Plural ($name | urlize)) | relLangURL }}"
+           style="--tag-count:{{ len $pages }}"
+           data-testid="tag-cloud-item">{{ $name }} <span class="tag-cloud-count">{{ len $pages }}</span></a>
+        {{ end }}
+      </div>
+      {{ end }}
+      {{ end }}
       {{ $pages := .Pages }}
       {{ if and (not $pages) .Data }}
         {{ $pages = (where .Data.Pages "Type" "in" site.Params.mainSections) }}

@@ -12,6 +12,17 @@
         <h1 class="error-title" data-testid="error-title">404</h1>
         <p class="error-message" data-testid="error-message">Page not found</p>
         <p><a href="{{ .Site.LanguagePrefix }}/" class="post-title-link" data-testid="error-home-link">Go Home</a></p>
+        {{ $recentPosts := where site.RegularPages "Type" "in" site.Params.mainSections | first 5 }}
+        {{ with $recentPosts }}
+        <div class="error-recent-posts" data-testid="error-recent-posts">
+          <p class="error-recent-title" data-testid="error-recent-title">Recent posts</p>
+          <ul data-testid="error-recent-list">
+            {{ range . }}
+            <li><a href="{{ .RelPermalink }}" data-testid="error-recent-link">{{ .Title }}</a></li>
+            {{ end }}
+          </ul>
+        </div>
+        {{ end }}
       </div>
     </main>
 

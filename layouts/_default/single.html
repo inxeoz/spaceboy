@@ -82,6 +82,10 @@
               <span data-testid="post-meta-sep">·</span>
               <span data-testid="reading-time">{{ .ReadingTime }} min read</span>
               {{ end }}
+              {{ if .WordCount }}
+              <span data-testid="post-meta-sep">·</span>
+              <span data-testid="word-count">{{ .WordCount }} words</span>
+              {{ end }}
             </div>
             {{ end }}
           </header>
@@ -114,6 +118,7 @@
           {{ end }}
 
           {{ if and (in .Site.Params.mainSections .Type) (not $hideFooter) }}
+            {{ partial "share.html" . }}
             {{ .Site.Params.postFooterContent | safeHTML }}
             {{ partial "related.html" . }}
             {{ if .Site.Params.postAds }}
@@ -122,6 +127,7 @@
             {{ if .Site.Params.disqus }}
             <div class="post-comments" data-testid="post-comments">{{ partial "disqus.html" . }}</div>
             {{ end }}
+            {{ partial "post-nav.html" . }}
           {{ end }}
         </article>
         </main>
@@ -170,6 +176,10 @@
           <span data-testid="post-meta-sep">·</span>
           <span data-testid="reading-time">{{ .ReadingTime }} min read</span>
           {{ end }}
+          {{ if .WordCount }}
+          <span data-testid="post-meta-sep">·</span>
+          <span data-testid="word-count">{{ .WordCount }} words</span>
+          {{ end }}
         </div>
         {{ end }}
       </header>
@@ -190,6 +200,7 @@
       {{ end }}
 
       {{ if and (in .Site.Params.mainSections .Type) (not $hideFooter) }}
+        {{ partial "share.html" . }}
         {{ .Site.Params.postFooterContent | safeHTML }}
         {{ partial "related.html" . }}
         {{ if .Site.Params.postAds }}
@@ -198,6 +209,7 @@
         {{ if .Site.Params.disqus }}
         <div class="post-comments" data-testid="post-comments">{{ partial "disqus.html" . }}</div>
         {{ end }}
+        {{ partial "post-nav.html" . }}
       {{ end }}
     </article>
     </main>

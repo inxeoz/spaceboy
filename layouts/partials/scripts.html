@@ -5,21 +5,24 @@ window.__SPACEBOY__ = {
     (dict "left" "$" "right" "$" "display" false)
     (dict "left" "\\(" "right" "\\)" "display" false)
     (dict "left" "\\[" "right" "\\]" "display" true)
-  ) | jsonify }},
+  ) | jsonify | safeJS }},
   enableCopyCode: {{ ne .Site.Params.enableCopyCode false }},
   needsFancybox: {{ or (eq .Type "gallery") (and .IsPage (in .Content "data-fancybox")) }},
   needsMermaid: {{ and .IsPage (or (.HasShortcode "mermaid") (in .RawContent "```mermaid")) }},
   needsKaTeX: {{ and .IsPage (or (.HasShortcode "katex") (in .RawContent "$$") (in .RawContent "$")) }},
   legacyMode: {{ .Site.Params.legacyMode | default false }},
-  fancyboxJSLocal: {{ default "" .Site.Params.fancyboxJSLocal | jsonify }},
-  fancyboxJSCDN: {{ default "https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1/dist/fancybox/fancybox.umd.js" .Site.Params.fancyboxJSCDN | jsonify }},
-  mermaidJSLocal: {{ default "" .Site.Params.mermaidJSLocal | jsonify }},
-  mermaidJSCDN: {{ default "https://cdn.jsdelivr.net/npm/mermaid@11.14.0/dist/mermaid.min.js" .Site.Params.mermaidJSCDN | jsonify }},
-  katexJSLocal: {{ default "" .Site.Params.katexJSLocal | jsonify }},
-  katexJSCDN: {{ default "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" .Site.Params.katexJSCDN | jsonify }},
-  katexAutoRenderJSLocal: {{ default "" .Site.Params.katexAutoRenderJSLocal | jsonify }},
-  katexAutoRenderJSCDN: {{ default "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" .Site.Params.katexAutoRenderJSCDN | jsonify }},
+  fancyboxJSLocal: {{ default "" .Site.Params.fancyboxJSLocal | jsonify | safeJS }},
+  fancyboxJSCDN: {{ default "https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1/dist/fancybox/fancybox.umd.js" .Site.Params.fancyboxJSCDN | jsonify | safeJS }},
+  mermaidJSLocal: {{ default "" .Site.Params.mermaidJSLocal | jsonify | safeJS }},
+  mermaidJSCDN: {{ default "https://cdn.jsdelivr.net/npm/mermaid@11.14.0/dist/mermaid.min.js" .Site.Params.mermaidJSCDN | jsonify | safeJS }},
+  katexJSLocal: {{ default "" .Site.Params.katexJSLocal | jsonify | safeJS }},
+  katexJSCDN: {{ default "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" .Site.Params.katexJSCDN | jsonify | safeJS }},
+  katexAutoRenderJSLocal: {{ default "" .Site.Params.katexAutoRenderJSLocal | jsonify | safeJS }},
+  katexAutoRenderJSCDN: {{ default "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" .Site.Params.katexAutoRenderJSCDN | jsonify | safeJS }},
   lazyImage: {{ and .Site.Params.lazyImage (not .IsHome) }},
+  enableSearch: {{ ne .Site.Params.enableSearch false }},
+  fuseJSLocal: {{ default "" .Site.Params.fuseJSLocal | jsonify | safeJS }},
+  fuseJSCDN: {{ default "https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js" .Site.Params.fuseJSCDN | jsonify | safeJS }},
   staticPrefix: "{{ default "" .Site.Params.staticPrefix }}"
 };
 </script>

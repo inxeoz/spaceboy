@@ -13,11 +13,14 @@
     var headings = [];
     article.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(function(el) {
       if (el.id) {
+        var clone = el.cloneNode(true);
+        var anch = clone.querySelector('.heading-anchor');
+        if (anch) anch.parentNode.removeChild(anch);
         headings.push({
           id: el.id,
           el: el,
           level: parseInt(el.tagName[1]),
-          text: el.textContent
+          text: clone.textContent.trim()
         });
       }
     });

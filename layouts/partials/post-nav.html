@@ -1,0 +1,16 @@
+{{ if or .PrevInSection .NextInSection }}
+<nav class="post-nav" aria-label="Post navigation" data-testid="post-nav">
+  {{ with .NextInSection }}
+  <a class="post-nav-link post-nav-older" href="{{ .RelPermalink }}" data-testid="post-nav-older">
+    <span class="post-nav-label">Older</span>
+    <span class="post-nav-title">{{ .Title }}</span>
+  </a>
+  {{ end }}
+  {{ with .PrevInSection }}
+  <a class="post-nav-link post-nav-newer" href="{{ .RelPermalink }}" data-testid="post-nav-newer">
+    <span class="post-nav-label">Newer</span>
+    <span class="post-nav-title">{{ .Title }}</span>
+  </a>
+  {{ end }}
+</nav>
+{{ end }}
