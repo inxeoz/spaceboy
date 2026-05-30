@@ -46,9 +46,9 @@
     --border-color: #4c5c68;
     --secondary-text: #c5c3c6;
     --code-bg: #4c5c68;
-    --surface-color: #4c5c68;
+    --surface-color: #555c69;
     --blockquote-border: #4dd0e1;
-    --card-bg: #33415c;
+    --card-bg: #363a40;
     --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
     --nav-group-bg: #8e9aaf;
     --nav-group-text: #1e293b;
@@ -1204,8 +1204,12 @@ pre {
 }
 
 [data-theme="dark"] .post-card {
-    border-color: rgba(151, 157, 172, 0.2);
+    border-color: var(--border-color);
     box-shadow: none;
+}
+
+[data-theme="dark"] .post-year {
+    opacity: 0.85;
 }
 [data-theme="dark"] .post-card:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
@@ -1338,8 +1342,8 @@ pre {
 }
 
 [data-theme="dark"] .post-card {
-    --card-bg: #555c69;
-    --card-text: #eef1ef;
+    --card-bg: #363a40;
+    --card-text: var(--text-color);
 }
 
 .post-card .post-card-content {
@@ -1361,11 +1365,13 @@ pre {
     color: var(--card-text, var(--text-color));
 }
 
-/* List-layout (hamburger icon active) — use muted slate text in dark theme */
+/* List-layout (hamburger icon active) — card text in dark theme */
 [data-theme="dark"].list-layout .post-card-content,
 [data-theme="dark"].list-layout .post-card-content .post-title-link,
-[data-theme="dark"].list-layout .post-card-content .post-title-link:hover {
-    color: #eef1ef;
+[data-theme="dark"].list-layout .post-card-content .post-title-link:hover,
+[data-theme="dark"].list-layout .post-card-content .post-excerpt,
+[data-theme="dark"].list-layout .post-card-content .post-date {
+    color: var(--text-color);
 }
 
 /* ── Thumbnail cards (showThumbnailInCatalog) ── */
