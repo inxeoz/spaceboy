@@ -55,13 +55,14 @@
       if (block) {
         var code = block.querySelector('code, pre');
         if (code) {
-          text = code.textContent || '';
-          if (!text && code.classList.contains('mermaid')) {
-            text = code.getAttribute('data-raw') || '';
+          if (code.classList.contains('mermaid')) {
+            text = code.getAttribute('data-raw') || code.textContent || '';
+          } else {
+            text = code.textContent || '';
           }
         } else {
-          var mermaid = block.querySelector('.mermaid');
-          if (mermaid) text = mermaid.getAttribute('data-raw') || mermaid.textContent || '';
+          var mermaidEl = block.querySelector('.mermaid');
+          if (mermaidEl) text = mermaidEl.getAttribute('data-raw') || mermaidEl.textContent || '';
         }
       }
 
@@ -96,8 +97,9 @@
   }
 
   if (S.lazyImage && !S.legacyMode) {
-    if (typeof LazyLoad !== 'undefined') {
-      new LazyLoad({ container: document.getElementById('article') });
+    var articleEl = document.getElementById('article');
+    if (typeof LazyLoad !== 'undefined' && articleEl) {
+      new LazyLoad({ container: articleEl });
     }
   }
 

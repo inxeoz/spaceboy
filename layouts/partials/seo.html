@@ -1,6 +1,6 @@
-{{ $description := .Site.Params.description | plainify }}
+{{ $description := .Site.Params.description | plainify | truncate 300 }}
 {{ if not .IsHome }}
-  {{ $description = (default .Summary .Description | plainify) }}
+  {{ $description = (default .Summary .Description | plainify | truncate 300) }}
 {{ end }}
 
 {{ $schemaType := "WebPage" }}
@@ -23,7 +23,8 @@
 }}
 
 {{ with .Site.Params.author.name }}
-  {{ $jsonLd = merge $jsonLd (dict "author" . "publisher" . "creator" . "accountablePerson" . "copyrightHolder" .) }}
+  {{ $person := dict "@type" "Person" "name" . }}
+  {{ $jsonLd = merge $jsonLd (dict "author" $person "publisher" $person "creator" $person "copyrightHolder" $person) }}
 {{ end }}
 
 {{ if .IsHome }}
@@ -41,6 +42,11 @@
   {{ with .Params.tags }}
     {{ $jsonLd = merge $jsonLd (dict "keywords" .) }}
   {{ end }}
+  {{ $ldImage := "" }}
+  {{ with .Params.coverImage }}{{ $ldImage = . | absURL }}{{ end }}
+  {{ if not $ldImage }}{{ with .Params.album }}{{ $ldImage = . | absURL }}{{ end }}{{ end }}
+  {{ if not $ldImage }}{{ with .Site.Params.ogImage }}{{ $ldImage = . | absURL }}{{ end }}{{ end }}
+  {{ with $ldImage }}{{ $jsonLd = merge $jsonLd (dict "image" .) }}{{ end }}
 {{ end }}
 
 <script type="application/ld+json">{{ $jsonLd | jsonify | safeJS }}</script>

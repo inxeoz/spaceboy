@@ -63,6 +63,7 @@
 
   var openExport = function(svgContent) {
     var win = window.open('', '_blank');
+    if (!win) return;
     var doc = win.document;
     doc.write('<!doctype html><meta charset=utf-8><title>Export</title><style>' +
       '*{margin:0}body{background:#111;display:flex;flex-direction:column;min-height:100vh}' +
