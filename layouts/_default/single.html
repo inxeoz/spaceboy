@@ -141,13 +141,17 @@
             {{ end }}
   {{ if $showPostNav }}{{ partial "post-nav.html" . }}{{ end }}
   {{ end }}
+          </article>
+        </main>
+        {{ partial "footer.html" . }}
       </div>
     </div>
-
-    <aside class="toc-right" id="toc-right-sidebar" data-testid="toc-right-sidebar">
-      {{ partial "toc-sub.html" . }}
-    </aside>
   </div>
+
+  <aside class="toc-right" id="toc-right-sidebar" data-testid="toc-right-sidebar">
+    {{ partial "toc-sub.html" . }}
+  </aside>
+</div>
   {{ else }}
   <div class="container" data-testid="post-container">
 

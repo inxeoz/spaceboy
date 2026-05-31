@@ -74,10 +74,14 @@
   {{ if and $enableCDNFallback (ne $fancyboxCSSLocal $fancyboxCSSCDN) }}
     {{ $fancyboxCSSFinal = $fancyboxCSSCDN }}
   {{ end }}
-  <link rel="stylesheet" href="{{ $fancyboxCSSFinal }}" />
+  <link rel="stylesheet" href="{{ $fancyboxCSSFinal }}" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="{{ $fancyboxCSSFinal }}"></noscript>
   {{ end }}
 
   {{ $needsKaTeX := and .IsPage (or (.HasShortcode "katex") (in .RawContent "$$") (in .RawContent "$")) }}
+  {{- if and $enableCDNFallback (or $needsFancybox $needsKaTeX) }}
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  {{- end }}
   {{ $katexCSSLocal := default (default (printf "%s%s" .Site.Params.staticPrefix ("/vendor/katex/katex.min.css" | relURL)) .Site.Params.katexCSS) .Site.Params.katexCSSLocal }}
   {{ $katexCSSCDN := default "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" .Site.Params.katexCSSCDN }}
   {{ if $needsKaTeX }}
@@ -85,7 +89,8 @@
   {{ if and $enableCDNFallback (ne $katexCSSLocal $katexCSSCDN) }}
     {{ $katexCSSFinal = $katexCSSCDN }}
   {{ end }}
-  <link rel="stylesheet" href="{{ $katexCSSFinal }}" />
+  <link rel="stylesheet" href="{{ $katexCSSFinal }}" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="{{ $katexCSSFinal }}"></noscript>
   {{ end }}
 
   {{- $metaDesc := .Site.Params.description | plainify | truncate 155 -}}
