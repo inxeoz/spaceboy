@@ -8,7 +8,7 @@
   {{ if eq $viewMode "goofy" }}
     {{ $d = dict "dropCap" true "justify" true "noMeta" true "hideFooter" true "showReadingTime" false "showLastModified" false }}
   {{ else if eq $viewMode "docs" }}
-    {{ $d = dict "showToc" true "numberedHeadings" true "showReadingTime" true "progressBar" true }}
+    {{ $d = dict "numberedHeadings" true "showReadingTime" true "progressBar" true }}
   {{ else if eq $viewMode "research" }}
     {{ $d = dict "showToc" true "numberedHeadings" true "justify" true "showReadingTime" true "progressBar" true }}
   {{ else if eq $viewMode "news" }}
@@ -218,6 +218,7 @@
   </div>
   {{ end }}
 
+  {{ .Store.Set "showToc" $showTOC }}
   {{ partial "scripts.html" . }}
   {{ if .Site.Params.extraBody }}{{ .Site.Params.extraBody | safeHTML }}{{ end }}
 

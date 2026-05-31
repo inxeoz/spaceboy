@@ -29,8 +29,18 @@ window.__SPACEBOY__ = {
 
 {{ $lazyload := resources.Get "js/lazyload.js" }}
 {{ $features := resources.Get "js/features.js" }}
-{{ $toc := resources.Get "js/toc.js" }}
 {{ $theme := resources.Get "js/theme.js" }}
-{{ $export := resources.Get "js/export.js" }}
-{{ $js := slice $lazyload $features $toc $theme $export | resources.Concat "js/theme.min.js" | minify | fingerprint }}
-<script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>
+{{ $core := slice $lazyload $features $theme | resources.Concat "js/theme-core.js" | minify | fingerprint }}
+<script src="{{ $core.RelPermalink }}" integrity="{{ $core.Data.Integrity }}" defer></script>
+
+{{- /* toc.js only on pages with ToC enabled */ -}}
+{{- if (.Store.Get "showToc") | default false }}
+{{ $toc := resources.Get "js/toc.js" | minify | fingerprint }}
+<script src="{{ $toc.RelPermalink }}" integrity="{{ $toc.Data.Integrity }}" defer></script>
+{{- end }}
+
+{{- /* export.js only on pages with code blocks */ -}}
+{{- if in .Content "chroma" }}
+{{ $export := resources.Get "js/export.js" | minify | fingerprint }}
+<script src="{{ $export.RelPermalink }}" integrity="{{ $export.Data.Integrity }}" defer></script>
+{{- end }}

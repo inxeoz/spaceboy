@@ -22,8 +22,19 @@
   {{- end -}}
   <link rel="alternate" type="application/rss+xml" href="{{ .Site.Params.staticPrefix }}{{ "index.xml" | relURL }}" title="{{ .Site.Title }}" />
 
-{{ $cssFiles := slice "css/index.css" "css/syntax-light.css" "css/syntax-dark.css" }}
+{{ $cssFiles := slice "css/index.css" }}
 
+{{- /* Only preload JetBrains Mono when the effective font is monospace */ -}}
+{{- $serifModes := slice "goofy" "research" "prose" "poem" -}}
+{{- $sansModes := slice "news" "list" -}}
+{{- $fontParam := .Param "font" -}}
+{{- $viewMode := .Param "viewMode" -}}
+{{- $useMono := true -}}
+{{- if $fontParam -}}
+  {{- if or (eq $fontParam "serif") (eq $fontParam "sans") -}}{{- $useMono = false -}}{{- end -}}
+{{- else if or (in $serifModes $viewMode) (in $sansModes $viewMode) -}}{{- $useMono = false -}}{{- end -}}
+
+{{ if $useMono }}
 {{ $fontNormal := resources.Get "fonts/JetBrainsMono-normal.woff2" | resources.Copy "fonts/JetBrainsMono-normal.woff2" }}
 {{ $fontItalic := resources.Get "fonts/JetBrainsMono-italic.woff2" | resources.Copy "fonts/JetBrainsMono-italic.woff2" }}
 <link rel="preload" href="{{ $fontNormal.RelPermalink }}" as="font" type="font/woff2" crossorigin>
@@ -32,6 +43,8 @@
 @font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:300 700;font-display:swap;src:url("{{ $fontNormal.RelPermalink }}")format("woff2")}
 @font-face{font-family:"JetBrains Mono";font-style:italic;font-weight:300 700;font-display:swap;src:url("{{ $fontItalic.RelPermalink }}")format("woff2")}
 </style>
+{{ end }}
+
 {{ range .Site.Params.extraCSSFiles }}
   {{ $cssFiles = $cssFiles | append . }}
 {{ end }}
@@ -44,6 +57,13 @@
 {{ with $css | resources.Concat "css/bundle.css" | minify }}
   <style>{{ .Content | safeCSS }}</style>
 {{ end }}
+
+{{- /* Syntax highlighting — loaded non-blocking */ -}}
+{{- $synLight := resources.Get "css/syntax-light.css" -}}
+{{- $synDark := resources.Get "css/syntax-dark.css" -}}
+{{- $syntax := slice $synLight $synDark | resources.Concat "css/syntax.css" | minify -}}
+<link rel="stylesheet" href="{{ $syntax.RelPermalink }}" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="{{ $syntax.RelPermalink }}"></noscript>
 
   {{ $needsFancybox := or (eq .Type "gallery") (and .IsPage (in .Content "data-fancybox")) }}
   {{ $fancyboxCSSLocal := default (default (printf "%s%s" .Site.Params.staticPrefix ("/vendor/fancybox/fancybox.css" | relURL)) .Site.Params.fancyboxCSS) .Site.Params.fancyboxCSSLocal }}
@@ -155,6 +175,10 @@
   {{- end }}
   </style>
   {{- end }}
+
+  {{- /* ── Color scheme (only affects colors, not structure) ── */ -}}
+  {{- $cs := .Param "colorScheme" -}}
+  {{- if $cs }}{{ partial "color-scheme" (dict "cs" $cs) }}{{ end -}}
 
   {{- /* ── Per-param overrides (beat viewMode) ── */ -}}
   {{- with .Param "hrStyle" }}

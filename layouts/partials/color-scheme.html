@@ -1,0 +1,67 @@
+{{- $cs := .cs -}}
+{{- if eq $cs "90s" }}
+<style>
+:root{--bg-color:#e8e8e8;--surface-color:#d8d8d8;--code-bg:#d8d8d8;--border-color:#d0d0d0;--link-color:#0860b8;--secondary-text:#5a5a5a;--blockquote-border:#0860b8;--text-color:#404040;--toc-bg:rgba(255,255,255,0.35);--toc-active-bg:rgba(8,96,184,0.08);--nav-group-bg:#0860b8;--nav-group-text:#e8e8e8}
+[data-theme="dark"]{--bg-color:#46494c;--surface-color:#555c69;--code-bg:#4c5c68;--border-color:#4c5c68;--link-color:#4dd0e1;--secondary-text:#c5c3c6;--text-color:#dcdcdd;--blockquote-border:#4dd0e1;--toc-bg:rgba(0,0,0,0.15);--toc-active-bg:rgba(77,208,225,0.08);--nav-group-bg:#8e9aaf;--nav-group-text:#1e293b}
+</style>
+{{- else if eq $cs "Modern" }}
+<style>
+:root{--bg-color:#ffffff;--surface-color:#f8f9fa;--code-bg:#f3f4f6;--border-color:#e5e7eb;--link-color:#2563eb;--secondary-text:#6b7280;--blockquote-border:#2563eb;--toc-bg:rgba(0,0,0,0.02);--toc-active-bg:rgba(37,99,235,0.06);--nav-group-bg:#2563eb;--nav-group-text:#ffffff}
+[data-theme="dark"]{--bg-color:#1a1b26;--surface-color:#24253a;--code-bg:#2d2e44;--border-color:#3b3d54;--link-color:#60a5fa;--secondary-text:#a0a2b6;--text-color:#c9d1d9;--blockquote-border:#60a5fa;--toc-bg:rgba(255,255,255,0.03);--toc-active-bg:rgba(96,165,250,0.1);--nav-group-bg:#3b3d54;--nav-group-text:#e2e4e5}
+</style>
+{{- else if eq $cs "Neon" }}
+<style>
+:root{--bg-color:#f5f5fc;--surface-color:#eaeaef;--code-bg:#e0dff0;--border-color:#d0cfe6;--link-color:#c900c9;--secondary-text:#6e6e89;--text-color:#15152a;--blockquote-border:#00cc66;--toc-bg:rgba(0,0,0,0.02);--toc-active-bg:rgba(201,0,201,0.06);--nav-group-bg:#c900c9;--nav-group-text:#ffffff}
+[data-theme="dark"]{--bg-color:#0b0b1a;--surface-color:#14142b;--code-bg:#101025;--border-color:#262645;--link-color:#ff33ff;--secondary-text:#7a7aa8;--text-color:#d0d0ea;--blockquote-border:#00ff77;--toc-bg:rgba(255,255,255,0.03);--toc-active-bg:rgba(255,51,255,0.1);--nav-group-bg:#ff33ff;--nav-group-text:#0b0b1a}
+</style>
+{{- else if eq $cs "Anime" }}
+<style>
+:root{--bg-color:#fdf6f0;--surface-color:#f5ece4;--code-bg:#eee3d8;--border-color:#e6d5c8;--link-color:#e84a7a;--secondary-text:#8a7068;--text-color:#3d2e2a;--blockquote-border:#f09a5e;--toc-bg:rgba(0,0,0,0.02);--toc-active-bg:rgba(232,74,122,0.06);--nav-group-bg:#e84a7a;--nav-group-text:#ffffff}
+[data-theme="dark"]{--bg-color:#16102a;--surface-color:#22183a;--code-bg:#1c1430;--border-color:#352a50;--link-color:#ff79c6;--secondary-text:#9488a8;--text-color:#ddd0e8;--blockquote-border:#f0c860;--toc-bg:rgba(255,255,255,0.03);--toc-active-bg:rgba(255,121,198,0.1);--nav-group-bg:#ff79c6;--nav-group-text:#16102a}
+</style>
+{{- else if eq $cs "Maharaja" }}
+<style>
+:root{--bg-color:#faf3e8;--surface-color:#f0e4d0;--code-bg:#e8d8c0;--border-color:#dcc8a8;--link-color:#c0392b;--secondary-text:#8a7060;--text-color:#3a2a1a;--blockquote-border:#d4a017;--toc-bg:rgba(0,0,0,0.02);--toc-active-bg:rgba(192,57,43,0.06);--nav-group-bg:#c0392b;--nav-group-text:#faf3e8}
+[data-theme="dark"]{--bg-color:#1a0a2e;--surface-color:#2a1540;--code-bg:#221035;--border-color:#3d2055;--link-color:#ffd700;--secondary-text:#a080c0;--text-color:#e8d8f0;--blockquote-border:#ff6b6b;--toc-bg:rgba(255,255,255,0.03);--toc-active-bg:rgba(255,215,0,0.1);--nav-group-bg:#ffd700;--nav-group-text:#1a0a2e}
+</style>
+{{- else if eq $cs "Nature" }}
+<style>
+:root{--bg-color:#f5f0e8;--surface-color:#ebe4d8;--code-bg:#e0d8c8;--border-color:#d0c8b8;--link-color:#2d7d46;--secondary-text:#7a7060;--text-color:#2a2a1a;--blockquote-border:#5b8a4c;--toc-bg:rgba(0,0,0,0.02);--toc-active-bg:rgba(45,125,70,0.06);--nav-group-bg:#2d7d46;--nav-group-text:#ffffff}
+[data-theme="dark"]{--bg-color:#0a1a0a;--surface-color:#152a15;--code-bg:#102010;--border-color:#203a20;--link-color:#6abf4b;--secondary-text:#809a70;--text-color:#d0e0c8;--blockquote-border:#8b6914;--toc-bg:rgba(255,255,255,0.03);--toc-active-bg:rgba(106,191,75,0.1);--nav-group-bg:#6abf4b;--nav-group-text:#0a1a0a}
+</style>
+{{- else if eq $cs "Galaxy" }}
+<style>
+:root{--bg-color:#f0edf5;--surface-color:#e4e0ee;--code-bg:#d8d4e6;--border-color:#c8c4d8;--link-color:#7c4dff;--secondary-text:#706a82;--text-color:#1a1830;--blockquote-border:#00bcd4;--toc-bg:rgba(0,0,0,0.02);--toc-active-bg:rgba(124,77,255,0.06);--nav-group-bg:#7c4dff;--nav-group-text:#ffffff}
+[data-theme="dark"]{--bg-color:#05001a;--surface-color:#0e0530;--code-bg:#0a0025;--border-color:#1c0e45;--link-color:#b388ff;--secondary-text:#706a95;--text-color:#d0cce8;--blockquote-border:#18ffff;--toc-bg:rgba(255,255,255,0.03);--toc-active-bg:rgba(179,136,255,0.1);--nav-group-bg:#7c4dff;--nav-group-text:#ffffff}
+</style>
+{{- else if eq $cs "Ocean" }}
+<style>
+:root{--bg-color:#f0f5f8;--surface-color:#e0eaf0;--code-bg:#d4e0e8;--border-color:#c0d0da;--link-color:#0077b6;--secondary-text:#5a7080;--text-color:#0a1a28;--blockquote-border:#00b4d8;--toc-bg:rgba(0,0,0,0.02);--toc-active-bg:rgba(0,119,182,0.06);--nav-group-bg:#0077b6;--nav-group-text:#ffffff}
+[data-theme="dark"]{--bg-color:#001020;--surface-color:#001c30;--code-bg:#001628;--border-color:#002840;--link-color:#00b4d8;--secondary-text:#507888;--text-color:#c8dce8;--blockquote-border:#ff7f50;--toc-bg:rgba(255,255,255,0.03);--toc-active-bg:rgba(0,180,216,0.1);--nav-group-bg:#00b4d8;--nav-group-text:#001020}
+</style>
+{{- else if eq $cs "BlackWhite" }}
+<style>
+:root{--bg-color:#ffffff;--surface-color:#f0f0f0;--code-bg:#e8e8e8;--border-color:#d0d0d0;--link-color:#000000;--secondary-text:#707070;--text-color:#000000;--blockquote-border:#909090;--toc-bg:rgba(0,0,0,0.02);--toc-active-bg:rgba(0,0,0,0.06);--nav-group-bg:#000000;--nav-group-text:#ffffff}
+[data-theme="dark"]{--bg-color:#000000;--surface-color:#181818;--code-bg:#101010;--border-color:#282828;--link-color:#ffffff;--secondary-text:#888888;--text-color:#ffffff;--blockquote-border:#707070;--toc-bg:rgba(255,255,255,0.03);--toc-active-bg:rgba(255,255,255,0.1);--nav-group-bg:#ffffff;--nav-group-text:#000000}
+</style>
+{{- else if eq $cs "C-Looney-Tunes" }}
+<style>
+:root{--bg-color:#fff7e8;--surface-color:#ffe8cc;--code-bg:#f0dbb8;--border-color:#dcc8a8;--link-color:#7c3aed;--secondary-text:#8a7050;--text-color:#2a1a0a;--blockquote-border:#f59e0b;--toc-bg:rgba(0,0,0,0.02);--toc-active-bg:rgba(124,58,237,0.06);--nav-group-bg:#f97316;--nav-group-text:#ffffff}
+[data-theme="dark"]{--bg-color:#1a1a2e;--surface-color:#252540;--code-bg:#1e1e38;--border-color:#353558;--link-color:#fbbf24;--secondary-text:#9090a8;--text-color:#e0dce0;--blockquote-border:#34d399;--toc-bg:rgba(255,255,255,0.03);--toc-active-bg:rgba(251,191,36,0.1);--nav-group-bg:#f97316;--nav-group-text:#1a1a2e}
+</style>
+{{- else if eq $cs "C-Disney" }}
+<style>
+:root{--bg-color:#fef8f0;--surface-color:#f5ece0;--code-bg:#ece0d0;--border-color:#dccfc0;--link-color:#1a3d7c;--secondary-text:#8a7a68;--text-color:#2a1a10;--blockquote-border:#c9a84c;--toc-bg:rgba(0,0,0,0.02);--toc-active-bg:rgba(26,61,124,0.06);--nav-group-bg:#b8860b;--nav-group-text:#ffffff}
+[data-theme="dark"]{--bg-color:#0a0a2a;--surface-color:#151540;--code-bg:#0f0f30;--border-color:#252555;--link-color:#ffd700;--secondary-text:#8080a8;--text-color:#e0d8e8;--blockquote-border:#ffb6c1;--toc-bg:rgba(255,255,255,0.03);--toc-active-bg:rgba(255,215,0,0.1);--nav-group-bg:#ffd700;--nav-group-text:#0a0a2a}
+</style>
+{{- else if eq $cs "Hacker" }}
+<style>
+:root{--bg-color:#f2f7ec;--surface-color:#e4ede0;--code-bg:#d8e4d0;--border-color:#c8d8c0;--link-color:#1a7a1a;--secondary-text:#608050;--text-color:#0a1a0a;--blockquote-border:#2ecc40;--toc-bg:rgba(0,0,0,0.02);--toc-active-bg:rgba(26,122,26,0.06);--nav-group-bg:#1a7a1a;--nav-group-text:#ffffff}
+[data-theme="dark"]{--bg-color:#000a00;--surface-color:#0a1a0a;--code-bg:#051005;--border-color:#1a2a1a;--link-color:#39ff14;--secondary-text:#508050;--text-color:#b0d0a0;--blockquote-border:#39ff14;--toc-bg:rgba(255,255,255,0.03);--toc-active-bg:rgba(57,255,20,0.1);--nav-group-bg:#39ff14;--nav-group-text:#000a00}
+</style>
+{{- else if eq $cs "2d-game" }}
+<style>
+:root{--bg-color:#fef8e8;--surface-color:#f5ecd0;--code-bg:#ece0c0;--border-color:#dccca8;--link-color:#e63946;--secondary-text:#8a7860;--text-color:#1a1a0a;--blockquote-border:#457b9d;--toc-bg:rgba(0,0,0,0.02);--toc-active-bg:rgba(230,57,70,0.06);--nav-group-bg:#e63946;--nav-group-text:#ffffff}
+[data-theme="dark"]{--bg-color:#0a0a1a;--surface-color:#152035;--code-bg:#0f1828;--border-color:#203050;--link-color:#f1c40f;--secondary-text:#7080a0;--text-color:#d0d8e0;--blockquote-border:#e63946;--toc-bg:rgba(255,255,255,0.03);--toc-active-bg:rgba(241,196,15,0.1);--nav-group-bg:#f1c40f;--nav-group-text:#0a0a1a}
+</style>
+{{- end -}}
