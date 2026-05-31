@@ -296,6 +296,7 @@ nav {
 .search-modal {
     position: fixed;
     inset: 0;
+    height: 100vh;
     z-index: 9000;
     display: flex;
     align-items: flex-start;
