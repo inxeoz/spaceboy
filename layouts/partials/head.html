@@ -65,7 +65,7 @@
 <link rel="stylesheet" href="{{ $syntax.RelPermalink }}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{ $syntax.RelPermalink }}"></noscript>
 
-  {{ $needsFancybox := or (eq .Type "gallery") (and .IsPage (in .Content "data-fancybox")) }}
+  {{ $needsFancybox := or (eq .Type "gallery") (and .IsPage (in .Content "data-fancybox")) (.Param "lightbox") }}
   {{ $fancyboxCSSLocal := default (default (printf "%s%s" .Site.Params.staticPrefix ("/vendor/fancybox/fancybox.css" | relURL)) .Site.Params.fancyboxCSS) .Site.Params.fancyboxCSSLocal }}
   {{ $fancyboxCSSCDN := default "https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1/dist/fancybox/fancybox.css" .Site.Params.fancyboxCSSCDN }}
   {{ $enableCDNFallback := ne .Site.Params.enableCDNFallback false }}
@@ -208,5 +208,8 @@
   {{ template "_internal/google_analytics.html" .}}
   {{ if ne .Site.Params.TwitterCards false }}{{ template "_internal/twitter_cards.html" .}}{{ end }}
   {{ .Site.Params.extraHead | safeHTML }}
+  {{- with .Param "customHead" }}{{ . | safeHTML }}{{ end -}}
+  {{- with .Param "noindex" }}<meta name="robots" content="noindex">{{ end -}}
+  {{- with .Param "customCSS" }}<style>{{ . | safeCSS }}</style>{{ end -}}
 
 </head>

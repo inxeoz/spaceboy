@@ -34,6 +34,16 @@
   {{ $showLastModified := .Param "showLastModified"   | default (index $d "showLastModified")  | default false }}
   {{ $hideFooter       := .Param "hideFooter"         | default (index $d "hideFooter")        | default false }}
 
+  {{- /* Granular section toggles — beat noMeta/hideFooter when explicitly set */ -}}
+  {{- $showDate         := (not $noMeta) -}}{{- if ne .Params.showDate nil }}{{ $showDate         = .Params.showDate }}{{ end -}}
+  {{- $showAuthor       := (not $noMeta) -}}{{- if ne .Params.showAuthor nil }}{{ $showAuthor       = .Params.showAuthor }}{{ end -}}
+  {{- $showWordCount    := (not $noMeta) -}}{{- if ne .Params.showWordCount nil }}{{ $showWordCount    = .Params.showWordCount }}{{ end -}}
+  {{- $showTags         := (not $hideFooter) -}}{{- if ne .Params.showTags nil }}{{ $showTags         = .Params.showTags }}{{ end -}}
+  {{- $showShare        := (not $hideFooter) -}}{{- if ne .Params.showShare nil }}{{ $showShare        = .Params.showShare }}{{ end -}}
+  {{- $showRelatedPosts := (not $hideFooter) -}}{{- if ne .Params.showRelatedPosts nil }}{{ $showRelatedPosts = .Params.showRelatedPosts }}{{ end -}}
+  {{- $showPostNav      := (not $hideFooter) -}}{{- if ne .Params.showPostNav nil }}{{ $showPostNav      = .Params.showPostNav }}{{ end -}}
+  {{- $showComments     := (not $hideFooter) -}}{{- if ne .Params.showComments nil }}{{ $showComments     = .Params.showComments }}{{ end -}}
+
   {{- if $progressBar }}
   <div id="progress-bar" class="progress-bar" aria-hidden="true"></div>
   {{- end }}
@@ -52,16 +62,18 @@
         <div class="main-content-section" data-testid="post-content-section">
         <main id="main-content" data-testid="post-main">
           <article class="post" id="article"{{ if $dropCap }} data-drop-cap{{ end }}{{ if $numberedHeadings }} data-numbered-headings{{ end }}{{ if $justify }} data-justify{{ end }}{{ if $imageFullBleed }} data-full-bleed{{ end }} data-testid="post-article">
-          {{ with .Params.coverImage }}<img src="{{ . }}" class="post-cover-image" alt="{{ $.Title }}" loading="lazy">{{ end }}
+      {{ with .Params.coverImage }}<img src="{{ . }}" class="post-cover-image" alt="{{ $.Title }}" loading="lazy">{{ end }}
+      {{ with .Params.heroImage }}<img src="{{ . }}" class="post-hero-image" alt="{{ $.Title }}" loading="lazy">{{ end }}
+          {{ with .Params.heroImage }}<img src="{{ . }}" class="post-hero-image" alt="{{ $.Title }}" loading="lazy">{{ end }}
           {{ $showTitle := ne (index .Params "show-title") false }}
           <header class="post-header" data-testid="post-header">
             {{ if $showTitle }}
             <h1 class="post-title" data-testid="post-title">{{ .Title }}</h1>
             {{ end }}
 
-            {{ if and (in .Site.Params.mainSections .Type) (not $noMeta) }}
+          {{ if and (in .Site.Params.mainSections .Type) (or .Date .Site.Params.author.name .ReadingTime .WordCount) }}
             <div class="post-meta" data-testid="post-meta">
-              {{ if .Date }}
+              {{ if and .Date $showDate }}
               <time datetime="{{ .Date.Format "2006-01-02 15:04:05 MST" }}" data-testid="post-date">
                 {{ .Date.Format "02 Jan 2006" }}
               </time>
@@ -70,8 +82,8 @@
               <span data-testid="post-meta-sep">·</span>
               <span data-testid="post-lastmod">Updated {{ .Lastmod.Format "02 Jan 2006" }}</span>
               {{ end }}
-              {{ if .Site.Params.author.name }}
-              <span data-testid="post-meta-sep">·</span>
+              {{ if and .Site.Params.author.name $showAuthor }}
+              {{ if or (and .Date $showDate) (and $showLastModified .Lastmod (ne (.Lastmod.Format "2006-01-02") (.Date.Format "2006-01-02"))) }}<span data-testid="post-meta-sep">·</span>{{ end }}
               {{ if .Params.author.homepage }}
               <a href="{{ .Params.author.homepage }}" target="_blank" rel="noopener noreferrer" data-testid="post-author">@{{ .Site.Params.author.name }}</a>
               {{ else }}
@@ -82,7 +94,7 @@
               <span data-testid="post-meta-sep">·</span>
               <span data-testid="reading-time">{{ .ReadingTime }} min read</span>
               {{ end }}
-              {{ if .WordCount }}
+              {{ if and .WordCount $showWordCount }}
               <span data-testid="post-meta-sep">·</span>
               <span data-testid="word-count">{{ .WordCount }} words</span>
               {{ end }}
@@ -109,7 +121,7 @@
             {{ .Content }}
           </div>
 
-          {{ if and .Params.tags (not $hideFooter) }}
+          {{ if and .Params.tags $showTags }}
           <div class="post-tags" data-testid="post-tags">
             {{ range .Params.tags }}
             <a href="{{ site.LanguagePrefix }}/tags/{{ lower . | urlize }}/" class="post-tag" data-testid="post-tag">{{ . }}</a>
@@ -117,22 +129,18 @@
           </div>
           {{ end }}
 
-          {{ if and (in .Site.Params.mainSections .Type) (not $hideFooter) }}
-            {{ partial "share.html" . }}
+          {{ if and (in .Site.Params.mainSections .Type) (or $showShare $showRelatedPosts $showComments $showPostNav) }}
+            {{ if $showShare }}{{ partial "share.html" . }}{{ end }}
             {{ .Site.Params.postFooterContent | safeHTML }}
-            {{ partial "related.html" . }}
+            {{ if $showRelatedPosts }}{{ partial "related.html" . }}{{ end }}
             {{ if .Site.Params.postAds }}
             <div class="post-ads" data-testid="post-ads">{{ .Site.Params.postAds | safeHTML }}</div>
             {{ end }}
-            {{ if .Site.Params.disqus }}
+            {{ if and .Site.Params.disqus $showComments }}
             <div class="post-comments" data-testid="post-comments">{{ partial "disqus.html" . }}</div>
             {{ end }}
-            {{ partial "post-nav.html" . }}
-          {{ end }}
-        </article>
-        </main>
-        {{ partial "footer.html" . }}
-        </div>
+  {{ if $showPostNav }}{{ partial "post-nav.html" . }}{{ end }}
+  {{ end }}
       </div>
     </div>
 
@@ -153,9 +161,9 @@
         <h1 class="post-title" data-testid="post-title">{{ .Title }}</h1>
         {{ end }}
 
-        {{ if and (in .Site.Params.mainSections .Type) (not $noMeta) }}
+        {{ if and (in .Site.Params.mainSections .Type) (or .Date .Site.Params.author.name .ReadingTime .WordCount) }}
         <div class="post-meta" data-testid="post-meta">
-          {{ if .Date }}
+          {{ if and .Date $showDate }}
           <time datetime="{{ .Date.Format "2006-01-02 15:04:05 MST" }}" data-testid="post-date">
             {{ .Date.Format "02 Jan 2006" }}
           </time>
@@ -164,8 +172,8 @@
           <span data-testid="post-meta-sep">·</span>
           <span data-testid="post-lastmod">Updated {{ .Lastmod.Format "02 Jan 2006" }}</span>
           {{ end }}
-          {{ if .Site.Params.author.name }}
-          <span data-testid="post-meta-sep">·</span>
+          {{ if and .Site.Params.author.name $showAuthor }}
+          {{ if or (and .Date $showDate) (and $showLastModified .Lastmod (ne (.Lastmod.Format "2006-01-02") (.Date.Format "2006-01-02"))) }}<span data-testid="post-meta-sep">·</span>{{ end }}
           {{ if .Params.author.homepage }}
           <a href="{{ .Params.author.homepage }}" target="_blank" rel="noopener noreferrer" data-testid="post-author">@{{ .Site.Params.author.name }}</a>
           {{ else }}
@@ -176,7 +184,7 @@
           <span data-testid="post-meta-sep">·</span>
           <span data-testid="reading-time">{{ .ReadingTime }} min read</span>
           {{ end }}
-          {{ if .WordCount }}
+          {{ if and .WordCount $showWordCount }}
           <span data-testid="post-meta-sep">·</span>
           <span data-testid="word-count">{{ .WordCount }} words</span>
           {{ end }}
@@ -191,7 +199,7 @@
         {{ .Content }}
       </div>
 
-      {{ if and .Params.tags (not $hideFooter) }}
+      {{ if and .Params.tags $showTags }}
       <div class="post-tags" data-testid="post-tags">
         {{ range .Params.tags }}
         <a href="{{ site.LanguagePrefix }}/tags/{{ lower . | urlize }}/" class="post-tag" data-testid="post-tag">{{ . }}</a>
@@ -199,17 +207,17 @@
       </div>
       {{ end }}
 
-      {{ if and (in .Site.Params.mainSections .Type) (not $hideFooter) }}
-        {{ partial "share.html" . }}
+      {{ if and (in .Site.Params.mainSections .Type) (or $showShare $showRelatedPosts $showComments $showPostNav) }}
+        {{ if $showShare }}{{ partial "share.html" . }}{{ end }}
         {{ .Site.Params.postFooterContent | safeHTML }}
-        {{ partial "related.html" . }}
+        {{ if $showRelatedPosts }}{{ partial "related.html" . }}{{ end }}
         {{ if .Site.Params.postAds }}
         <div class="post-ads" data-testid="post-ads">{{ .Site.Params.postAds | safeHTML }}</div>
         {{ end }}
-        {{ if .Site.Params.disqus }}
+        {{ if and .Site.Params.disqus $showComments }}
         <div class="post-comments" data-testid="post-comments">{{ partial "disqus.html" . }}</div>
         {{ end }}
-        {{ partial "post-nav.html" . }}
+        {{ if $showPostNav }}{{ partial "post-nav.html" . }}{{ end }}
       {{ end }}
     </article>
     </main>
@@ -221,6 +229,8 @@
   {{ .Store.Set "showToc" $showTOC }}
   {{ partial "scripts.html" . }}
   {{ if .Site.Params.extraBody }}{{ .Site.Params.extraBody | safeHTML }}{{ end }}
+  {{- with .Param "lightbox" }}<script>(function(){document.querySelectorAll('.post-content img:not([data-fancybox])').forEach(function(el){el.setAttribute('data-fancybox','post')})})()</script>{{ end -}}
+  {{- with .Param "customJS" }}<script>{{ . | safeJS }}</script>{{ end -}}
 
 </body>
 </html>

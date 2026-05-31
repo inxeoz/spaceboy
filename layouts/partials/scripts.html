@@ -7,7 +7,7 @@ window.__SPACEBOY__ = {
     (dict "left" "\\[" "right" "\\]" "display" true)
   ) | jsonify | safeJS }},
   enableCopyCode: {{ ne .Site.Params.enableCopyCode false }},
-  needsFancybox: {{ or (eq .Type "gallery") (and .IsPage (in .Content "data-fancybox")) }},
+  needsFancybox: {{ or (eq .Type "gallery") (and .IsPage (in .Content "data-fancybox")) (.Param "lightbox") }},
   needsMermaid: {{ and .IsPage (or (.HasShortcode "mermaid") (in .RawContent "```mermaid")) }},
   needsKaTeX: {{ and .IsPage (or (.HasShortcode "katex") (in .RawContent "$$") (in .RawContent "$")) }},
   legacyMode: {{ .Site.Params.legacyMode | default false }},

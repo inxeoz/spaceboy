@@ -10,7 +10,11 @@
     <div class="posts-container" data-testid="posts-container-{{ .Key }}">
       {{ range .Pages }}
       {{ $catThumb := "" }}{{ $listThumb := "" }}
-      {{ if or (.Param "showThumbnailInCatalog") (.Param "showThumbnailInList") }}
+      {{ $thumb := .Param "thumbnail" }}
+      {{ if $thumb }}
+        {{ if .Param "showThumbnailInCatalog" }}{{ $catThumb = $thumb }}{{ end }}
+        {{ if .Param "showThumbnailInList" }}{{ $listThumb = $thumb }}{{ end }}
+      {{ else if or (.Param "showThumbnailInCatalog") (.Param "showThumbnailInList") }}
         {{ $imgMatch := findRE `!\[.*?\]\(.*?\)` .RawContent 1 }}
         {{ if $imgMatch }}
           {{ $url := index $imgMatch 0 }}
