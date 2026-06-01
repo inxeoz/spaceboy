@@ -22,6 +22,7 @@
 /* NameConstant */ [data-theme="dark"] .chroma .no { color:#ffb366 }
 /* NameDecorator */ [data-theme="dark"] .chroma .nd { color:#ffb366 }
 /* NameLabel */ [data-theme="dark"] .chroma .nl { color:#ffa8a6 }
+/* NameNamespace */ [data-theme="dark"] .chroma .nn { color:#f8f8f2 }
 /* NameTag */ [data-theme="dark"] .chroma .nt { color:#ffa8d9 }
 /* NameBuiltin */ [data-theme="dark"] .chroma .nb { color:#ffa8a6 }
 /* NameVariable */ [data-theme="dark"] .chroma .nv { color:#ffa8a6 }
