@@ -106,6 +106,7 @@
   window.updateThemeIcons = updateThemeIcons;
 
   window.toggleTheme = function() {
+    if (window.clearPalette) clearPalette();
     var isDark = root.getAttribute('data-theme') === 'dark';
     root.setAttribute('data-theme', isDark ? 'light' : 'dark');
     safeSet(themeKey, isDark ? 'light' : 'dark');

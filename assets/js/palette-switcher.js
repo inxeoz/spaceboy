@@ -121,7 +121,7 @@
   }
 
   function currentPalette() {
-    return document.documentElement.getAttribute('data-palette') || 'Modern';
+    return document.documentElement.getAttribute('data-palette') || '';
   }
 
   function setPalette(value) {
@@ -129,14 +129,20 @@
     document.documentElement.setAttribute('data-palette', value);
     try { localStorage.setItem('palette', value); saved = value; } catch (_) {}
     updateUI(value);
+
+  window.clearPalette = function () {
+    document.documentElement.removeAttribute('data-palette');
+    try { localStorage.removeItem('palette'); saved = null; } catch (_) {}
+    updateUI('');
+  };
   }
 
   function updateUI(value) {
     if (!dropdown) return;
-    value = value || 'Modern';
+    var cur = value != null && value !== '' ? value : document.documentElement.getAttribute('data-palette') || '';
     var togs = dropdown.querySelectorAll('.palette-tog');
     for (var i = 0; i < togs.length; i++) {
-      var active = togs[i].getAttribute('data-palette') === value;
+      var active = togs[i].getAttribute('data-palette') === cur;
       togs[i].setAttribute('aria-pressed', active ? 'true' : 'false');
       var swatch = togs[i].querySelector('.palette-swatch');
       if (swatch) {
