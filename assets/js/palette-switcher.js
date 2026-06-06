@@ -1,52 +1,123 @@
 (function () {
   'use strict';
 
-  var overlay = document.getElementById('theme-overlay');
-  var list    = document.getElementById('theme-overlay-list');
-  if (!overlay || !list) return;
+  /* ── palette data ── */
+  var PALETTES = [
+    // Spaceboy originals
+    { id: '90s',            label: '90s' },
+    { id: 'Modern',         label: 'Modern' },
+    { id: 'Neon',           label: 'Neon' },
+    { id: 'Anime',          label: 'Anime' },
+    { id: 'Maharaja',       label: 'Maharaja' },
+    { id: 'Nature',         label: 'Nature' },
+    { id: 'Galaxy',         label: 'Galaxy' },
+    { id: 'Ocean',          label: 'Ocean' },
+    { id: 'BlackWhite',     label: 'Black & White' },
+    { id: 'C-Looney-Tunes', label: 'Looney Tunes' },
+    { id: 'C-Disney',       label: 'Disney' },
+    { id: 'Hacker',         label: 'Hacker' },
+    { id: '2d-game',        label: '2D Game' },
+    // Dark
+    { sep: 'dark' },
+    { id: 'Herdr',           label: 'herdr' },
+    { id: 'Taat',            label: 'taat' },
+    { id: 'Catppuccin',      label: 'catppuccin' },
+    { id: 'Terminal',        label: 'terminal' },
+    { id: 'Tokyo-Night',     label: 'tokyo night' },
+    { id: 'Dracula',         label: 'dracula' },
+    { id: 'Nord',            label: 'nord' },
+    { id: 'Gruvbox',         label: 'gruvbox' },
+    { id: 'One-Dark',        label: 'one dark' },
+    { id: 'Solarized',       label: 'solarized' },
+    { id: 'Kanagawa',        label: 'kanagawa' },
+    { id: 'Rose-Pine',       label: 'rose pine' },
+    { id: 'Vesper',          label: 'vesper' },
+    // Light
+    { sep: 'light' },
+    { id: 'Catppuccin-Latte',   label: 'catppuccin latte' },
+    { id: 'Tokyo-Night-Day',    label: 'tokyo day' },
+    { id: 'Gruvbox-Light',      label: 'gruvbox light' },
+    { id: 'One-Light',          label: 'one light' },
+    { id: 'Solarized-Light',    label: 'solarized light' },
+    { id: 'Kanagawa-Lotus',     label: 'kanagawa lotus' },
+    { id: 'Rose-Pine-Dawn',     label: 'rose pine dawn' },
+  ];
 
-  var options = Array.prototype.slice.call(
-    list.querySelectorAll('[role="option"]')
-  );
-  var saved   = null;
-  try { saved = localStorage.getItem('palette'); } catch (_) {}
+  var dropdown, btn, saved;
+
+  function init() {
+    btn = document.getElementById('sbtn-palette');
+    if (!btn) return;
+
+    try { saved = localStorage.getItem('palette'); } catch (_) {}
+    ensureDropdown();
+    document.addEventListener('click', onDocClick);
+  }
+
+  function ensureDropdown() {
+    if (dropdown) return;
+    dropdown = document.createElement('div');
+    dropdown.id = 'palette-dropdown';
+    dropdown.className = 'palette-dropdown';
+    dropdown.hidden = true;
+
+    var list = document.createElement('div');
+    list.className = 'palette-dropdown-list';
+    list.setAttribute('role', 'listbox');
+
+    var activeId = currentPalette();
+
+    PALETTES.forEach(function (p) {
+      if (p.sep) {
+        var sep = document.createElement('div');
+        sep.className = 'palette-sep';
+        sep.textContent = p.sep;
+        list.appendChild(sep);
+        return;
+      }
+      var opt = document.createElement('button');
+      opt.type = 'button';
+      opt.className = 'palette-opt';
+      opt.setAttribute('role', 'option');
+      opt.setAttribute('data-palette', p.id);
+      opt.setAttribute('aria-selected', p.id === activeId ? 'true' : 'false');
+      opt.textContent = p.label;
+      opt.addEventListener('click', function () { select(p.id); });
+      opt.addEventListener('mouseenter', function () { preview(p.id); });
+      list.appendChild(opt);
+    });
+
+    dropdown.appendChild(list);
+    // Insert after the setting-btns div
+    var btns = btn.closest('.setting-btns');
+    if (btns && btns.parentNode) {
+      btns.parentNode.insertBefore(dropdown, btns.nextSibling);
+    }
+  }
 
   function currentPalette() {
-    return document.documentElement.getAttribute('data-palette') || '';
+    return document.documentElement.getAttribute('data-palette') || 'Modern';
   }
 
   function setPalette(value) {
-    document.documentElement.setAttribute('data-palette', value || 'Modern');
-    try { localStorage.setItem('palette', value || 'Modern'); } catch (_) {}
-    updateUI(value || 'Modern');
+    value = value || 'Modern';
+    document.documentElement.setAttribute('data-palette', value);
+    try { localStorage.setItem('palette', value); } catch (_) {}
+    updateUI(value);
   }
 
   function updateUI(value) {
+    if (!dropdown) return;
     value = value || 'Modern';
-    options.forEach(function (opt) {
-      opt.setAttribute(
-        'aria-selected',
-        String(opt.getAttribute('data-palette') === value)
-      );
-    });
+    var opts = dropdown.querySelectorAll('.palette-opt');
+    for (var i = 0; i < opts.length; i++) {
+      opts[i].setAttribute('aria-selected', opts[i].getAttribute('data-palette') === value ? 'true' : 'false');
+    }
   }
 
-  function openOverlay() {
-    overlay.hidden = false;
-    document.body.style.overflow = 'hidden';
-    updateUI(currentPalette() || 'Modern');
-    var active = list.querySelector('[aria-selected="true"]') || options[0];
-    if (active) active.focus();
-  }
-
-  function closeOverlay() {
-    overlay.hidden = true;
-    document.body.style.overflow = '';
-  }
-
-  function toggleOverlay() {
-    if (overlay.hidden) openOverlay();
-    else closeOverlay();
+  function select(value) {
+    setPalette(value);
+    close();
   }
 
   function preview(value) {
@@ -54,66 +125,34 @@
     updateUI(value);
   }
 
-  function commit(value) {
-    setPalette(value);
-    closeOverlay();
+  function toggle() {
+    if (dropdown.hidden) open();
+    else close();
   }
 
-  function revert() {
-    setPalette(saved || 'Modern');
-    closeOverlay();
+  function open() {
+    dropdown.hidden = false;
+    updateUI(currentPalette());
+    var active = dropdown.querySelector('[aria-selected="true"]');
+    if (active) active.focus();
   }
 
-  // Click commits, hover previews
-  options.forEach(function (opt) {
-    opt.addEventListener('click', function () {
-      commit(opt.getAttribute('data-palette'));
-    });
-    opt.addEventListener('mouseenter', function () {
-      preview(opt.getAttribute('data-palette'));
-    });
-  });
-
-  // Keyboard navigation
-  document.addEventListener('keydown', function (e) {
-    if (overlay.hidden) {
-      // t shortcut to toggle overlay (outside form fields)
-      if (e.key === 't' && !e.ctrlKey && !e.metaKey && !e.altKey) {
-        var tag = document.activeElement && document.activeElement.tagName;
-        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
-        e.preventDefault();
-        toggleOverlay();
-      }
-      return;
+  function close() {
+    dropdown.hidden = true;
+    // Restore saved palette (undo preview changes)
+    var cur = currentPalette();
+    if (saved && cur !== saved) {
+      setPalette(saved);
     }
+  }
 
-    var idx = options.indexOf(document.activeElement);
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      var next = idx >= 0 ? Math.min(options.length - 1, idx + 1) : 0;
-      preview(options[next].getAttribute('data-palette'));
-      options[next].focus();
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      var prev = idx >= 0 ? Math.max(0, idx - 1) : options.length - 1;
-      preview(options[prev].getAttribute('data-palette'));
-      options[prev].focus();
-    } else if (e.key === 'Enter' && idx >= 0) {
-      e.preventDefault();
-      commit(options[idx].getAttribute('data-palette'));
-    } else if (e.key === 'Escape') {
-      e.preventDefault();
-      revert();
+  function onDocClick(e) {
+    if (!dropdown || dropdown.hidden) return;
+    if (!dropdown.contains(e.target) && e.target !== btn) {
+      close();
     }
-  });
+  }
 
-  // Close on backdrop click
-  overlay.addEventListener('click', function (e) {
-    if (e.target === overlay) revert();
-  });
-
-  document.getElementById('theme-close-btn').addEventListener('click', revert);
-
-  // Expose toggle globally for the "more" button
-  window.__togglePaletteOverlay = toggleOverlay;
+  document.addEventListener('DOMContentLoaded', init);
+  window.__togglePaletteDropdown = toggle;
 })();
