@@ -3077,30 +3077,8 @@ kbd {
     font-size: 0.82rem;
     color: var(--text-color);
 }
-.palette-swatch {
-    flex-shrink: 0;
-    width: 1.6rem;
-    height: 1.6rem;
-    padding: 2px;
-    border: 1px solid var(--border-color);
-    border-radius: 3px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: transparent;
-    transition: background 0.15s ease;
-}
-.palette-swatch-inner {
-    display: block;
-    width: 100%;
-    height: 100%;
-    border-radius: 1px;
-    border: 1px solid currentColor;
-    background: transparent;
-    transition: background 0.15s ease;
-}
-.palette-row[aria-pressed="true"] .palette-swatch-inner {
-    background: currentColor;
+.palette-row[aria-pressed="true"] {
+    background: var(--toc-active-bg);
 }
 @media (forced-colors: active) {
     .skip-link:focus {

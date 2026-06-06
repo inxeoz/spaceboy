@@ -88,20 +88,9 @@
       name.setAttribute('data-testid', 'palette-name-' + p.id);
       name.textContent = p.label;
 
-      // Color swatch indicator (no longer wrapped in a button — row click selects)
-      var swatch = document.createElement('span');
-      swatch.className = 'palette-swatch';
-      swatch.setAttribute('data-testid', 'palette-swatch-' + p.id);
-      swatch.style.color = p.color;
-
-      var inner = document.createElement('span');
-      inner.className = 'palette-swatch-inner';
-      swatch.appendChild(inner);
-
       row.addEventListener('click', function () { select(p.id); });
       row.addEventListener('mouseenter', function () { preview(p.id); });
       row.appendChild(name);
-      row.appendChild(swatch);
       list.appendChild(row);
     });
 
