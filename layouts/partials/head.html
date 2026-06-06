@@ -94,7 +94,7 @@
   {{ end }}
 
   {{- $metaDesc := .Site.Params.description | plainify | truncate 155 -}}
-  {{- if not .IsHome -}}{{- $metaDesc = (default .Summary .Description | plainify | truncate 155) -}}{{- end -}}
+  {{- if not .IsHome -}}{{- $metaDesc = ((.Description | plainify | truncate 155) | default (.Summary | plainify | truncate 155)) -}}{{- end -}}
 
   {{- $ogImage := "" -}}
   {{- with .Params.coverImage -}}{{- $ogImage = . | absURL -}}{{- end -}}

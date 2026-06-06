@@ -2,7 +2,23 @@
   var S = window.__SPACEBOY__;
   if (!S) return;
 
-  var closest = window._closest_;
+  function closest(el, selector) {
+    while (el && el.nodeType === 1) {
+      if (el.matches(selector)) return el;
+      el = el.parentElement;
+    }
+    return null;
+  }
+
+  var measurer = (function() {
+    var c = document.createElement('canvas');
+    c.width = c.height = 1;
+    var ctx = c.getContext('2d');
+    return {
+      setFont: function(f) { ctx.font = f; },
+      measure: function(t) { return ctx.measureText(t).width; }
+    };
+  })();
 
   var collectTokens = function(el, color, lines) {
     if (el.nodeType === 3) {
@@ -38,10 +54,8 @@
     var maxLineLen = 0;
     lines.forEach(function(line) { maxLineLen = Math.max(maxLineLen, line.text.length); });
 
-    var canvas = document.createElement('canvas');
-    var ctx = canvas.getContext('2d');
-    ctx.font = fontSize + 'px ' + fontFamily;
-    var charWidth = ctx.measureText('x').width;
+    measurer.setFont(fontSize + 'px ' + fontFamily);
+    var charWidth = measurer.measure('x');
     var width = Math.max(400, charWidth * maxLineLen + padding * 2);
     var height = lines.length * lineHeight + padding * 2;
 
@@ -54,7 +68,7 @@
       line.tokens.forEach(function(token) {
         var escaped = token.text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         svg += '<text x="' + x + '" y="' + y + '" font-family="' + fontFamily + '" font-size="' + fontSize + '" fill="' + token.color + '">' + escaped + '</text>';
-        x += ctx.measureText(token.text).width;
+        x += measurer.measure(token.text);
       });
     });
 

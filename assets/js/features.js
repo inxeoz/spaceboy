@@ -41,8 +41,6 @@
     return null;
   }
 
-  window._closest_ = closest;
-  window._matchesSelector_ = matchesSelector;
 
   function announce(msg) {
     var ann = document.getElementById('copy-announcement');
