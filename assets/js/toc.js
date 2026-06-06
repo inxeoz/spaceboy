@@ -283,6 +283,8 @@
 
     // ── Init ──
     updateBoth();
+
+    window.initDualTableOfContents = initDualTableOfContents;
   }
 
   if (document.readyState === 'loading') {

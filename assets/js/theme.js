@@ -141,7 +141,7 @@
   updateLayoutIcons();
 
   document.addEventListener('DOMContentLoaded', function() {
-    window.initDualTableOfContents();
+    if (typeof window.initDualTableOfContents === 'function') window.initDualTableOfContents();
 
     var header = document.getElementById('site-header');
     if (header) {
