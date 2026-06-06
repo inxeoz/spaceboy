@@ -276,6 +276,9 @@
           toggleBtn.setAttribute('aria-expanded', 'false');
         }
       });
+      // Also wire custom smooth scroll to mobile TOC links
+      var mobileNav = mobileContent.querySelector('.toc-nav');
+      if (mobileNav) setupSmoothScroll(mobileNav);
     }
 
     // ── Init ──

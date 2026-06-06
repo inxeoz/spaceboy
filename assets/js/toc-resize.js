@@ -19,38 +19,45 @@
 
     var startX, startW, rafId;
 
+    function pointerX(e) {
+      return e.clientX !== undefined ? e.clientX : e.touches[0].clientX;
+    }
+
     function getWidth() {
       return sidebar.getBoundingClientRect().width;
     }
 
     function onDown(e) {
-      // Only primary button
-      if (e.button !== 0) return;
-      e.preventDefault();
-      startX = e.clientX;
+      // Only primary button for mouse
+      if (e.button && e.button !== 0) return;
+      startX = pointerX(e);
       startW = getWidth();
       document.body.style.cursor = 'col-resize';
       document.body.classList.add('toc-resize-active');
+      document.addEventListener('pointermove', onMove);
+      document.addEventListener('pointerup', onUp);
+      // Fallback for environments without pointer events
       document.addEventListener('mousemove', onMove);
       document.addEventListener('mouseup', onUp);
+      document.addEventListener('touchmove', onMove, { passive: false });
+      document.addEventListener('touchend', onUp);
+      document.addEventListener('touchcancel', onUp);
     }
 
     function onMove(e) {
+      e.preventDefault();
       if (rafId) return;
       rafId = requestAnimationFrame(function() {
         rafId = null;
-        var dx = e.clientX - startX;
+        var dx = pointerX(e) - startX;
         var newW;
         if (edge === 'right') {
-          // Left sidebar: drag right → wider
           newW = startW + dx;
         } else {
-          // Right sidebar: drag right → narrower
           newW = startW - dx;
         }
         newW = Math.max(MIN_W, Math.min(MAX_W, Math.round(newW)));
         sidebar.style.setProperty('width', newW + 'px', 'important');
-        // CSS variable for grid
         if (edge === 'right') {
           page.style.setProperty('--toc-left-width', newW + 'px');
         } else {
@@ -63,16 +70,22 @@
       if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
       document.body.style.cursor = '';
       document.body.classList.remove('toc-resize-active');
+      document.removeEventListener('pointermove', onMove);
+      document.removeEventListener('pointerup', onUp);
       document.removeEventListener('mousemove', onMove);
       document.removeEventListener('mouseup', onUp);
-      // Persist
+      document.removeEventListener('touchmove', onMove);
+      document.removeEventListener('touchend', onUp);
+      document.removeEventListener('touchcancel', onUp);
       try {
         var w = sidebar.style.width;
         if (w) localStorage.setItem(edge === 'right' ? LS_LEFT : LS_RIGHT, parseInt(w) + 'px');
       } catch(e) {}
     }
 
+    handle.addEventListener('pointerdown', onDown);
     handle.addEventListener('mousedown', onDown);
+    handle.addEventListener('touchstart', onDown, { passive: true });
   }
 
   // Restore saved widths
