@@ -1,39 +1,53 @@
-<div class="theme-overlay" id="theme-overlay" hidden aria-modal="true" role="dialog" aria-label="Theme switcher" data-testid="theme-overlay">
+<div class="theme-overlay" id="theme-overlay" hidden aria-modal="true" role="dialog" aria-label="Color palette switcher" data-testid="theme-overlay">
   <div class="theme-overlay-panel" data-testid="theme-overlay-panel">
-    <div class="theme-overlay-title" data-testid="theme-overlay-title">pick a palette</div>
+    <div class="theme-overlay-title" data-testid="theme-overlay-title">Color Palette</div>
     <div class="theme-overlay-tabs" data-testid="theme-overlay-tabs">
       <span class="active" data-testid="theme-overlay-tab-all">all</span>
     </div>
     <div class="theme-overlay-list" id="theme-overlay-list" role="listbox" aria-label="Color palettes" data-testid="theme-overlay-list">
-      <div class="theme-sep" data-testid="theme-sep-light">light</div>
-      <button role="option" data-palette="tokyo-night-day" aria-selected="false" data-testid="palette-option-tokyo-night-day">Tokyo Night Day</button>
-      <button role="option" data-palette="catppuccin-latte" aria-selected="false" data-testid="palette-option-catppuccin-latte">Catppuccin Latte</button>
-      <button role="option" data-palette="gruvbox-light" aria-selected="false" data-testid="palette-option-gruvbox-light">Gruvbox Light</button>
-      <button role="option" data-palette="one-light" aria-selected="false" data-testid="palette-option-one-light">One Light</button>
-      <button role="option" data-palette="solarized-light" aria-selected="false" data-testid="palette-option-solarized-light">Solarized Light</button>
-      <button role="option" data-palette="kanagawa-lotus" aria-selected="false" data-testid="palette-option-kanagawa-lotus">Kanagawa Lotus</button>
-      <button role="option" data-palette="rose-pine-dawn" aria-selected="false" data-testid="palette-option-rose-pine-dawn">Rose Pine Dawn</button>
+      <!-- Spaceboy originals -->
+      <button role="option" data-palette="90s" aria-selected="false" data-testid="palette-option-90s">90s</button>
+      <button role="option" data-palette="Modern" aria-selected="false" data-testid="palette-option-Modern">Modern</button>
+      <button role="option" data-palette="Neon" aria-selected="false" data-testid="palette-option-Neon">Neon</button>
+      <button role="option" data-palette="Anime" aria-selected="false" data-testid="palette-option-Anime">Anime</button>
+      <button role="option" data-palette="Maharaja" aria-selected="false" data-testid="palette-option-Maharaja">Maharaja</button>
+      <button role="option" data-palette="Nature" aria-selected="false" data-testid="palette-option-Nature">Nature</button>
+      <button role="option" data-palette="Galaxy" aria-selected="false" data-testid="palette-option-Galaxy">Galaxy</button>
+      <button role="option" data-palette="Ocean" aria-selected="false" data-testid="palette-option-Ocean">Ocean</button>
+      <button role="option" data-palette="BlackWhite" aria-selected="false" data-testid="palette-option-BlackWhite">Black &amp; White</button>
+      <button role="option" data-palette="C-Looney-Tunes" aria-selected="false" data-testid="palette-option-C-Looney-Tunes">Looney Tunes</button>
+      <button role="option" data-palette="C-Disney" aria-selected="false" data-testid="palette-option-C-Disney">Disney</button>
+      <button role="option" data-palette="Hacker" aria-selected="false" data-testid="palette-option-Hacker">Hacker</button>
+      <button role="option" data-palette="2d-game" aria-selected="false" data-testid="palette-option-2d-game">2D Game</button>
 
       <div class="theme-sep" data-testid="theme-sep-dark">dark</div>
-      <button role="option" data-palette="herdr" aria-selected="false" data-testid="palette-option-herdr">Herdr</button>
-      <button role="option" data-palette="taat" aria-selected="false" data-testid="palette-option-taat">Taat</button>
-      <button role="option" data-palette="catppuccin" aria-selected="false" data-testid="palette-option-catppuccin">Catppuccin</button>
-      <button role="option" data-palette="terminal" aria-selected="false" data-testid="palette-option-terminal">Terminal</button>
-      <button role="option" data-palette="tokyo-night" aria-selected="false" data-testid="palette-option-tokyo-night">Tokyo Night</button>
-      <button role="option" data-palette="dracula" aria-selected="false" data-testid="palette-option-dracula">Dracula</button>
-      <button role="option" data-palette="nord" aria-selected="false" data-testid="palette-option-nord">Nord</button>
-      <button role="option" data-palette="gruvbox" aria-selected="false" data-testid="palette-option-gruvbox">Gruvbox</button>
-      <button role="option" data-palette="one-dark" aria-selected="false" data-testid="palette-option-one-dark">One Dark</button>
-      <button role="option" data-palette="solarized" aria-selected="false" data-testid="palette-option-solarized">Solarized</button>
-      <button role="option" data-palette="kanagawa" aria-selected="false" data-testid="palette-option-kanagawa">Kanagawa</button>
-      <button role="option" data-palette="rose-pine" aria-selected="false" data-testid="palette-option-rose-pine">Rose Pine</button>
-      <button role="option" data-palette="vesper" aria-selected="false" data-testid="palette-option-vesper">Vesper</button>
+      <button role="option" data-palette="Herdr" aria-selected="false" data-testid="palette-option-Herdr">herdr</button>
+      <button role="option" data-palette="Taat" aria-selected="false" data-testid="palette-option-Taat">taat</button>
+      <button role="option" data-palette="Catppuccin" aria-selected="false" data-testid="palette-option-Catppuccin">catppuccin</button>
+      <button role="option" data-palette="Terminal" aria-selected="false" data-testid="palette-option-Terminal">terminal</button>
+      <button role="option" data-palette="Tokyo-Night" aria-selected="false" data-testid="palette-option-Tokyo-Night">tokyo night</button>
+      <button role="option" data-palette="Dracula" aria-selected="false" data-testid="palette-option-Dracula">dracula</button>
+      <button role="option" data-palette="Nord" aria-selected="false" data-testid="palette-option-Nord">nord</button>
+      <button role="option" data-palette="Gruvbox" aria-selected="false" data-testid="palette-option-Gruvbox">gruvbox</button>
+      <button role="option" data-palette="One-Dark" aria-selected="false" data-testid="palette-option-One-Dark">one dark</button>
+      <button role="option" data-palette="Solarized" aria-selected="false" data-testid="palette-option-Solarized">solarized</button>
+      <button role="option" data-palette="Kanagawa" aria-selected="false" data-testid="palette-option-Kanagawa">kanagawa</button>
+      <button role="option" data-palette="Rose-Pine" aria-selected="false" data-testid="palette-option-Rose-Pine">rose pine</button>
+      <button role="option" data-palette="Vesper" aria-selected="false" data-testid="palette-option-Vesper">vesper</button>
+
+      <div class="theme-sep" data-testid="theme-sep-light">light</div>
+      <button role="option" data-palette="Catppuccin-Latte" aria-selected="false" data-testid="palette-option-Catppuccin-Latte">catppuccin latte</button>
+      <button role="option" data-palette="Tokyo-Night-Day" aria-selected="false" data-testid="palette-option-Tokyo-Night-Day">tokyo day</button>
+      <button role="option" data-palette="Gruvbox-Light" aria-selected="false" data-testid="palette-option-Gruvbox-Light">gruvbox light</button>
+      <button role="option" data-palette="One-Light" aria-selected="false" data-testid="palette-option-One-Light">one light</button>
+      <button role="option" data-palette="Solarized-Light" aria-selected="false" data-testid="palette-option-Solarized-Light">solarized light</button>
+      <button role="option" data-palette="Kanagawa-Lotus" aria-selected="false" data-testid="palette-option-Kanagawa-Lotus">kanagawa lotus</button>
+      <button role="option" data-palette="Rose-Pine-Dawn" aria-selected="false" data-testid="palette-option-Rose-Pine-Dawn">rose pine dawn</button>
     </div>
     <div class="theme-overlay-footer" data-testid="theme-overlay-footer">
-      <span data-testid="theme-overlay-shortcuts"><span class="key">esc</span> cancel &nbsp; <span class="key">enter</span> commit</span>
+      <span data-testid="theme-overlay-shortcuts"><span class="key">esc</span> cancel</span>
       <div class="theme-overlay-actions" data-testid="theme-overlay-actions">
-        <button class="theme-apply-btn" id="theme-apply-btn" type="button" data-testid="theme-apply-btn">apply</button>
-        <button class="theme-close-btn" id="theme-close-btn" type="button" data-testid="theme-close-btn">cancel</button>
+        <button class="theme-close-btn" id="theme-close-btn" type="button" data-testid="theme-close-btn">close</button>
       </div>
     </div>
   </div>

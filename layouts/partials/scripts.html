@@ -47,3 +47,7 @@ window.__SPACEBOY__ = {
 {{ $export := resources.Get "js/export.js" | minify | fingerprint }}
 <script src="{{ $export.RelPermalink }}" integrity="{{ $export.Data.Integrity }}" defer></script>
 {{- end }}
+
+{{- /* palette-switcher.js — always loaded for color scheme overlay */ -}}
+{{ $palette := resources.Get "js/palette-switcher.js" | minify | fingerprint }}
+<script src="{{ $palette.RelPermalink }}" integrity="{{ $palette.Data.Integrity }}" defer></script>
