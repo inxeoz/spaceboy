@@ -21,6 +21,8 @@
     {{ $d = dict "imageFullBleed" true "noMeta" true "hideFooter" true }}
   {{ else if eq $viewMode "poem" }}
     {{ $d = dict "noMeta" true "hideFooter" true }}
+  {{ else if eq $viewMode "minimal" }}
+    {{ $d = dict "noMeta" true "hideFooter" true }}
   {{ end }}
 
   {{ $progressBar      := .Param "progressBar"       | default (index $d "progressBar")       | default false }}

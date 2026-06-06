@@ -164,6 +164,8 @@
     --content-max-width:100%;
   {{- else if eq $viewMode "poem" }}
     --font-body:Georgia,"Charter","Palatino Linotype","Book Antiqua",serif;
+  {{- else if eq $viewMode "minimal" }}
+    --content-max-width:clamp(320px,95vw,calc((1200px + 100vw)/2));
   {{- end }}
   }
   {{- if eq $viewMode "goofy" }}
@@ -214,7 +216,9 @@
   {{ if ne .Site.Params.TwitterCards false }}{{ template "_internal/twitter_cards.html" .}}{{ end }}
   {{ .Site.Params.extraHead | safeHTML }}
   {{- with .Param "customHead" }}{{ . | safeHTML }}{{ end -}}
-  {{- with .Param "noindex" }}<meta name="robots" content="noindex">{{ end -}}
+  {{- $noindex := .Param "noindex" -}}
+  {{- if and (eq $viewMode "minimal") (not (isset .Params "noindex")) }}{{ $noindex = true }}{{ end -}}
+  {{- if $noindex }}<meta name="robots" content="noindex">{{ end -}}
   {{- with .Param "customCSS" }}<style>{{ . | safeCSS }}</style>{{ end -}}
 
 </head>
