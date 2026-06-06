@@ -103,6 +103,7 @@
 
   window.renderMermaid = renderMermaid;
   window.renderKaTeX = renderKaTeX;
+  window.updateThemeIcons = updateThemeIcons;
 
   window.toggleTheme = function() {
     var isDark = root.getAttribute('data-theme') === 'dark';
