@@ -3,7 +3,6 @@
 
   /* ── palette data ── */
   var PALETTES = [
-    // Spaceboy originals
     { id: '90s',            label: '90s' },
     { id: 'Modern',         label: 'Modern' },
     { id: 'Neon',           label: 'Neon' },
@@ -17,7 +16,7 @@
     { id: 'C-Disney',       label: 'Disney' },
     { id: 'Hacker',         label: 'Hacker' },
     { id: '2d-game',        label: '2D Game' },
-    // Dark
+
     { sep: 'dark' },
     { id: 'Herdr',           label: 'herdr' },
     { id: 'Taat',            label: 'taat' },
@@ -32,7 +31,7 @@
     { id: 'Kanagawa',        label: 'kanagawa' },
     { id: 'Rose-Pine',       label: 'rose pine' },
     { id: 'Vesper',          label: 'vesper' },
-    // Light
+
     { sep: 'light' },
     { id: 'Catppuccin-Latte',   label: 'catppuccin latte' },
     { id: 'Tokyo-Night-Day',    label: 'tokyo day' },
@@ -63,7 +62,6 @@
 
     var list = document.createElement('div');
     list.className = 'palette-dropdown-list';
-    list.setAttribute('role', 'listbox');
 
     var activeId = currentPalette();
 
@@ -75,20 +73,37 @@
         list.appendChild(sep);
         return;
       }
-      var opt = document.createElement('button');
-      opt.type = 'button';
-      opt.className = 'palette-opt';
-      opt.setAttribute('role', 'option');
-      opt.setAttribute('data-palette', p.id);
-      opt.setAttribute('aria-selected', p.id === activeId ? 'true' : 'false');
-      opt.textContent = p.label;
-      opt.addEventListener('click', function () { select(p.id); });
-      opt.addEventListener('mouseenter', function () { preview(p.id); });
-      list.appendChild(opt);
+
+      var row = document.createElement('div');
+      row.className = 'palette-row';
+
+      var name = document.createElement('span');
+      name.className = 'palette-name';
+      name.textContent = p.label;
+
+      var tog = document.createElement('button');
+      tog.type = 'button';
+      tog.className = 'palette-tog';
+      tog.setAttribute('data-palette', p.id);
+      tog.setAttribute('aria-pressed', p.id === activeId ? 'true' : 'false');
+      tog.textContent = p.id === activeId ? 'On' : 'Off';
+
+      // Clicking toggle selects this palette
+      tog.addEventListener('click', function (e) {
+        e.stopPropagation();
+        select(p.id);
+      });
+
+      // Hover on row previews
+      row.addEventListener('mouseenter', function () { preview(p.id); });
+
+      row.appendChild(name);
+      row.appendChild(tog);
+      list.appendChild(row);
     });
 
     dropdown.appendChild(list);
-    // Insert after the setting-btns div
+
     var btns = btn.closest('.setting-btns');
     if (btns && btns.parentNode) {
       btns.parentNode.insertBefore(dropdown, btns.nextSibling);
@@ -109,9 +124,11 @@
   function updateUI(value) {
     if (!dropdown) return;
     value = value || 'Modern';
-    var opts = dropdown.querySelectorAll('.palette-opt');
-    for (var i = 0; i < opts.length; i++) {
-      opts[i].setAttribute('aria-selected', opts[i].getAttribute('data-palette') === value ? 'true' : 'false');
+    var togs = dropdown.querySelectorAll('.palette-tog');
+    for (var i = 0; i < togs.length; i++) {
+      var active = togs[i].getAttribute('data-palette') === value;
+      togs[i].setAttribute('aria-pressed', active ? 'true' : 'false');
+      togs[i].textContent = active ? 'On' : 'Off';
     }
   }
 
@@ -133,13 +150,12 @@
   function open() {
     dropdown.hidden = false;
     updateUI(currentPalette());
-    var active = dropdown.querySelector('[aria-selected="true"]');
+    var active = dropdown.querySelector('[aria-pressed="true"]');
     if (active) active.focus();
   }
 
   function close() {
     dropdown.hidden = true;
-    // Restore saved palette (undo preview changes)
     var cur = currentPalette();
     if (saved && cur !== saved) {
       setPalette(saved);

@@ -3048,37 +3048,45 @@ kbd {
     letter-spacing: 0.06em;
     color: var(--secondary-text);
 }
-.palette-opt {
+.palette-row {
     display: flex;
     align-items: center;
-    width: 100%;
-    padding: 0.4rem 0.8rem;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    color: var(--text-color);
-    font-family: inherit;
-    font-size: 0.82rem;
-    font-weight: 400;
-    text-align: left;
-    cursor: pointer;
-    line-height: 1.5;
+    justify-content: space-between;
+    padding: 0 0.8rem;
+    min-height: 2.2rem;
 }
-.palette-opt:hover,
-.palette-opt:focus-visible {
-    outline: none;
+.palette-row:hover {
     background: var(--toc-hover-bg);
 }
-.palette-opt[aria-selected="true"] {
-    background: var(--toc-active-bg);
-    font-weight: 700;
+.palette-name {
+    font-size: 0.82rem;
+    color: var(--text-color);
 }
-.palette-opt[aria-selected="true"]::after {
-    content: "✓";
-    margin-left: auto;
-    font-size: 0.78rem;
-    font-weight: 400;
-    color: var(--link-color);
+.palette-tog {
+    flex-shrink: 0;
+    min-width: 3.2rem;
+    padding: 0.25rem 0.6rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--secondary-text);
+    font-family: inherit;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    line-height: 1.4;
+}
+.palette-tog:hover,
+.palette-tog:focus-visible {
+    outline: none;
+    border-color: var(--link-color);
+    color: var(--text-color);
+}
+.palette-tog[aria-pressed="true"] {
+    background: var(--link-color);
+    color: var(--bg-color);
+    border-color: var(--link-color);
 }
 
 /* High-contrast / forced-colors mode overrides */
