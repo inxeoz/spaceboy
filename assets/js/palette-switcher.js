@@ -3,43 +3,43 @@
 
   /* ── palette data ── */
   var PALETTES = [
-    { id: '90s',            label: '90s' },
-    { id: 'Modern',         label: 'Modern' },
-    { id: 'Neon',           label: 'Neon' },
-    { id: 'Anime',          label: 'Anime' },
-    { id: 'Maharaja',       label: 'Maharaja' },
-    { id: 'Nature',         label: 'Nature' },
-    { id: 'Galaxy',         label: 'Galaxy' },
-    { id: 'Ocean',          label: 'Ocean' },
-    { id: 'BlackWhite',     label: 'Black & White' },
-    { id: 'C-Looney-Tunes', label: 'Looney Tunes' },
-    { id: 'C-Disney',       label: 'Disney' },
-    { id: 'Hacker',         label: 'Hacker' },
-    { id: '2d-game',        label: '2D Game' },
+    { id: '90s',            label: '90s',            color: '#0860b8' },
+    { id: 'Modern',         label: 'Modern',         color: '#2563eb' },
+    { id: 'Neon',           label: 'Neon',           color: '#c900c9' },
+    { id: 'Anime',          label: 'Anime',          color: '#e84a7a' },
+    { id: 'Maharaja',       label: 'Maharaja',       color: '#c0392b' },
+    { id: 'Nature',         label: 'Nature',         color: '#2d7d46' },
+    { id: 'Galaxy',         label: 'Galaxy',         color: '#7c4dff' },
+    { id: 'Ocean',          label: 'Ocean',          color: '#0077b6' },
+    { id: 'BlackWhite',     label: 'Black & White',  color: '#000000' },
+    { id: 'C-Looney-Tunes', label: 'Looney Tunes',   color: '#7c3aed' },
+    { id: 'C-Disney',       label: 'Disney',         color: '#1a3d7c' },
+    { id: 'Hacker',         label: 'Hacker',         color: '#1a7a1a' },
+    { id: '2d-game',        label: '2D Game',        color: '#e63946' },
 
     { sep: 'dark' },
-    { id: 'Herdr',           label: 'herdr' },
-    { id: 'Taat',            label: 'taat' },
-    { id: 'Catppuccin',      label: 'catppuccin' },
-    { id: 'Terminal',        label: 'terminal' },
-    { id: 'Tokyo-Night',     label: 'tokyo night' },
-    { id: 'Dracula',         label: 'dracula' },
-    { id: 'Nord',            label: 'nord' },
-    { id: 'Gruvbox',         label: 'gruvbox' },
-    { id: 'One-Dark',        label: 'one dark' },
-    { id: 'Solarized',       label: 'solarized' },
-    { id: 'Kanagawa',        label: 'kanagawa' },
-    { id: 'Rose-Pine',       label: 'rose pine' },
-    { id: 'Vesper',          label: 'vesper' },
+    { id: 'Herdr',           label: 'herdr',          color: '#4a9eff' },
+    { id: 'Taat',            label: 'taat',           color: '#4a9eff' },
+    { id: 'Catppuccin',      label: 'catppuccin',     color: '#89b4fa' },
+    { id: 'Terminal',        label: 'terminal',       color: '#4a9eff' },
+    { id: 'Tokyo-Night',     label: 'tokyo night',    color: '#7aa2f7' },
+    { id: 'Dracula',         label: 'dracula',        color: '#bd93f9' },
+    { id: 'Nord',            label: 'nord',           color: '#88c0d0' },
+    { id: 'Gruvbox',         label: 'gruvbox',        color: '#d79921' },
+    { id: 'One-Dark',        label: 'one dark',       color: '#61afef' },
+    { id: 'Solarized',       label: 'solarized',      color: '#268bd2' },
+    { id: 'Kanagawa',        label: 'kanagawa',       color: '#7e9cd8' },
+    { id: 'Rose-Pine',       label: 'rose pine',      color: '#c4a7e7' },
+    { id: 'Vesper',          label: 'vesper',          color: '#ffc799' },
 
     { sep: 'light' },
-    { id: 'Catppuccin-Latte',   label: 'catppuccin latte' },
-    { id: 'Tokyo-Night-Day',    label: 'tokyo day' },
-    { id: 'Gruvbox-Light',      label: 'gruvbox light' },
-    { id: 'One-Light',          label: 'one light' },
-    { id: 'Solarized-Light',    label: 'solarized light' },
-    { id: 'Kanagawa-Lotus',     label: 'kanagawa lotus' },
-    { id: 'Rose-Pine-Dawn',     label: 'rose pine dawn' },
+    { id: 'Catppuccin-Latte',   label: 'catppuccin latte',  color: '#1e66f5' },
+    { id: 'Tokyo-Night-Day',    label: 'tokyo day',         color: '#2e7de9' },
+    { id: 'Gruvbox-Light',      label: 'gruvbox light',     color: '#076678' },
+    { id: 'One-Light',          label: 'one light',         color: '#4078f2' },
+    { id: 'Solarized-Light',    label: 'solarized light',   color: '#268bd2' },
+    { id: 'Kanagawa-Lotus',     label: 'kanagawa lotus',    color: '#4d699b' },
+    { id: 'Rose-Pine-Dawn',     label: 'rose pine dawn',    color: '#907aa9' },
   ];
 
   var dropdown, btn, saved;
@@ -86,7 +86,13 @@
       tog.className = 'palette-tog';
       tog.setAttribute('data-palette', p.id);
       tog.setAttribute('aria-pressed', p.id === activeId ? 'true' : 'false');
-      tog.textContent = p.id === activeId ? 'On' : 'Off';
+
+      // Color swatch inside toggle
+      var swatch = document.createElement('span');
+      swatch.className = 'palette-swatch';
+      swatch.style.borderColor = p.color;
+      if (p.id === activeId) swatch.style.background = p.color;
+      tog.appendChild(swatch);
 
       tog.addEventListener('click', function (e) {
         e.stopPropagation();
@@ -127,7 +133,10 @@
     for (var i = 0; i < togs.length; i++) {
       var active = togs[i].getAttribute('data-palette') === value;
       togs[i].setAttribute('aria-pressed', active ? 'true' : 'false');
-      togs[i].textContent = active ? 'On' : 'Off';
+      var swatch = togs[i].querySelector('.palette-swatch');
+      if (swatch) {
+        swatch.style.background = active ? swatch.style.borderColor : 'transparent';
+      }
     }
   }
 
