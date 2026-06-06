@@ -120,7 +120,7 @@
   function setPalette(value) {
     value = value || 'Modern';
     document.documentElement.setAttribute('data-palette', value);
-    try { localStorage.setItem('palette', value); } catch (_) {}
+    try { localStorage.setItem('palette', value); saved = value; } catch (_) {}
     updateUI(value);
   }
 
