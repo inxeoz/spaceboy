@@ -65,21 +65,10 @@
 <link rel="stylesheet" href="{{ $syntax.RelPermalink }}" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="{{ $syntax.RelPermalink }}"></noscript>
 
-  {{ $needsFancybox := or (eq .Type "gallery") (and .IsPage (in .Content "data-fancybox")) (.Param "lightbox") }}
-  {{ $fancyboxCSSLocal := default (default (printf "%s%s" .Site.Params.staticPrefix ("/vendor/fancybox/fancybox.css" | relURL)) .Site.Params.fancyboxCSS) .Site.Params.fancyboxCSSLocal }}
-  {{ $fancyboxCSSCDN := default "https://cdn.jsdelivr.net/npm/@fancyapps/ui@6.1/dist/fancybox/fancybox.css" .Site.Params.fancyboxCSSCDN }}
-  {{ $enableCDNFallback := ne .Site.Params.enableCDNFallback false }}
-  {{ if $needsFancybox }}
-  {{ $fancyboxCSSFinal := $fancyboxCSSLocal }}
-  {{ if and $enableCDNFallback (ne $fancyboxCSSLocal $fancyboxCSSCDN) }}
-    {{ $fancyboxCSSFinal = $fancyboxCSSCDN }}
-  {{ end }}
-  <link rel="stylesheet" href="{{ $fancyboxCSSFinal }}" media="print" onload="this.media='all'">
-  <noscript><link rel="stylesheet" href="{{ $fancyboxCSSFinal }}"></noscript>
-  {{ end }}
 
   {{ $needsKaTeX := and .IsPage (or (.HasShortcode "katex") (in .RawContent "$$") (in .RawContent "$")) }}
-  {{- if and $enableCDNFallback (or $needsFancybox $needsKaTeX) }}
+  {{ $enableCDNFallback := ne .Site.Params.enableCDNFallback false }}
+  {{- if and $enableCDNFallback $needsKaTeX }}
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   {{- end }}
   {{ $katexCSSLocal := default (default (printf "%s%s" .Site.Params.staticPrefix ("/vendor/katex/katex.min.css" | relURL)) .Site.Params.katexCSS) .Site.Params.katexCSSLocal }}

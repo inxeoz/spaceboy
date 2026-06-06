@@ -124,20 +124,6 @@
   }
 
   document.addEventListener('DOMContentLoaded', function() {
-    if (S.needsFancybox && !S.legacyMode) {
-      loadScriptWithFallback(
-        S.fancyboxJSLocal,
-        S.fancyboxJSCDN,
-        function() {
-          if (window.Fancybox && typeof window.Fancybox.bind === 'function') {
-            window.Fancybox.bind('[data-fancybox]', {
-              Toolbar: { display: { left: [], middle: [], right: ['zoomIn', 'zoomOut', 'close'] } }
-            });
-          }
-        }
-      );
-    }
-
     if (S.needsMermaid && !S.legacyMode) {
       loadScriptWithFallback(
         S.mermaidJSLocal,

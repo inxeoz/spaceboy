@@ -235,7 +235,6 @@
   {{ .Store.Set "showToc" $showTOC }}
   {{ partial "scripts.html" . }}
   {{ if .Site.Params.extraBody }}{{ .Site.Params.extraBody | safeHTML }}{{ end }}
-  {{- with .Param "lightbox" }}<script>(function(){document.querySelectorAll('.post-content img:not([data-fancybox])').forEach(function(el){el.setAttribute('data-fancybox','post')})})()</script>{{ end -}}
   {{- with .Param "customJS" }}<script>{{ . | safeJS }}</script>{{ end -}}
 
 </body>

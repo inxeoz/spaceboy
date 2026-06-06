@@ -20,9 +20,7 @@
           <div class="gallery-grid" data-testid="gallery-grid">
             {{ range .Params.gallery }}
             <div class="gallery-item" data-testid="gallery-item">
-              <a href="{{ .url }}" data-fancybox="gallery" data-caption="{{ .name }}" data-testid="gallery-image-link">
-                <img src="{{ .url }}" alt="{{ .name }}" loading="lazy" data-testid="gallery-image">
-              </a>
+              <img src="{{ .url }}" alt="{{ .name }}" loading="lazy" data-testid="gallery-image">
               {{ if .name }}<p class="gallery-caption" data-testid="gallery-caption">{{ .name }}</p>{{ end }}
             </div>
             {{ end }}
