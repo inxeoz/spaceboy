@@ -214,7 +214,38 @@
                 navigator.clipboard.writeText(window.location.origin + url).catch(function() {});
               }
               history.pushState(null, '', url);
-              h.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+              // ── Custom smooth scroll with ease-out and highlight ──
+              function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+              function flashHeading() {
+                h.classList.remove('heading-highlight');
+                void h.offsetWidth;
+                h.classList.add('heading-highlight');
+                setTimeout(function() { h.classList.remove('heading-highlight'); }, 1600);
+              }
+              function doScroll() {
+                var targetY = h.getBoundingClientRect().top + window.pageYOffset - (window.innerHeight / 2) + (h.offsetHeight / 2);
+                var startY = window.pageYOffset;
+                var distance = targetY - startY;
+                if (Math.abs(distance) < 5) { flashHeading(); return; }
+                var duration = Math.min(800, Math.max(250, Math.abs(distance) * 0.4));
+                var startTime = null;
+                function step(now) {
+                  if (!startTime) startTime = now;
+                  var elapsed = now - startTime;
+                  var p = Math.min(elapsed / duration, 1);
+                  window.scrollTo(0, startY + distance * easeOutCubic(p));
+                  if (p < 1) { requestAnimationFrame(step); }
+                  else { flashHeading(); }
+                }
+                requestAnimationFrame(step);
+              }
+              if (prefersReducedMotion) {
+                h.scrollIntoView({ behavior: 'instant', block: 'center' });
+                flashHeading();
+              } else {
+                doScroll();
+              }
               announce('Link copied!');
             });
             h.appendChild(anchor);

@@ -13,14 +13,11 @@
     var headings = [];
     article.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(function(el) {
       if (el.id) {
-        var clone = el.cloneNode(true);
-        var anch = clone.querySelector('.heading-anchor');
-        if (anch) anch.parentNode.removeChild(anch);
         headings.push({
           id: el.id,
           el: el,
           level: parseInt(el.tagName[1]),
-          text: clone.textContent.trim()
+          text: el.textContent.trim()
         });
       }
     });
@@ -41,6 +38,9 @@
       });
     }
 
+    // ── Prefer reduced motion ──
+    var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     // ── Scroll TOC container so the active link stays visible ──
     function scrollTocToActive(container, link) {
       var cRect = container.getBoundingClientRect();
@@ -53,9 +53,6 @@
     }
 
     // ── Active index ──
-    // Returns the index of the last heading that has scrolled past the 90px
-    // threshold. Falls back to 0 (first heading) so there is always something
-    // highlighted — including when the page is at the very top.
     function getActiveIndex() {
       for (var i = headings.length - 1; i >= 0; i--) {
         if (headings[i].el.getBoundingClientRect().top <= 90) return i;
@@ -64,9 +61,7 @@
     }
 
     // ── Walk backwards from idx to find the nearest heading that has a
-    //    link in tocNav. This handles the case where the active heading is
-    //    an h3/h4 that only appears in the right TOC — we highlight its
-    //    nearest ancestor h1/h2 in the left TOC instead. ──
+    //    link in tocNav. Handles h3/h4 that only appear in the right TOC. ──
     function findTocLink(tocNav, startIdx) {
       for (var i = startIdx; i >= 0; i--) {
         var link = tocNav.querySelector('a[href="#' + headings[i].id + '"]');
@@ -75,75 +70,99 @@
       return null;
     }
 
+    function setActive(link) {
+      if (!link) return;
+      link.classList.add('active');
+      link.setAttribute('aria-current', 'location');
+    }
+
+    function clearActive(container) {
+      if (!container) return;
+      container.querySelectorAll('a.active').forEach(function(a) {
+        a.classList.remove('active');
+        a.removeAttribute('aria-current');
+      });
+    }
+
     // ── Update main (left) TOC ──
     function updateMain(activeIdx) {
       if (!mainTocNav) return;
-      mainTocNav.querySelectorAll('a').forEach(function(a) { a.classList.remove('active'); });
+      clearActive(mainTocNav);
       var link = findTocLink(mainTocNav, activeIdx);
       if (link) {
-        link.classList.add('active');
+        setActive(link);
         scrollTocToActive(mainTocNav, link);
       }
     }
 
     // ── Update sub (right) TOC ──
+    var lastSubParentId = null;
+
     function updateSub(activeIdx) {
       if (!subTocNav) return;
 
-      var header = document.getElementById('sub-toc-header-text');
-      if (!header) {
-        var h = subTocNav.closest('.toc-card').querySelector('.toc-header');
-        header = document.createElement('span');
-        header.id = 'sub-toc-header-text';
-        h.textContent = '';
-        h.appendChild(header);
-      }
-
       var subs = [];
+      var currentH2 = null;
+      var currentH2Id = null;
 
       if (hasH3) {
-        var currentH2 = null;
         for (var i = activeIdx; i >= 0; i--) {
-          if (headings[i].level === 2) { currentH2 = headings[i]; break; }
+          if (headings[i].level === 2) { currentH2 = headings[i]; currentH2Id = i; break; }
         }
-        header.textContent = currentH2 ? currentH2.text : 'In this section';
+      }
 
-        if (currentH2) {
-          var start = headings.indexOf(currentH2);
-          for (var i = start + 1; i < headings.length; i++) {
-            if (headings[i].level === 2) break;
-            if (headings[i].level >= 3) subs.push(headings[i]);
+      // Only rebuild HTML when crossing an H2 boundary
+      if (currentH2Id !== lastSubParentId) {
+        lastSubParentId = currentH2Id;
+
+        var header = document.getElementById('sub-toc-header');
+        if (!header) {
+          var h = subTocNav.closest('.toc-card').querySelector('.toc-header');
+          header = document.createElement('span');
+          header.id = 'sub-toc-header';
+          h.textContent = '';
+          h.appendChild(header);
+        }
+
+        if (hasH3) {
+          header.textContent = currentH2 ? currentH2.text : 'In this section';
+
+          if (currentH2) {
+            var start = headings.indexOf(currentH2);
+            for (var i = start + 1; i < headings.length; i++) {
+              if (headings[i].level === 2) break;
+              if (headings[i].level >= 3) subs.push(headings[i]);
+            }
+          }
+        } else {
+          header.textContent = 'Sections';
+          if (hasH2) {
+            headings.forEach(function(h) {
+              if (h.level === 2) subs.push(h);
+            });
           }
         }
-      } else {
-        header.textContent = 'Sections';
-        if (hasH2) {
-          headings.forEach(function(h) {
-            if (h.level === 2) subs.push(h);
-          });
+
+        if (subs.length === 0) {
+          subTocNav.innerHTML = '<p class="sub-toc-empty">No sub headings</p>';
+          return;
         }
+
+        var html = '<ul>';
+        subs.forEach(function(h) {
+          var displayLevel = h.level > 4 ? 4 : h.level;
+          html += '<li><a href="#' + h.id + '" data-level="' + displayLevel + '"><span class="dot"></span>' + h.text + '</a></li>';
+        });
+        html += '</ul>';
+        subTocNav.innerHTML = html;
       }
 
-      if (subs.length === 0) {
-        subTocNav.innerHTML = '<p class="sub-toc-empty">No sub headings</p>';
-        return;
+      clearActive(subTocNav);
+      var activeLink = subTocNav.querySelector('a[href="#' + headings[activeIdx].id + '"]');
+      if (activeLink) {
+        setActive(activeLink);
+        scrollTocToActive(subTocNav, activeLink);
       }
-
-      var html = '<ul>';
-      subs.forEach(function(h) {
-        var displayLevel = h.level > 4 ? 4 : h.level;
-        html += '<li><a href="#' + h.id + '" data-level="' + displayLevel + '"><span class="dot"></span>' + h.text + '</a></li>';
-      });
-      html += '</ul>';
-      subTocNav.innerHTML = html;
-
-      subTocNav.querySelectorAll('a').forEach(function(a) { a.classList.remove('active'); });
-      subTocNav.querySelectorAll('a').forEach(function(a) {
-        if (a.getAttribute('href') === '#' + headings[activeIdx].id) {
-          a.classList.add('active');
-          scrollTocToActive(subTocNav, a);
-        }
-      });
     }
 
     function updateBoth() {
@@ -159,25 +178,70 @@
         var link = e.target.closest('a[href^="#"]');
         if (!link) return;
         e.preventDefault();
-        var id = link.getAttribute('href').slice(1);
-        var target = document.getElementById(id);
+        var rawId = link.getAttribute('href').slice(1);
+        var target = document.getElementById(rawId);
         if (!target) return;
 
-        // Force the active class immediately so there is no flash of
-        // un-highlighted state while the smooth scroll animates.
+        // Force the active class immediately
+        clearActive(mainTocNav);
+        clearActive(subTocNav);
+        link.classList.add('active');
+        link.setAttribute('aria-current', 'location');
+
         if (container === mainTocNav) {
-          mainTocNav.querySelectorAll('a').forEach(function(a) { a.classList.remove('active'); });
-          link.classList.add('active');
+          clearActive(subTocNav);
+          // Also update the right TOC to reflect
+          var idx = headings.findIndex(function(h) { return h.id === rawId; });
+          if (idx >= 0) lastSubParentId = null; // force sub-TOC rebuild on next updateSub
         } else if (container === subTocNav) {
-          subTocNav.querySelectorAll('a').forEach(function(a) { a.classList.remove('active'); });
-          link.classList.add('active');
-          // Also update the left TOC to reflect the parent section
-          var idx = headings.findIndex(function(h) { return h.id === id; });
+          clearActive(mainTocNav);
+          var idx = headings.findIndex(function(h) { return h.id === rawId; });
           if (idx >= 0) updateMain(idx);
         }
+        // ── Custom smooth scroll with ease-out and highlight ──
+        function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
 
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        history.pushState(null, '', '#' + id);
+        function flashHeading() {
+          target.classList.remove('heading-highlight');
+          void target.offsetWidth;
+          target.classList.add('heading-highlight');
+          setTimeout(function() { target.classList.remove('heading-highlight'); }, 1600);
+        }
+
+        function doScroll() {
+          var targetY = target.getBoundingClientRect().top + window.pageYOffset - (window.innerHeight / 2) + (target.offsetHeight / 2);
+          var startY = window.pageYOffset;
+          var distance = targetY - startY;
+
+          if (Math.abs(distance) < 5) { flashHeading(); return; }
+
+          var duration = Math.min(800, Math.max(250, Math.abs(distance) * 0.4));
+          var startTime = null;
+
+          function step(now) {
+            if (!startTime) startTime = now;
+            var elapsed = now - startTime;
+            var p = Math.min(elapsed / duration, 1);
+            window.scrollTo(0, startY + distance * easeOutCubic(p));
+            if (p < 1) {
+              requestAnimationFrame(step);
+            } else {
+              flashHeading();
+            }
+          }
+          requestAnimationFrame(step);
+        }
+
+        if (prefersReducedMotion) {
+          target.scrollIntoView({ behavior: 'instant', block: 'center' });
+          flashHeading();
+        } else {
+          doScroll();
+        }
+
+        if (window.history && window.history.pushState) {
+          history.pushState(null, '', '#' + rawId);
+        }
       });
     }
     setupSmoothScroll(mainTocNav);
@@ -185,8 +249,8 @@
 
     // ── IntersectionObserver ──
     if (window.IntersectionObserver) {
-      var obs = new IntersectionObserver(function() { updateBoth(); }, { rootMargin: '-90px 0px -75% 0px' });
-      headings.forEach(function(h) { obs.observe(h.el); });
+      var tocObs = new IntersectionObserver(function() { updateBoth(); }, { rootMargin: '-90px 0px -75% 0px' });
+      headings.forEach(function(h) { tocObs.observe(h.el); });
     } else {
       var ticking = false;
       window.addEventListener('scroll', function() {
@@ -218,5 +282,9 @@
     updateBoth();
   }
 
-  window.initDualTableOfContents = initDualTableOfContents;
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDualTableOfContents);
+  } else {
+    initDualTableOfContents();
+  }
 })();

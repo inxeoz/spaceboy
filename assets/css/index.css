@@ -14,6 +14,7 @@
 
     --toc-bg: rgba(255, 255, 255, 0.35);
     --toc-active-bg: rgba(8, 96, 184, 0.08);
+    --toc-hover-bg: rgba(8, 96, 184, 0.04);
 
     --font-body: "JetBrains Mono", "Fira Code", monospace;
     --font-mono: "Fira Code", "JetBrains Mono", monospace;
@@ -55,6 +56,7 @@
 
     --toc-bg: rgba(0, 0, 0, 0.30);
     --toc-active-bg: rgba(77, 208, 225, 0.12);
+    --toc-hover-bg: rgba(77, 208, 225, 0.06);
 }
 
 /* Skip-to-content for keyboard / screen-reader users */
@@ -625,6 +627,15 @@ main {
     font-style: italic;
 }
 
+.post-content h1,
+.post-content h2,
+.post-content h3,
+.post-content h4,
+.post-content h5,
+.post-content h6 {
+    word-break: break-word;
+}
+
 .post-content h1 {
     font: var(--font-weight-bold) clamp(1.25rem, 4vw, 1.85rem)/1.4
         var(--font-body);
@@ -690,6 +701,27 @@ main {
 }
 .heading-anchor:hover {
     color: var(--link-color);
+}
+
+@keyframes heading-flash {
+  0% { transform: scaleX(0); opacity: 0.1; }
+  45% { transform: scaleX(1); opacity: 0.1; }
+  100% { transform: scaleX(1); opacity: 0; }
+}
+.heading-highlight:where(h1,h2,h3,h4,h5,h6) {
+    position: relative;
+}
+.heading-highlight::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--link-color);
+    border-radius: 3px;
+    transform: scaleX(0);
+    transform-origin: left;
+    pointer-events: none;
+    z-index: -1;
+    animation: heading-flash 1.6s ease-out;
 }
 
 .post-content ul,
@@ -2171,11 +2203,16 @@ pre {
     position: relative;
     margin: 0;
 }
+.toc-main li:not(:last-child) {
+    border-bottom: 1px solid var(--border-color);
+}
 
 .toc-main a {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    min-width: 0;
+    word-break: break-word;
     padding: 0.3rem 0.5rem;
     color: var(--secondary-text);
     opacity: 0.7;
@@ -2200,7 +2237,7 @@ pre {
 .toc-main a:hover {
     opacity: 1;
     color: var(--link-color);
-    background: var(--toc-active-bg);
+    background: var(--toc-hover-bg);
 }
 
 .toc-main a:hover .dot {
@@ -2258,11 +2295,16 @@ pre {
 .toc-sub-nav li {
     margin: 0;
 }
+.toc-sub-nav li:not(:last-child) {
+    border-bottom: 1px solid var(--border-color);
+}
 
 .toc-sub-nav a {
     display: flex;
     align-items: center;
     gap: 0.35rem;
+    min-width: 0;
+    word-break: break-word;
     padding: 0.28rem 0.5rem;
     color: var(--secondary-text);
     opacity: 0.7;
@@ -2283,7 +2325,7 @@ pre {
 .toc-sub-nav a:hover {
     opacity: 1;
     color: var(--link-color);
-    background: var(--toc-active-bg);
+    background: var(--toc-hover-bg);
 }
 
 .toc-sub-nav a:hover .dot {
