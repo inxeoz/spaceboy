@@ -2087,7 +2087,7 @@ pre {
     position: sticky;
     top: 65px;
     height: calc(100vh - 80px);
-    overflow: visible;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     padding: 1.2rem 0 1rem 0;
@@ -2098,7 +2098,7 @@ pre {
     position: sticky;
     top: 65px;
     height: calc(100vh - 80px);
-    overflow: visible;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     padding: 1.2rem 0 1rem 0;
@@ -2206,13 +2206,13 @@ body.toc-resize-active {
     border-bottom: 1px solid var(--border-color);
 }
 
-/* ── TOC Nav ── */
 .toc-nav {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     flex: 1;
     overflow-y: auto;
+    overscroll-behavior: contain;
     padding: 0.5rem 0;
     scrollbar-width: thin;
     scrollbar-color: var(--link-color) transparent;
