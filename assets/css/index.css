@@ -2185,6 +2185,11 @@ body.toc-resize-active {
     user-select: none;
 }
 @media (max-width: 1200px) {
+    .toc-right .toc-resize-handle {
+        display: none;
+    }
+}
+@media (max-width: 768px) {
     .toc-resize-handle {
         display: none;
     }
