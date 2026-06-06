@@ -71,7 +71,7 @@
       if (p.sep) {
         var sep = document.createElement('div');
         sep.className = 'palette-sep';
-        sep.setAttribute('data-testid', 'palette-sep');
+        sep.setAttribute('data-testid', 'palette-sep-' + p.sep);
         sep.textContent = p.sep;
         list.appendChild(sep);
         return;
