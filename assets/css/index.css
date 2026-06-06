@@ -3046,6 +3046,23 @@ kbd {
     letter-spacing: 0.06em;
     color: var(--secondary-text);
 }
+.sbtn {
+    padding: 0.3rem 0.75rem;
+    font-size: 0.78rem;
+    font-family: inherit;
+    background: transparent;
+    color: var(--secondary-text);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    white-space: nowrap;
+}
+.sbtn:hover { border-color: var(--link-color); color: var(--link-color); }
+.sbtn.active {
+    background: var(--link-color);
+    color: var(--bg-color);
+    border-color: var(--link-color);
+}
 .palette-row {
     display: flex;
     align-items: center;
