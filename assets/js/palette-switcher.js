@@ -88,13 +88,11 @@
       tog.setAttribute('aria-pressed', p.id === activeId ? 'true' : 'false');
       tog.textContent = p.id === activeId ? 'On' : 'Off';
 
-      // Clicking toggle selects this palette
       tog.addEventListener('click', function (e) {
         e.stopPropagation();
         select(p.id);
       });
 
-      // Hover on row previews
       row.addEventListener('mouseenter', function () { preview(p.id); });
 
       row.appendChild(name);
@@ -104,9 +102,10 @@
 
     dropdown.appendChild(list);
 
-    var btns = btn.closest('.setting-btns');
-    if (btns && btns.parentNode) {
-      btns.parentNode.insertBefore(dropdown, btns.nextSibling);
+    // Insert right after the theme's setting-row, so it sits below it
+    var row = btn.closest('.setting-row');
+    if (row && row.parentNode) {
+      row.parentNode.insertBefore(dropdown, row.nextSibling);
     }
   }
 
