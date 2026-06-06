@@ -94,13 +94,11 @@
       if (p.id === activeId) swatch.style.background = p.color;
       tog.appendChild(swatch);
 
-      tog.addEventListener('click', function (e) {
-        e.stopPropagation();
+      tog.addEventListener('click', function () {
         select(p.id);
       });
-
+      row.addEventListener('click', function () { select(p.id); });
       row.addEventListener('mouseenter', function () { preview(p.id); });
-
       row.appendChild(name);
       row.appendChild(tog);
       list.appendChild(row);
