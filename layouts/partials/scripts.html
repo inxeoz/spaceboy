@@ -36,6 +36,12 @@ window.__SPACEBOY__ = {
 <script src="{{ $toc.RelPermalink }}" integrity="{{ $toc.Data.Integrity }}" defer></script>
 {{- end }}
 
+{{- /* toc-resize.js on pages with ToC for resizable sidebars */ -}}
+{{- if (.Store.Get "showToc") | default false }}
+{{ $resize := resources.Get "js/toc-resize.js" | minify | fingerprint }}
+<script src="{{ $resize.RelPermalink }}" integrity="{{ $resize.Data.Integrity }}" defer></script>
+{{- end }}
+
 {{- /* export.js only on pages with code blocks */ -}}
 {{- if in .Content "chroma" }}
 {{ $export := resources.Get "js/export.js" | minify | fingerprint }}
