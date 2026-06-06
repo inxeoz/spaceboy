@@ -80,34 +80,28 @@
       var row = document.createElement('div');
       row.className = 'palette-row';
       row.setAttribute('data-testid', 'palette-row-' + p.id);
+      row.setAttribute('data-palette', p.id);
+      row.setAttribute('aria-pressed', p.id === activeId ? 'true' : 'false');
 
       var name = document.createElement('span');
       name.className = 'palette-name';
       name.setAttribute('data-testid', 'palette-name-' + p.id);
       name.textContent = p.label;
 
-      var tog = document.createElement('button');
-      tog.type = 'button';
-      tog.className = 'palette-tog';
-      tog.setAttribute('data-testid', 'palette-tog-' + p.id);
-      tog.setAttribute('data-palette', p.id);
-      tog.setAttribute('aria-pressed', p.id === activeId ? 'true' : 'false');
-
-      // Color swatch inside toggle
+      // Color swatch indicator (no longer wrapped in a button — row click selects)
       var swatch = document.createElement('span');
       swatch.className = 'palette-swatch';
       swatch.setAttribute('data-testid', 'palette-swatch-' + p.id);
-      swatch.style.borderColor = p.color;
-      if (p.id === activeId) swatch.style.background = p.color;
-      tog.appendChild(swatch);
+      swatch.style.color = p.color;
 
-      tog.addEventListener('click', function () {
-        select(p.id);
-      });
+      var inner = document.createElement('span');
+      inner.className = 'palette-swatch-inner';
+      swatch.appendChild(inner);
+
       row.addEventListener('click', function () { select(p.id); });
       row.addEventListener('mouseenter', function () { preview(p.id); });
       row.appendChild(name);
-      row.appendChild(tog);
+      row.appendChild(swatch);
       list.appendChild(row);
     });
 
@@ -140,14 +134,10 @@
   function updateUI(value) {
     if (!dropdown) return;
     var cur = value != null && value !== '' ? value : document.documentElement.getAttribute('data-palette') || '';
-    var togs = dropdown.querySelectorAll('.palette-tog');
-    for (var i = 0; i < togs.length; i++) {
-      var active = togs[i].getAttribute('data-palette') === cur;
-      togs[i].setAttribute('aria-pressed', active ? 'true' : 'false');
-      var swatch = togs[i].querySelector('.palette-swatch');
-      if (swatch) {
-        swatch.style.background = active ? swatch.style.borderColor : 'transparent';
-      }
+    var rows = dropdown.querySelectorAll('.palette-row');
+    for (var i = 0; i < rows.length; i++) {
+      var active = rows[i].getAttribute('data-palette') === cur;
+      rows[i].setAttribute('aria-pressed', active ? 'true' : 'false');
     }
   }
 
@@ -155,7 +145,6 @@
     setPalette(value);
     close();
   }
-
   function preview(value) {
     document.documentElement.setAttribute('data-palette', value);
     updateUI(value);

@@ -3077,25 +3077,20 @@ kbd {
     font-size: 0.82rem;
     color: var(--text-color);
 }
-.palette-tog {
+.palette-swatch {
     flex-shrink: 0;
     width: 1.6rem;
     height: 1.6rem;
     padding: 2px;
     border: 1px solid var(--border-color);
     border-radius: 3px;
-    background: transparent;
-    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: transparent;
+    transition: background 0.15s ease;
 }
-.palette-tog:hover,
-.palette-tog:focus-visible {
-    outline: none;
-    border-color: var(--link-color);
-}
-.palette-swatch {
+.palette-swatch-inner {
     display: block;
     width: 100%;
     height: 100%;
@@ -3104,8 +3099,8 @@ kbd {
     background: transparent;
     transition: background 0.15s ease;
 }
-.palette-tog[aria-pressed="true"] .palette-swatch {
-    border-color: currentColor;
+.palette-row[aria-pressed="true"] .palette-swatch-inner {
+    background: currentColor;
 }
 @media (forced-colors: active) {
     .skip-link:focus {
