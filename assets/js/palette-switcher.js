@@ -58,10 +58,12 @@
     dropdown = document.createElement('div');
     dropdown.id = 'palette-dropdown';
     dropdown.className = 'palette-dropdown';
+    dropdown.setAttribute('data-testid', 'palette-dropdown');
     dropdown.hidden = true;
 
     var list = document.createElement('div');
     list.className = 'palette-dropdown-list';
+    list.setAttribute('data-testid', 'palette-list');
 
     var activeId = currentPalette();
 
@@ -69,6 +71,7 @@
       if (p.sep) {
         var sep = document.createElement('div');
         sep.className = 'palette-sep';
+        sep.setAttribute('data-testid', 'palette-sep');
         sep.textContent = p.sep;
         list.appendChild(sep);
         return;
@@ -76,20 +79,24 @@
 
       var row = document.createElement('div');
       row.className = 'palette-row';
+      row.setAttribute('data-testid', 'palette-row');
 
       var name = document.createElement('span');
       name.className = 'palette-name';
+      name.setAttribute('data-testid', 'palette-name');
       name.textContent = p.label;
 
       var tog = document.createElement('button');
       tog.type = 'button';
       tog.className = 'palette-tog';
+      tog.setAttribute('data-testid', 'palette-tog');
       tog.setAttribute('data-palette', p.id);
       tog.setAttribute('aria-pressed', p.id === activeId ? 'true' : 'false');
 
       // Color swatch inside toggle
       var swatch = document.createElement('span');
       swatch.className = 'palette-swatch';
+      swatch.setAttribute('data-testid', 'palette-swatch');
       swatch.style.borderColor = p.color;
       if (p.id === activeId) swatch.style.background = p.color;
       tog.appendChild(swatch);
