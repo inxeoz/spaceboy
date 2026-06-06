@@ -56,7 +56,7 @@
   <div class="page" data-testid="page-toc-layout">
     <aside class="toc-left" id="toc-left-sidebar" data-testid="toc-left-sidebar">
       {{ partial "toc-main.html" . }}
-      <div class="toc-resize-handle" data-edge="right" aria-hidden="true"></div>
+      <div class="toc-resize-handle" data-edge="right" data-testid="toc-resize-handle-right" aria-hidden="true"></div>
     </aside>
 
     <div class="main-content-wrapper" data-testid="main-content-wrapper">
@@ -152,7 +152,7 @@
   </div>
 
   <aside class="toc-right" id="toc-right-sidebar" data-testid="toc-right-sidebar">
-    <div class="toc-resize-handle" data-edge="left" aria-hidden="true"></div>
+    <div class="toc-resize-handle" data-edge="left" data-testid="toc-resize-handle-left" aria-hidden="true"></div>
     {{ partial "toc-sub.html" . }}
   </aside>
 </div>

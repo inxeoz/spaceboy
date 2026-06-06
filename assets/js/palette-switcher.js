@@ -79,24 +79,24 @@
 
       var row = document.createElement('div');
       row.className = 'palette-row';
-      row.setAttribute('data-testid', 'palette-row');
+      row.setAttribute('data-testid', 'palette-row-' + p.id);
 
       var name = document.createElement('span');
       name.className = 'palette-name';
-      name.setAttribute('data-testid', 'palette-name');
+      name.setAttribute('data-testid', 'palette-name-' + p.id);
       name.textContent = p.label;
 
       var tog = document.createElement('button');
       tog.type = 'button';
       tog.className = 'palette-tog';
-      tog.setAttribute('data-testid', 'palette-tog');
+      tog.setAttribute('data-testid', 'palette-tog-' + p.id);
       tog.setAttribute('data-palette', p.id);
       tog.setAttribute('aria-pressed', p.id === activeId ? 'true' : 'false');
 
       // Color swatch inside toggle
       var swatch = document.createElement('span');
       swatch.className = 'palette-swatch';
-      swatch.setAttribute('data-testid', 'palette-swatch');
+      swatch.setAttribute('data-testid', 'palette-swatch-' + p.id);
       swatch.style.borderColor = p.color;
       if (p.id === activeId) swatch.style.background = p.color;
       tog.appendChild(swatch);
