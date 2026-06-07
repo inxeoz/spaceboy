@@ -750,10 +750,43 @@ main {
     line-height: 1.8;
 }
 
-.post-content table {
-    width: 100%;
-    border-collapse: collapse;
+.post-content .table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     margin: 1.75em 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--secondary-text) var(--surface-color);
+    /* Shadow fade: local layers mask the shadow at each edge when you're already there */
+    background:
+        linear-gradient(to right, var(--bg-color), var(--bg-color)) left  / 40px 100% local   no-repeat,
+        linear-gradient(to left,  var(--bg-color), var(--bg-color)) right / 40px 100% local   no-repeat,
+        linear-gradient(to right, rgba(0,0,0,0.32), transparent)   left  / 40px 100% scroll  no-repeat,
+        linear-gradient(to left,  rgba(0,0,0,0.32), transparent)   right / 40px 100% scroll  no-repeat;
+}
+
+.post-content .table-scroll::-webkit-scrollbar {
+    height: 10px;
+}
+
+.post-content .table-scroll::-webkit-scrollbar-track {
+    background: var(--surface-color);
+    border-radius: 5px;
+}
+
+.post-content .table-scroll::-webkit-scrollbar-thumb {
+    background: var(--secondary-text);
+    border-radius: 5px;
+    border: 2px solid var(--surface-color);
+}
+
+.post-content .table-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--link-color);
+}
+
+.post-content table {
+    width: auto;
+    min-width: 100%;
+    border-collapse: collapse;
     font-size: 0.9rem;
     line-height: 1.6;
 }
@@ -783,10 +816,17 @@ main {
     background-color: var(--code-bg);
     padding: 1.25rem;
     overflow: auto;
+    -webkit-overflow-scrolling: touch;
     max-height: var(--code-max-height, 32rem);
     margin: 1.75em 0;
     border-radius: 4px;
     line-height: 1.6;
+}
+
+.post-content iframe,
+.post-content video {
+    max-width: 100%;
+    display: block;
 }
 .post-content code {
     font: var(--font-weight-normal) 0.9rem var(--font-mono);

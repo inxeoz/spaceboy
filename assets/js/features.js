@@ -251,6 +251,15 @@
             h.appendChild(anchor);
           })(headings[i]);
         }
+
+        // Wrap tables in a scrollable container
+        content.querySelectorAll('table').forEach(function(table) {
+          if (table.parentNode.classList.contains('table-scroll')) return;
+          var wrapper = document.createElement('div');
+          wrapper.className = 'table-scroll';
+          table.parentNode.insertBefore(wrapper, table);
+          wrapper.appendChild(table);
+        });
       }
 
       // Share: copy-link button
