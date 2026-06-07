@@ -105,8 +105,9 @@
             {{ end }}
           </header>
 
+          {{ if .TableOfContents }}
           <div class="toc-mobile" id="toc-mobile" data-testid="toc-mobile">
-            <button class="toc-mobile-toggle" id="toc-mobile-toggle" aria-expanded="false" data-testid="toc-mobile-toggle">
+            <button type="button" class="toc-mobile-toggle" id="toc-mobile-toggle" aria-expanded="false" data-testid="toc-mobile-toggle">
               <span data-testid="toc-mobile-label">{{ .Param "tocTitle" | default "Contents" }}</span>
               <span class="icon" data-testid="toc-mobile-icon">▾</span>
             </button>
@@ -116,6 +117,7 @@
               </nav>
             </div>
           </div>
+          {{ end }}
 
           <div class="post-content" data-testid="post-content">
             {{ with .Params.epigraph }}<blockquote class="epigraph"><p>{{ . }}</p></blockquote>{{ end }}
@@ -199,6 +201,20 @@
         </div>
         {{ end }}
       </header>
+
+      {{ if .TableOfContents }}
+      <div class="toc-mobile" id="toc-mobile" data-testid="toc-mobile">
+        <button type="button" class="toc-mobile-toggle" id="toc-mobile-toggle" aria-expanded="false" data-testid="toc-mobile-toggle">
+          <span data-testid="toc-mobile-label">{{ .Param "tocTitle" | default "Contents" }}</span>
+          <span class="icon" data-testid="toc-mobile-icon">▾</span>
+        </button>
+        <div class="toc-mobile-content" id="toc-mobile-content" hidden data-testid="toc-mobile-content">
+          <nav class="toc-nav toc-main" data-testid="toc-mobile-nav">
+            {{ .TableOfContents }}
+          </nav>
+        </div>
+      </div>
+      {{ end }}
 
       <div class="post-content" data-testid="post-content">
         {{ with .Params.epigraph }}<blockquote class="epigraph"><p>{{ . }}</p></blockquote>{{ end }}

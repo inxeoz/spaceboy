@@ -141,8 +141,6 @@
   updateLayoutIcons();
 
   document.addEventListener('DOMContentLoaded', function() {
-    if (typeof window.initDualTableOfContents === 'function') window.initDualTableOfContents();
-
     var header = document.getElementById('site-header');
     if (header) {
       var lastScrollY = window.pageYOffset || document.documentElement.scrollTop;

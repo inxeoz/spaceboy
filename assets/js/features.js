@@ -153,7 +153,7 @@
       document.body.appendChild(langTooltip);
 
       document.addEventListener('mousemove', function(e) {
-        if (closest(e.target, '.copy-code-btn, .export-code-btn')) {
+        if (closest(e.target, '.copy-code-btn')) {
           langTooltip.classList.remove('visible');
           return;
         }

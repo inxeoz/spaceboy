@@ -4,7 +4,6 @@
   function initDualTableOfContents() {
     var mainTocNav = document.getElementById('toc-nav');
     var subTocNav = document.getElementById('toc-sub-nav');
-    if (!mainTocNav && !subTocNav) return;
 
     var article = document.getElementById('article');
     if (!article) return;

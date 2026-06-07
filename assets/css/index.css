@@ -847,30 +847,12 @@ main {
     z-index: 10;
 }
 
-.export-code-btn {
-    position: absolute;
-    top: 36px;
-    right: 8px;
-    padding: 4px 8px;
-    background: var(--code-bg);
-    color: var(--text-color);
-    border: 1px solid var(--secondary-text);
-    cursor: pointer;
-    opacity: 0;
-    transition: opacity 0.2s;
-    font-family: inherit;
-    z-index: 10;
-}
-
 .code-block-wrapper:hover .copy-code-btn,
-.code-block-wrapper:hover .export-code-btn,
-.code-block-wrapper.clicked .copy-code-btn,
-.code-block-wrapper.clicked .export-code-btn {
+.code-block-wrapper.clicked .copy-code-btn {
     opacity: 1;
 }
 @media (hover: none) {
-    .copy-code-btn,
-    .export-code-btn {
+    .copy-code-btn {
         opacity: 1;
     }
 
@@ -882,15 +864,13 @@ main {
         min-width: 44px;
     }
 }
-.copy-code-btn:hover,
-.export-code-btn:hover {
+.copy-code-btn:hover {
     opacity: 0.5 !important;
 }
 .copy-code-btn.copied {
     color: #22c55e;
 }
-.copy-code-btn:focus-visible,
-.export-code-btn:focus-visible {
+.copy-code-btn:focus-visible {
     opacity: 1;
     outline: 3px solid var(--link-color);
     outline-offset: 2px;
@@ -2478,6 +2458,8 @@ body.toc-resize-active {
 .toc-mobile-content .toc-nav {
     padding: 0;
     font-size: 0.82rem;
+    overflow: visible;
+    overscroll-behavior: auto;
 }
 
 .toc-mobile-content .toc-nav ul ul {
@@ -2654,7 +2636,7 @@ body.toc-resize-active {
 @media print {
     .site-header-container,
     .toc-left, .toc-right, .toc-mobile,
-    .progress-bar, .copy-code-btn, .export-code-btn,
+    .progress-bar, .copy-code-btn,
     .post-tags, .related-content, .related-posts,
     .post-ads, .post-comments,
     .back-to-top, .post-share, .heading-anchor,
@@ -3095,8 +3077,7 @@ kbd {
     .post-category {
         border: 1px solid ButtonText;
     }
-    .copy-code-btn,
-    .export-code-btn {
+    .copy-code-btn {
         border: 1px solid ButtonText;
         background: ButtonFace;
         color: ButtonText;

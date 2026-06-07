@@ -30,8 +30,8 @@ window.__SPACEBOY__ = {
 {{ $core := slice $lazyload $features $theme | resources.Concat "js/theme-core.js" | minify | fingerprint }}
 <script src="{{ $core.RelPermalink }}" integrity="{{ $core.Data.Integrity }}" defer></script>
 
-{{- /* toc.js only on pages with ToC enabled */ -}}
-{{- if (.Store.Get "showToc") | default false }}
+{{- /* toc.js on pages that have headings (for mobile TOC toggle + desktop TOC sync) */ -}}
+{{- if .TableOfContents }}
 {{ $toc := resources.Get "js/toc.js" | minify | fingerprint }}
 <script src="{{ $toc.RelPermalink }}" integrity="{{ $toc.Data.Integrity }}" defer></script>
 {{- end }}
@@ -42,11 +42,6 @@ window.__SPACEBOY__ = {
 <script src="{{ $resize.RelPermalink }}" integrity="{{ $resize.Data.Integrity }}" defer></script>
 {{- end }}
 
-{{- /* export.js only on pages with code blocks */ -}}
-{{- if in .Content "chroma" }}
-{{ $export := resources.Get "js/export.js" | minify | fingerprint }}
-<script src="{{ $export.RelPermalink }}" integrity="{{ $export.Data.Integrity }}" defer></script>
-{{- end }}
 
 {{- /* palette-switcher.js — always loaded for color scheme overlay */ -}}
 {{ $palette := resources.Get "js/palette-switcher.js" | minify | fingerprint }}
