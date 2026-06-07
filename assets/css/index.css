@@ -1398,12 +1398,7 @@ pre {
 
 /* Neutral card colors */
 .post-card {
-    --card-bg: #eef1ef;
-    --card-text: #1c2321;
-}
-
-[data-theme="dark"] .post-card {
-    --card-bg: #363a40;
+    --card-bg: var(--surface-color);
     --card-text: var(--text-color);
 }
 

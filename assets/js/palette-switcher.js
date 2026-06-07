@@ -42,7 +42,22 @@
     { id: 'Rose-Pine-Dawn',     label: 'rose pine dawn',    color: '#907aa9' },
   ];
 
+  var PALETTE_THEME = {};
+  (function () {
+    var group = 'general';
+    PALETTES.forEach(function (p) {
+      if (p.sep) { group = p.sep; return; }
+      PALETTE_THEME[p.id] = group;
+    });
+  })();
+
   var dropdown, btn, saved;
+
+  window.clearPalette = function () {
+    document.documentElement.removeAttribute('data-palette');
+    try { localStorage.removeItem('palette'); saved = null; } catch (_) {}
+    updateUI('');
+  };
 
   function init() {
     btn = document.getElementById('sbtn-palette');
@@ -94,6 +109,19 @@
       list.appendChild(row);
     });
 
+    dropdown.addEventListener('mouseleave', function () {
+      var cur = currentPalette();
+      if (cur !== (saved || '')) {
+        if (saved) {
+          document.documentElement.setAttribute('data-palette', saved);
+          updateUI(saved);
+        } else {
+          document.documentElement.removeAttribute('data-palette');
+          updateUI('');
+        }
+      }
+    });
+
     dropdown.appendChild(list);
 
     // Insert right after the theme's setting-row, so it sits below it
@@ -112,12 +140,6 @@
     document.documentElement.setAttribute('data-palette', value);
     try { localStorage.setItem('palette', value); saved = value; } catch (_) {}
     updateUI(value);
-
-  window.clearPalette = function () {
-    document.documentElement.removeAttribute('data-palette');
-    try { localStorage.removeItem('palette'); saved = null; } catch (_) {}
-    updateUI('');
-  };
   }
 
   function updateUI(value) {
@@ -132,6 +154,16 @@
 
   function select(value) {
     setPalette(value);
+    var group = PALETTE_THEME[value];
+    if (group === 'dark' || group === 'light') {
+      var root = document.documentElement;
+      root.setAttribute('data-theme', group);
+      try { localStorage.setItem('theme', group); } catch (_) {}
+      if (window.updateThemeIcons) window.updateThemeIcons();
+      if (window.renderMermaid) window.renderMermaid();
+      if (window.renderKaTeX) window.renderKaTeX();
+      if (window.__refreshThemeButtons) window.__refreshThemeButtons();
+    }
     close();
   }
   function preview(value) {
@@ -154,8 +186,12 @@
   function close() {
     dropdown.hidden = true;
     var cur = currentPalette();
-    if (saved && cur !== saved) {
-      setPalette(saved);
+    if (cur !== (saved || '')) {
+      if (saved) {
+        setPalette(saved);
+      } else {
+        window.clearPalette();
+      }
     }
   }
 
