@@ -754,33 +754,34 @@ main {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     margin: 1.75em 0;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
     scrollbar-width: thin;
-    scrollbar-color: var(--secondary-text) var(--surface-color);
-    /* Shadow fade: local layers mask the shadow at each edge when you're already there */
+    scrollbar-color: var(--link-color) var(--surface-color);
+    /* scroll-shadow: local mask covers the shadow when scrolled to an edge */
     background:
-        linear-gradient(to right, var(--bg-color), var(--bg-color)) left  / 40px 100% local   no-repeat,
-        linear-gradient(to left,  var(--bg-color), var(--bg-color)) right / 40px 100% local   no-repeat,
-        linear-gradient(to right, rgba(0,0,0,0.32), transparent)   left  / 40px 100% scroll  no-repeat,
-        linear-gradient(to left,  rgba(0,0,0,0.32), transparent)   right / 40px 100% scroll  no-repeat;
+        linear-gradient(to right, var(--bg-color), var(--bg-color)) left  / 40px 100% local  no-repeat,
+        linear-gradient(to left,  var(--bg-color), var(--bg-color)) right / 40px 100% local  no-repeat,
+        linear-gradient(to right, rgba(0,0,0,0.22), transparent)   left  / 40px 100% scroll no-repeat,
+        linear-gradient(to left,  rgba(0,0,0,0.22), transparent)   right / 40px 100% scroll no-repeat;
 }
 
 .post-content .table-scroll::-webkit-scrollbar {
-    height: 10px;
+    height: 8px;
 }
 
 .post-content .table-scroll::-webkit-scrollbar-track {
     background: var(--surface-color);
-    border-radius: 5px;
 }
 
 .post-content .table-scroll::-webkit-scrollbar-thumb {
-    background: var(--secondary-text);
-    border-radius: 5px;
+    background: var(--link-color);
+    border-radius: 4px;
     border: 2px solid var(--surface-color);
 }
 
 .post-content .table-scroll::-webkit-scrollbar-thumb:hover {
-    background: var(--link-color);
+    filter: brightness(1.15);
 }
 
 .post-content table {
@@ -793,23 +794,21 @@ main {
 
 .post-content th,
 .post-content td {
-    padding: 0.6em 0.8em;
+    padding: 0.55em 0.85em;
     border: 1px solid var(--border-color);
     text-align: left;
+    vertical-align: top;
 }
 
 .post-content th {
     background: var(--surface-color);
     font-weight: var(--font-weight-semibold);
-}
-
-.post-content td {
-    background: transparent;
+    border-bottom: 2px solid var(--link-color);
+    white-space: nowrap;
 }
 
 .post-content tr:nth-child(even) td {
     background: var(--surface-color);
-    background: rgba(128, 128, 128, 0.04);
 }
 
 .post-content pre {
