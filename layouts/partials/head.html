@@ -123,7 +123,8 @@
 
 
   {{- $viewMode := .Param "viewMode" -}}
-  {{- if and $viewMode (ne $viewMode "custom") }}
+  {{- $layoutModes := slice "goofy" "research" "news" "docs" "prose" "list" "media" "poem" "minimal" -}}
+  {{- if and $viewMode (in $layoutModes $viewMode) }}
   <style>:root{
   {{- if eq $viewMode "goofy" }}
     --font-body:Georgia,"Charter","Palatino Linotype","Book Antiqua",serif;
@@ -188,9 +189,8 @@
   {{- end }}
   {{- end }}
   </style>
-  {{- /* ── Per-page color scheme override (frontmatter colorScheme) ── */ -}}
-  {{- $cs := .Param "colorScheme" -}}
-  {{- if $cs }}{{ partial "color-scheme" (dict "cs" $cs) }}{{ end -}}
+  {{- /* ── Per-page palette: viewMode values not in layoutModes are treated as palette names ── */ -}}
+  {{- if and $viewMode (not (in $layoutModes $viewMode)) }}{{ partial "color-scheme" (dict "cs" $viewMode) }}{{ end -}}
 
   {{- /* ── Per-param overrides (beat viewMode) ── */ -}}
   {{- with .Param "hrStyle" }}
