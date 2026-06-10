@@ -3,9 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build:diagrams": "node scripts/render-mermaid-cache.mjs"
+    "build:diagrams": "node scripts/render-mermaid-cache.mjs && node scripts/render-katex-cache.mjs"
   },
   "dependencies": {
-    "@mermaid-js/mermaid-cli": "^11.4.0"
+    "@mermaid-js/mermaid-cli": "^11.4.0",
+    "katex": "^0.16.0"
   }
 }

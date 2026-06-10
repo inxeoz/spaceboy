@@ -117,20 +117,6 @@
   }
 
   document.addEventListener('DOMContentLoaded', function() {
-    if (S.needsKaTeX && !S.legacyMode) {
-      loadScriptWithFallback(
-        S.katexJSLocal,
-        S.katexJSCDN,
-        function() {
-          loadScriptWithFallback(
-            S.katexAutoRenderJSLocal,
-            S.katexAutoRenderJSCDN,
-            window.renderKaTeX
-          );
-        }
-      );
-    }
-
     if (!S.legacyMode) {
       // Language tooltip that follows the cursor inside code blocks
       var langTooltip = document.createElement('div');

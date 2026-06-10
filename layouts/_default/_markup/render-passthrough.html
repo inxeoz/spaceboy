@@ -1,0 +1,9 @@
+{{- $source := trim .Inner "\n\r " -}}
+{{- $key := printf "%s:%s" .Type $source | sha256 -}}
+{{- $html := index (index hugo.Data "katex-cache") $key -}}
+{{- if $html -}}
+  {{- $html | safeHTML -}}
+{{- else -}}
+  {{- if eq .Type "block" -}}<div class="katex-block katex-fallback"><code>{{ $source }}</code></div>
+  {{- else -}}<code class="katex-fallback">{{ $source }}</code>{{- end -}}
+{{- end -}}

@@ -1,18 +1,7 @@
 <script>
 window.__SPACEBOY__ = {
-  katexDelimiters: {{ .Site.Params.katexDelimiters | default (slice
-    (dict "left" "$$" "right" "$$" "display" true)
-    (dict "left" "$" "right" "$" "display" false)
-    (dict "left" "\\(" "right" "\\)" "display" false)
-    (dict "left" "\\[" "right" "\\]" "display" true)
-  ) | jsonify | safeJS }},
   enableCopyCode: {{ ne .Site.Params.enableCopyCode false }},
-  needsKaTeX: {{ and .IsPage (or (.HasShortcode "katex") (in .RawContent "$$") (in .RawContent "$")) }},
   legacyMode: {{ .Site.Params.legacyMode | default false }},
-  katexJSLocal: {{ default "" .Site.Params.katexJSLocal | jsonify | safeJS }},
-  katexJSCDN: {{ default "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" .Site.Params.katexJSCDN | jsonify | safeJS }},
-  katexAutoRenderJSLocal: {{ default "" .Site.Params.katexAutoRenderJSLocal | jsonify | safeJS }},
-  katexAutoRenderJSCDN: {{ default "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" .Site.Params.katexAutoRenderJSCDN | jsonify | safeJS }},
   lazyImage: {{ and .Site.Params.lazyImage (not .IsHome) }},
   enableSearch: {{ ne .Site.Params.enableSearch false }},
   fuseJSLocal: {{ default "" .Site.Params.fuseJSLocal | jsonify | safeJS }},
