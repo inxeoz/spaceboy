@@ -1,0 +1,14 @@
+{{ $source := trim .Inner "\n\r " }}
+{{ $hash := sha256 $source }}
+{{ $svgPath := printf "static/mermaid-cache/%s.svg" $hash }}
+{{ if (fileExists $svgPath) }}
+  {{ $svg := readFile $svgPath }}
+  <figure class="mermaid-diagram" data-testid="mermaid-diagram">{{ $svg | safeHTML }}</figure>
+{{ else }}
+  <div class="code-block-wrapper" data-testid="mermaid-fallback">
+    <button class="copy-code-btn" aria-label="Copy code">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+    </button>
+    <pre class="mermaid-fallback"><code>{{ .Inner }}</code></pre>
+  </div>
+{{ end }}

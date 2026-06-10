@@ -175,8 +175,14 @@
   {{- /* ── Color schemes: all loaded, activated via [data-palette="…"] ── */ -}}
   <style>
   {{- range $name, $colors := index site.Data "color-schemes" }}
-  [data-palette="{{ $name }}"]{ {{ $colors.light | safeCSS }} }
-  [data-palette="{{ $name }}"][data-theme="dark"]{ {{ $colors.dark | safeCSS }} }
+  [data-palette="{{ $name }}"]{ {{ $colors.light | safeCSS }}{{ with index $colors "syntax-light" }} {{ . | safeCSS }}{{ end }} }
+  [data-palette="{{ $name }}"][data-theme="dark"]{ {{ $colors.dark | safeCSS }}{{ with index $colors "syntax-dark" }} {{ . | safeCSS }}{{ end }} }
+  {{- with index $colors "mermaid-light" }}
+  [data-palette="{{ $name }}"] .mermaid-diagram{ {{ . | safeCSS }} }
+  {{- end }}
+  {{- with index $colors "mermaid-dark" }}
+  [data-palette="{{ $name }}"][data-theme="dark"] .mermaid-diagram{ {{ . | safeCSS }} }
+  {{- end }}
   {{- end }}
   </style>
   {{- /* ── Per-page color scheme override (frontmatter colorScheme) ── */ -}}

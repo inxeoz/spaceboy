@@ -60,14 +60,7 @@
       if (block) {
         var code = block.querySelector('code, pre');
         if (code) {
-          if (code.classList.contains('mermaid')) {
-            text = code.getAttribute('data-raw') || code.textContent || '';
-          } else {
-            text = code.textContent || '';
-          }
-        } else {
-          var mermaidEl = block.querySelector('.mermaid');
-          if (mermaidEl) text = mermaidEl.getAttribute('data-raw') || mermaidEl.textContent || '';
+          text = code.textContent || '';
         }
       }
 
@@ -124,14 +117,6 @@
   }
 
   document.addEventListener('DOMContentLoaded', function() {
-    if (S.needsMermaid && !S.legacyMode) {
-      loadScriptWithFallback(
-        S.mermaidJSLocal,
-        S.mermaidJSCDN,
-        window.renderMermaid
-      );
-    }
-
     if (S.needsKaTeX && !S.legacyMode) {
       loadScriptWithFallback(
         S.katexJSLocal,

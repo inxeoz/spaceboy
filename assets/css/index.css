@@ -38,6 +38,18 @@
     --spacing-xl: clamp(2rem, 5vw, 4rem);
 
     --content-max-width: clamp(320px, 95vw, 1200px);
+
+    /* Syntax token colors — light defaults (github-inspired) */
+    --syn-bg:       #f7f7f7;
+    --syn-text:     #24292e;
+    --syn-keyword:  #d73a49;
+    --syn-type:     #6f42c1;
+    --syn-func:     #6f42c1;
+    --syn-const:    #005cc5;
+    --syn-string:   #032f62;
+    --syn-builtin:  #e36209;
+    --syn-comment:  #6a737d;
+    --syn-line-hl:  #dedede;
 }
 
 [data-theme="dark"] {
@@ -57,6 +69,18 @@
     --toc-bg: rgba(0, 0, 0, 0.30);
     --toc-active-bg: rgba(77, 208, 225, 0.12);
     --toc-hover-bg: rgba(77, 208, 225, 0.06);
+
+    /* Syntax token colors — dark defaults (base16-snazzy-inspired) */
+    --syn-bg:       #282a36;
+    --syn-text:     #e2e4e5;
+    --syn-keyword:  #ffa8d9;
+    --syn-type:     #9aedfe;
+    --syn-func:     #57c7ff;
+    --syn-const:    #ffb366;
+    --syn-string:   #5af78e;
+    --syn-builtin:  #ffa8a6;
+    --syn-comment:  #bdc0c8;
+    --syn-line-hl:  #3d3f4a;
 }
 
 /* Skip-to-content for keyboard / screen-reader users */
@@ -2071,16 +2095,20 @@ pre {
     }
 }
 
-/* Mermaid Diagrams */
-.mermaid {
+/* Pre-rendered Mermaid Diagrams */
+.mermaid-diagram {
+    display: flex;
+    justify-content: center;
+    margin: var(--spacing-md) 0;
+}
+.mermaid-diagram svg {
+    max-width: 100%;
+    height: auto;
+}
+.mermaid-fallback {
     display: flex;
     justify-content: center;
     margin: 0;
-}
-.mermaid svg {
-    max-width: 100%;
-    height: auto;
-    background: transparent;
 }
 
 /* ═══════════════════════════════════════

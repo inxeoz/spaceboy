@@ -48,36 +48,6 @@
     }
   }
 
-  function renderMermaid() {
-    if (typeof mermaid === 'undefined') return;
-    var diagrams = document.querySelectorAll('.mermaid');
-    if (!diagrams.length) return;
-
-    for (var i = 0; i < diagrams.length; i++) {
-      var el = diagrams[i];
-      var raw = el.getAttribute('data-raw');
-      if (!raw) {
-        raw = (el.textContent || '').trim();
-        el.setAttribute('data-raw', raw);
-      }
-      el.removeAttribute('data-processed');
-      el.innerHTML = raw;
-    }
-
-    var isDark = root.getAttribute('data-theme') === 'dark';
-    mermaid.initialize({
-      startOnLoad: false,
-      theme: isDark ? 'dark' : 'default',
-      themeVariables: isDark ? {
-        background: '#46494c',
-        mainBkg: '#4c5c68'
-      } : {}
-    });
-    if (typeof mermaid.run === 'function') {
-      mermaid.run({ querySelector: '.mermaid' }).catch(function(err) { console.error('Mermaid render failed:', err); });
-    }
-  }
-
   function renderKaTeX() {
     if (typeof renderMathInElement === 'undefined') return;
     try {
@@ -101,7 +71,6 @@
     }
   }
 
-  window.renderMermaid = renderMermaid;
   window.renderKaTeX = renderKaTeX;
   window.updateThemeIcons = updateThemeIcons;
 
@@ -111,7 +80,6 @@
     root.setAttribute('data-theme', isDark ? 'light' : 'dark');
     safeSet(themeKey, isDark ? 'light' : 'dark');
     updateThemeIcons();
-    renderMermaid();
     renderKaTeX();
   };
 

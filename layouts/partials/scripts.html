@@ -7,11 +7,8 @@ window.__SPACEBOY__ = {
     (dict "left" "\\[" "right" "\\]" "display" true)
   ) | jsonify | safeJS }},
   enableCopyCode: {{ ne .Site.Params.enableCopyCode false }},
-  needsMermaid: {{ and .IsPage (or (.HasShortcode "mermaid") (in .RawContent "```mermaid")) }},
   needsKaTeX: {{ and .IsPage (or (.HasShortcode "katex") (in .RawContent "$$") (in .RawContent "$")) }},
   legacyMode: {{ .Site.Params.legacyMode | default false }},
-  mermaidJSLocal: {{ default "" .Site.Params.mermaidJSLocal | jsonify | safeJS }},
-  mermaidJSCDN: {{ default "https://cdn.jsdelivr.net/npm/mermaid@11.14.0/dist/mermaid.min.js" .Site.Params.mermaidJSCDN | jsonify | safeJS }},
   katexJSLocal: {{ default "" .Site.Params.katexJSLocal | jsonify | safeJS }},
   katexJSCDN: {{ default "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" .Site.Params.katexJSCDN | jsonify | safeJS }},
   katexAutoRenderJSLocal: {{ default "" .Site.Params.katexAutoRenderJSLocal | jsonify | safeJS }},

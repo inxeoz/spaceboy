@@ -1,0 +1,11 @@
+{
+  "name": "spaceboy-theme",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:diagrams": "node scripts/render-mermaid-cache.mjs"
+  },
+  "dependencies": {
+    "@mermaid-js/mermaid-cli": "^11.4.0"
+  }
+}

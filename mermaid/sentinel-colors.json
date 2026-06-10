@@ -1,0 +1,29 @@
+{
+  "sentinelColors": {
+    "primaryColor":        { "sentinel": "#0F1E2D", "mapsTo": "var(--surface-color)" },
+    "primaryTextColor":    { "sentinel": "#1F2E3D", "mapsTo": "var(--text-color)"    },
+    "lineColor":           { "sentinel": "#2F3E4D", "mapsTo": "var(--link-color)"    },
+    "secondaryColor":      { "sentinel": "#3F4E5D", "mapsTo": "var(--card-bg)"       },
+    "tertiaryColor":       { "sentinel": "#4F5E6D", "mapsTo": "var(--code-bg)"       },
+    "background":          { "sentinel": "#5F6E7D", "mapsTo": "var(--bg-color)"      },
+    "mainBkg":             { "sentinel": "#6F7E8D", "mapsTo": "var(--surface-color)" },
+    "nodeBorder":          { "sentinel": "#7F8E9D", "mapsTo": "var(--text-color)"    },
+    "clusterBkg":          { "sentinel": "#8F9EAD", "mapsTo": "var(--code-bg)"       },
+    "clusterBorder":       { "sentinel": "#9FAEBD", "mapsTo": "var(--text-color)"    },
+    "titleColor":          { "sentinel": "#AFCEDD", "mapsTo": "var(--text-color)"    },
+    "edgeLabelBackground": { "sentinel": "#BFDECD", "mapsTo": "var(--surface-color)" },
+    "nodeTextColor":       { "sentinel": "#CFEECD", "mapsTo": "var(--text-color)"    },
+    "actorBorder":         { "sentinel": "#7F8E9D", "mapsTo": "var(--text-color)"    },
+    "actorBkg":            { "sentinel": "#6F7E8D", "mapsTo": "var(--surface-color)" }
+  },
+  "hardcodedDefaults": [
+    { "from": "stroke:#333333", "to": "stroke:var(--link-color)" },
+    { "from": "stroke:#333",    "to": "stroke:var(--link-color)" },
+    { "from": "fill:#333333",   "to": "fill:var(--text-color)"   },
+    { "from": "fill:#333",      "to": "fill:var(--text-color)"   },
+    { "from": "color:#333333",  "to": "color:var(--text-color)"  },
+    { "from": "color:#333",     "to": "color:var(--text-color)"  },
+    { "from": "fill:black",     "to": "fill:var(--text-color)"   },
+    { "from": "color:black",    "to": "color:var(--text-color)"  }
+  ]
+}
