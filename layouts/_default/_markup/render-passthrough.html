@@ -1,6 +1,6 @@
 {{- $source := trim .Inner "\n\r " -}}
 {{- $key := printf "%s:%s" .Type $source | sha256 -}}
-{{- $html := index (index hugo.Data "katex-cache") $key -}}
+{{- $html := index (index site.Data "katex-cache") $key -}}
 {{- if $html -}}
   {{- $html | safeHTML -}}
 {{- else -}}

@@ -174,7 +174,7 @@
 
   {{- /* ── Color schemes: all loaded, activated via [data-palette="…"] ── */ -}}
   <style>
-  {{- range $name, $colors := index hugo.Data "color-schemes" }}
+  {{- range $name, $colors := index site.Data "color-schemes" }}
   [data-palette="{{ $name }}"]{ {{ $colors.light | safeCSS }}{{ with index $colors "syntax-light" }} {{ . | safeCSS }}{{ end }} }
   [data-palette="{{ $name }}"][data-theme="dark"]{ {{ $colors.dark | safeCSS }}{{ with index $colors "syntax-dark" }} {{ . | safeCSS }}{{ end }} }
   {{- with index $colors "mermaid-light" }}
