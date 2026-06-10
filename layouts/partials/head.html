@@ -166,6 +166,9 @@
   .post-header{margin-bottom:2.5rem}
   @media(max-width:640px){.post-title{font-size:1.6rem!important}}
   {{- end }}
+  {{- if eq $viewMode "minimal" }}
+  .site-footer{display:none!important}
+  {{- end }}
   {{- if eq $viewMode "poem" }}
   .post-content{text-align:center}
   {{- end }}
