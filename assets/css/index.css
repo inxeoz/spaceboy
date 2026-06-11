@@ -2070,7 +2070,7 @@ pre {
     }
 
     .page {
-        grid-template-columns: var(--toc-left-width, minmax(240px, 320px)) minmax(0, 1fr) var(--toc-right-width, minmax(240px, 320px));
+        grid-template-columns: var(--toc-left-width, 260px) minmax(0, 1fr) var(--toc-right-width, 260px);
     }
 }
 
@@ -2116,7 +2116,7 @@ pre {
    ═══════════════════════════════════════ */
 .page {
     display: grid;
-    grid-template-columns: var(--toc-left-width, minmax(200px, 280px)) minmax(0, 1fr) var(--toc-right-width, minmax(200px, 280px));
+    grid-template-columns: var(--toc-left-width, 260px) minmax(0, 1fr) var(--toc-right-width, 260px);
     grid-template-areas: "left center right";
     align-items: start;
     margin: 0;
@@ -2277,6 +2277,11 @@ body.toc-resize-active {
     opacity: 0.3;
 }
 
+#TableOfContents,
+#TableOfContents ul {
+    width: 100%;
+}
+
 /* ── Left: Main TOC ── */
 .toc-main ul {
     list-style: none;
@@ -2288,17 +2293,20 @@ body.toc-resize-active {
     position: relative;
     margin: 0;
 }
-.toc-main li:not(:last-child) {
-    border-bottom: 1px solid var(--border-color);
+.toc-main li:not(:last-child)::after {
+    content: '';
+    display: block;
+    height: 1px;
+    background: var(--border-color);
 }
 
 .toc-main a {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.35rem;
     min-width: 0;
     word-break: break-word;
-    padding: 0.3rem 0.5rem;
+    padding: 0.25rem 0.4rem;
     color: var(--secondary-text);
     opacity: 0.7;
     border-radius: 4px;
@@ -2360,7 +2368,7 @@ body.toc-resize-active {
 
 /* h2 links appear nested under h1 in Hugo's TOC */
 .toc-main ul ul a {
-    padding-left: 1rem;
+    padding-left: 0.75rem;
     font-size: 0.78rem;
     font-weight: 480;
 }
@@ -2375,13 +2383,17 @@ body.toc-resize-active {
     list-style: none;
     padding: 0;
     margin: 0;
+    width: 100%;
 }
 
 .toc-sub-nav li {
     margin: 0;
 }
-.toc-sub-nav li:not(:last-child) {
-    border-bottom: 1px solid var(--border-color);
+.toc-sub-nav li:not(:last-child)::after {
+    content: '';
+    display: block;
+    height: 1px;
+    background: var(--border-color);
 }
 
 .toc-sub-nav a {
@@ -2390,7 +2402,7 @@ body.toc-resize-active {
     gap: 0.35rem;
     min-width: 0;
     word-break: break-word;
-    padding: 0.28rem 0.5rem;
+    padding: 0.25rem 0.4rem;
     color: var(--secondary-text);
     opacity: 0.7;
     border-radius: 4px;
@@ -2992,7 +3004,7 @@ kbd {
 /* ── Responsive ── */
 @media (max-width: 1000px) {
     .page {
-        grid-template-columns: var(--toc-left-width, minmax(160px, 220px)) minmax(0, 1fr);
+        grid-template-columns: var(--toc-left-width, 260px) minmax(0, 1fr);
     }
     .toc-left .toc-card {
         padding: 0.5rem;
@@ -3009,7 +3021,7 @@ kbd {
     }
 
     .page {
-        grid-template-columns: var(--toc-left-width, minmax(200px, 280px)) minmax(0, 1fr);
+        grid-template-columns: var(--toc-left-width, 260px) minmax(0, 1fr);
     }
 }
 @media (max-width: 768px) {
