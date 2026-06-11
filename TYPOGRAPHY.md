@@ -2,13 +2,19 @@
 
 ## Font Stack
 
-All typography uses monospace fonts only for consistency and technical aesthetic.
+Body text uses the highly-legible Atkinson Hyperlegible sans-serif face from Google Fonts.
+Code blocks use JetBrains Mono (self-hosted woff2) for clarity.
 
 ### Primary Fonts
-- **Body & Headers**: `JetBrains Mono` (fallback: `Fira Code`, then system `monospace`)
-- **Code Blocks**: `Fira Code` (fallback: `JetBrains Mono`, then system `monospace`)
+- **Body & Headers**: `Atkinson Hyperlegible` (fallback: `system-ui`, `-apple-system`, then system `sans-serif`)
+- **Code Blocks**: `JetBrains Mono` (fallback: `Fira Code`, then system `monospace`)
 
-No sans-serif fonts. Pure monospace throughout.
+### Per-Page Override
+Front-matter `font:` parameter supports:
+- `font: mono` → JetBrains Mono (restores monospace for the whole page)
+- `font: serif` → Georgia serif
+- `font: sans` → system-ui sans-serif
+- `font: "custom-font"` → any font-family string
 
 ---
 
@@ -181,8 +187,8 @@ Font weight + size differentiation works with color variables:
 
 ```css
 :root {
-    --font-body: 'JetBrains Mono', 'Fira Code', monospace;
-    --font-mono: 'Fira Code', 'JetBrains Mono', monospace;
+    --font-body: 'Atkinson Hyperlegible', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
     
     --line-height-body: 1.8;
     --font-size-base: 1rem;
@@ -203,16 +209,20 @@ Font weight + size differentiation works with color variables:
 
 ## Implementation Notes
 
-### Monospace Considerations
-- **Readability**: 1rem+ size + light/normal weight prevents "code-heavy" feeling
-- **Density**: Tight letter spacing on headers balances monospace width
-- **Consistency**: Same fonts everywhere creates cohesive, technical aesthetic
-- **Performance**: JetBrains Mono & Fira Code load via system fonts when available
+### Atkinson Hyperlegible
+- **Readability**: Designed for low-vision readers — unambiguous letterforms, larger counters, distinct glyph shapes
+- **Performance**: Loaded from Google Fonts with `display=swap` to avoid invisible-text flash; preconnect hints in `<head>`
+- **Weight availability**: Regular (400) and Bold (700) only — light (300), medium (500), and semibold (600) fall back to closest available weight
+
+### JetBrains Mono (code blocks)
+- **Self-hosted**: woff2 files in `assets/fonts/`, preloaded in `<head>`
+- **Range**: Supports weight 300–700, normal + italic
+- **Fallback stack**: `'JetBrains Mono', 'Fira Code', monospace`
 
 ### Accessibility
-- Min font size: 0.85rem (footer) - still readable in monospace
-- Line heights 1.3+ for headers, 1.6+ for body - WCAG compliant
-- Weight contrast: 300–700 provides visual distinction for dyslexic readers
+- Min font size: 0.85rem (footer) — still readable in sans-serif
+- Line heights 1.3+ for headers, 1.6+ for body — WCAG compliant
+- Weight contrast: 300–700 provides visual distinction for dyslexic readers (Atkinson lacks 300/500/600; browser fallback maps them to 400 or 700)
 - Color + weight: Never relies on color alone for emphasis
 
 ### Maintenance
@@ -224,11 +234,11 @@ Font weight + size differentiation works with color variables:
 
 ## Testing Checklist
 
-- [ ] Headers render bold/semibold, distinct from body
+- [ ] Headers render bold, distinct from body
 - [ ] Body text 1rem is readable at arm's length on laptop
-- [ ] Code blocks stand out via size + background
+- [ ] Code blocks stand out via mono face + background
 - [ ] Lists have clear spacing between items
 - [ ] Blockquotes visually distinct via indent + border + weight
 - [ ] Mobile: text size reduces gracefully, readability maintained
 - [ ] Dark/light modes preserve contrast with weight/size hierarchy
-- [ ] Print: monospace fonts render clearly (test in Firefox print preview)
+- [ ] Print: Atkinson Hyperlegible renders (needs network) or falls back to sans-serif

@@ -181,8 +181,7 @@ Create `assets/css/override.css` in your site:
 
 ## Hugo Version Compatibility
 
-The theme requires Hugo **0.122+** (for goldmark passthrough extension).
-The passthrough render hook (`render-passthrough.html`) requires Hugo **0.132+**.
+The theme requires Hugo **0.132+** (for goldmark passthrough extension and `render-passthrough.html`).
 
 **Important for templates:** use `site.Data`, not `hugo.Data`. The `hugo.Data`
 API was added in Hugo 0.156 and breaks on older Hugo versions (e.g. Cloudflare

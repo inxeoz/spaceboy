@@ -9,8 +9,6 @@
   var root = document.documentElement;
   var themeKey = 'theme';
 
-  window.katexDelimiters = S.katexDelimiters;
-
   function safeGet(key) {
     try {
       if (window.localStorage) return window.localStorage.getItem(key);
@@ -48,30 +46,6 @@
     }
   }
 
-  function renderKaTeX() {
-    if (typeof renderMathInElement === 'undefined') return;
-    try {
-      var delimiters = window.katexDelimiters;
-      if (typeof delimiters === 'string') {
-        delimiters = JSON.parse(delimiters);
-      }
-      if (!delimiters) {
-        delimiters = [
-          { left: '$$', right: '$$', display: true },
-          { left: '$', right: '$', display: false },
-          { left: '\\(', right: '\\)', display: false },
-          { left: '\\[', right: '\\]', display: true }
-        ];
-      }
-      renderMathInElement(document.body, {
-        delimiters: delimiters
-      });
-    } catch(err) {
-      console.error('KaTeX render failed:', err);
-    }
-  }
-
-  window.renderKaTeX = renderKaTeX;
   window.updateThemeIcons = updateThemeIcons;
 
   window.toggleTheme = function() {
@@ -80,7 +54,6 @@
     root.setAttribute('data-theme', isDark ? 'light' : 'dark');
     safeSet(themeKey, isDark ? 'light' : 'dark');
     updateThemeIcons();
-    renderKaTeX();
   };
 
   window.toggleLayout = function() {

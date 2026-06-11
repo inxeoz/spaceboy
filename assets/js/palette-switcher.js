@@ -160,7 +160,6 @@
       root.setAttribute('data-theme', group);
       try { localStorage.setItem('theme', group); } catch (_) {}
       if (window.updateThemeIcons) window.updateThemeIcons();
-      if (window.renderKaTeX) window.renderKaTeX();
       if (window.__refreshThemeButtons) window.__refreshThemeButtons();
     }
     close();

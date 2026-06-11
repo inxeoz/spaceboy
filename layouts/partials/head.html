@@ -15,6 +15,10 @@
   {{- if .Site.Params.staticPrefix -}}
   <link rel="dns-prefetch" href="{{ .Site.Params.staticPrefix }}" />
   {{- end -}}
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap"></noscript>
   {{- if .Site.Params.favicon -}}
   <link rel="apple-touch-icon" href="{{ .Site.Params.favicon }}" />
   <link rel="icon" href="{{ .Site.Params.favicon }}" />
@@ -24,17 +28,7 @@
 
 {{ $cssFiles := slice "css/index.css" }}
 
-{{- /* Only preload JetBrains Mono when the effective font is monospace */ -}}
-{{- $serifModes := slice "goofy" "research" "poem" -}}
-{{- $sansModes := slice -}}
-{{- $fontParam := .Param "font" -}}
-{{- $viewMode := .Param "viewMode" -}}
-{{- $useMono := true -}}
-{{- if $fontParam -}}
-  {{- if or (eq $fontParam "serif") (eq $fontParam "sans") -}}{{- $useMono = false -}}{{- end -}}
-{{- else if or (in $serifModes $viewMode) (in $sansModes $viewMode) -}}{{- $useMono = false -}}{{- end -}}
-
-{{ if $useMono }}
+{{- /* JetBrains Mono: loaded for code blocks (--font-mono) on all pages */ -}}
 {{ $fontNormal := resources.Get "fonts/JetBrainsMono-normal.woff2" | resources.Copy "fonts/JetBrainsMono-normal.woff2" }}
 {{ $fontItalic := resources.Get "fonts/JetBrainsMono-italic.woff2" | resources.Copy "fonts/JetBrainsMono-italic.woff2" }}
 <link rel="preload" href="{{ $fontNormal.RelPermalink }}" as="font" type="font/woff2" crossorigin>
@@ -43,7 +37,6 @@
 @font-face{font-family:"JetBrains Mono";font-style:normal;font-weight:300 700;font-display:swap;src:url("{{ $fontNormal.RelPermalink }}")format("woff2")}
 @font-face{font-family:"JetBrains Mono";font-style:italic;font-weight:300 700;font-display:swap;src:url("{{ $fontItalic.RelPermalink }}")format("woff2")}
 </style>
-{{ end }}
 
 {{ range .Site.Params.extraCSSFiles }}
   {{ $cssFiles = $cssFiles | append . }}
@@ -72,7 +65,7 @@
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   {{- end }}
   {{ $katexCSSLocal := default (default (printf "%s%s" .Site.Params.staticPrefix ("/vendor/katex/katex.min.css" | relURL)) .Site.Params.katexCSS) .Site.Params.katexCSSLocal }}
-  {{ $katexCSSCDN := default "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" .Site.Params.katexCSSCDN }}
+  {{ $katexCSSCDN := default "https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css" .Site.Params.katexCSSCDN }}
   {{ if $needsKaTeX }}
   {{ $katexCSSFinal := $katexCSSLocal }}
   {{ if and $enableCDNFallback (ne $katexCSSLocal $katexCSSCDN) }}
@@ -123,27 +116,21 @@
 
 
   {{- $viewMode := .Param "viewMode" -}}
-  {{- $layoutModes := slice "goofy" "research" "docs" "media" "poem" "minimal" -}}
+  {{- $layoutModes := slice "goofy" "docs" "poem" "minimal" -}}
   {{- if and $viewMode (in $layoutModes $viewMode) }}
   <style>:root{
   {{- if eq $viewMode "goofy" }}
-    --font-body:Georgia,"Charter","Palatino Linotype","Book Antiqua",serif;
     --font-size-base:clamp(1.2rem,3.5vw,1.5rem);
     --line-height-body:2.1;
     --content-max-width:clamp(320px,95vw,880px);
-    --letter-spacing-normal:0.015em;
-  {{- else if eq $viewMode "research" }}
-    --font-body:Georgia,"Charter","Palatino Linotype","Book Antiqua",serif;
-    --font-size-base:clamp(0.85rem,2.5vw,1.05rem);
-    --line-height-body:1.9;
-    --content-max-width:clamp(320px,95vw,1000px);
-    --letter-spacing-normal:0.01em;
+    --letter-spacing-normal:0.005em;
   {{- else if eq $viewMode "docs" }}
     --code-max-height:48rem;
-  {{- else if eq $viewMode "media" }}
-    --content-max-width:100%;
   {{- else if eq $viewMode "poem" }}
-    --font-body:Georgia,"Charter","Palatino Linotype","Book Antiqua",serif;
+    --font-size-base:clamp(1.1rem,3vw,1.25rem);
+    --line-height-body:2.2;
+    --content-max-width:clamp(320px,95vw,680px);
+    --letter-spacing-normal:0.02em;
   {{- else if eq $viewMode "minimal" }}
     --content-max-width:clamp(320px,95vw,calc((1200px + 100vw)/2));
   {{- end }}
@@ -161,7 +148,7 @@
   .site-footer{display:none!important}
   {{- end }}
   {{- if eq $viewMode "poem" }}
-  .post-content{text-align:center}
+  .post-content{font-size:var(--font-size-base);line-height:var(--line-height-body);text-align:center}
   {{- end }}
   </style>
   {{- end }}
@@ -188,8 +175,14 @@
   {{- end }}
 
   {{- $font := .Params.font }}
-  {{- if $font }}
-  <style>:root{--font-body:{{ if eq $font "serif" }}Georgia,"Charter","Palatino Linotype","Book Antiqua",serif{{ else if eq $font "sans" }}system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif{{ else }}"JetBrains Mono","Fira Code",monospace{{ end }};{{ if eq $font "serif" }}--letter-spacing-normal:0.01em;--line-height-body:1.9;{{ else if eq $font "sans" }}--letter-spacing-normal:-0.01em;{{ end }}</style>
+  {{- if eq $font "serif" }}
+  <style>:root{--font-body:Georgia,"Charter","Palatino Linotype","Book Antiqua",serif;--letter-spacing-normal:0.01em;--line-height-body:1.9;}</style>
+  {{- else if eq $font "sans" }}
+  <style>:root{--font-body:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;--letter-spacing-normal:-0.01em;}</style>
+  {{- else if eq $font "mono" }}
+  <style>:root{--font-body:"JetBrains Mono","Fira Code",monospace;}</style>
+  {{- else if $font }}
+  <style>:root{--font-body:{{ $font }};}</style>
   {{- end }}
 
   {{- with .Param "contentWidth" }}

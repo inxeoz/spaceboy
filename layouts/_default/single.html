@@ -9,16 +9,12 @@
     {{ $d = dict "dropCap" true "justify" true "noMeta" true "hideFooter" true "showReadingTime" false "showLastModified" false }}
   {{ else if eq $viewMode "docs" }}
     {{ $d = dict "numberedHeadings" true "showReadingTime" true "progressBar" true }}
-  {{ else if eq $viewMode "research" }}
-    {{ $d = dict "showToc" true "numberedHeadings" true "justify" true "showReadingTime" true "progressBar" true }}
   {{ else if eq $viewMode "news" }}
     {{ $d = dict "justify" true }}
   {{ else if eq $viewMode "prose" }}
     {{ $d = dict "dropCap" true "justify" true "showReadingTime" true }}
   {{ else if eq $viewMode "list" }}
     {{ $d = dict "showReadingTime" true }}
-  {{ else if eq $viewMode "media" }}
-    {{ $d = dict "imageFullBleed" true "noMeta" true "hideFooter" true }}
   {{ else if eq $viewMode "poem" }}
     {{ $d = dict "noMeta" true "hideFooter" true }}
   {{ else if eq $viewMode "minimal" }}
@@ -105,7 +101,7 @@
             {{ end }}
           </header>
 
-          {{ if .TableOfContents }}
+          {{ if and $showTOC .TableOfContents }}
           <div class="toc-mobile" id="toc-mobile" data-testid="toc-mobile">
             <button type="button" class="toc-mobile-toggle" id="toc-mobile-toggle" aria-expanded="false" data-testid="toc-mobile-toggle">
               <span data-testid="toc-mobile-label">{{ .Param "tocTitle" | default "Contents" }}</span>
@@ -202,7 +198,7 @@
         {{ end }}
       </header>
 
-      {{ if .TableOfContents }}
+      {{ if and $showTOC .TableOfContents }}
       <div class="toc-mobile" id="toc-mobile" data-testid="toc-mobile">
         <button type="button" class="toc-mobile-toggle" id="toc-mobile-toggle" aria-expanded="false" data-testid="toc-mobile-toggle">
           <span data-testid="toc-mobile-label">{{ .Param "tocTitle" | default "Contents" }}</span>

@@ -1,6 +1,6 @@
 features = ["blog"]
 license = "MIT"
-min_version = "0.50"
+min_version = "0.132.0"
 name = "spaceboy"
 
 [params]
