@@ -1,0 +1,87 @@
+{{- $p := .ctx -}}
+{{- $o := .opts -}}
+<article class="post" id="article"{{ if $o.dropCap }} data-drop-cap{{ end }}{{ if $o.numberedHeadings }} data-numbered-headings{{ end }}{{ if $o.justify }} data-justify{{ end }}{{ if $o.imageFullBleed }} data-full-bleed{{ end }} data-testid="post-article">
+  {{ with $p.Params.coverImage }}<img src="{{ . }}" class="post-cover-image" alt="{{ $p.Title }}" loading="lazy">{{ end }}
+  {{ with $p.Params.heroImage }}<img src="{{ . }}" class="post-hero-image" alt="{{ $p.Title }}" loading="lazy">{{ end }}
+
+  <header class="post-header" data-testid="post-header">
+    {{ if ne (index $p.Params "show-title") false }}
+    <h1 class="post-title" data-testid="post-title">{{ $p.Title }}</h1>
+    {{ end }}
+
+    {{ if and (in $p.Site.Params.mainSections $p.Type) (or $p.Date $p.Site.Params.author.name $p.ReadingTime $p.WordCount) }}
+    {{- $showLastmod := and $o.showLastModified $p.Lastmod (ne ($p.Lastmod.Format "2006-01-02") ($p.Date.Format "2006-01-02")) -}}
+    <div class="post-meta" data-testid="post-meta">
+      {{ if and $p.Date $o.showDate }}
+      <time datetime="{{ $p.Date.Format "2006-01-02 15:04:05 MST" }}" data-testid="post-date">
+        {{ $p.Date.Format "02 Jan 2006" }}
+      </time>
+      {{ end }}
+      {{ if $showLastmod }}
+      <span data-testid="post-meta-sep">·</span>
+      <span data-testid="post-lastmod">Updated {{ $p.Lastmod.Format "02 Jan 2006" }}</span>
+      {{ end }}
+      {{ if and $p.Site.Params.author.name $o.showAuthor }}
+      {{ if or (and $p.Date $o.showDate) $showLastmod }}<span data-testid="post-meta-sep">·</span>{{ end }}
+      {{ if $p.Params.author.homepage }}
+      <a href="{{ $p.Params.author.homepage }}" target="_blank" rel="noopener noreferrer" data-testid="post-author">@{{ $p.Site.Params.author.name }}</a>
+      {{ else }}
+      <span data-testid="post-author">@{{ $p.Site.Params.author.name }}</span>
+      {{ end }}
+      {{ end }}
+      {{ if and $o.showReadingTime $p.ReadingTime }}
+      <span data-testid="post-meta-sep">·</span>
+      <span data-testid="reading-time">{{ $p.ReadingTime }} min read</span>
+      {{ end }}
+      {{ if and $p.WordCount $o.showWordCount }}
+      <span data-testid="post-meta-sep">·</span>
+      <span data-testid="word-count">{{ $p.WordCount }} words</span>
+      {{ end }}
+    </div>
+    {{ end }}
+  </header>
+
+  {{ partial "series-nav.html" $p }}
+
+  {{ if and $o.showTOC $p.TableOfContents }}
+  <div class="toc-mobile" id="toc-mobile" data-testid="toc-mobile">
+    <button type="button" class="toc-mobile-toggle" id="toc-mobile-toggle" aria-expanded="false" data-testid="toc-mobile-toggle">
+      <span data-testid="toc-mobile-label">{{ $p.Param "tocTitle" | default "Contents" }}</span>
+      <span class="icon" data-testid="toc-mobile-icon">▾</span>
+    </button>
+    <div class="toc-mobile-content" id="toc-mobile-content" hidden data-testid="toc-mobile-content">
+      <nav class="toc-nav toc-main" data-testid="toc-mobile-nav">
+        {{ $p.TableOfContents }}
+      </nav>
+    </div>
+  </div>
+  {{ end }}
+
+  <div class="post-content" data-testid="post-content">
+    {{ with $p.Params.epigraph }}<blockquote class="epigraph"><p>{{ . }}</p></blockquote>{{ end }}
+    {{ with $p.Params.abstract }}<aside class="post-abstract" data-testid="post-abstract">{{ . }}</aside>{{ end }}
+    {{ $p.Site.Params.postHeaderContent | safeHTML }}
+    {{ $p.Content }}
+  </div>
+
+  {{ if and $p.Params.tags $o.showTags }}
+  <div class="post-tags" data-testid="post-tags">
+    {{ range $p.Params.tags }}
+    <a href="{{ site.LanguagePrefix }}/tags/{{ lower . | urlize }}/" class="post-tag" data-testid="post-tag">{{ . }}</a>
+    {{ end }}
+  </div>
+  {{ end }}
+
+  {{ if and (in $p.Site.Params.mainSections $p.Type) (or $o.showShare $o.showRelatedPosts $o.showComments $o.showPostNav) }}
+    {{ if $o.showShare }}{{ partial "share.html" $p }}{{ end }}
+    {{ $p.Site.Params.postFooterContent | safeHTML }}
+    {{ if $o.showRelatedPosts }}{{ partial "related.html" $p }}{{ end }}
+    {{ if $p.Site.Params.postAds }}
+    <div class="post-ads" data-testid="post-ads">{{ $p.Site.Params.postAds | safeHTML }}</div>
+    {{ end }}
+    {{ if and $p.Site.Params.disqus $o.showComments }}
+    <div class="post-comments" data-testid="post-comments">{{ partial "disqus.html" $p }}</div>
+    {{ end }}
+    {{ if $o.showPostNav }}{{ partial "post-nav.html" $p }}{{ end }}
+  {{ end }}
+</article>

@@ -1,6 +1,4 @@
 (function() {
-  if (!document.querySelector || !document.addEventListener) return;
-
   function initDualTableOfContents() {
     var mainTocNav = document.getElementById('toc-nav');
     var subTocNav = document.getElementById('toc-sub-nav');
@@ -36,9 +34,6 @@
         }
       });
     }
-
-    // ── Prefer reduced motion ──
-    var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // ── Scroll TOC container so the active link stays visible ──
     function scrollTocToActive(container, link) {
@@ -197,45 +192,11 @@
           var idx = headings.findIndex(function(h) { return h.id === rawId; });
           if (idx >= 0) updateMain(idx);
         }
-        // ── Custom smooth scroll with ease-out and highlight ──
-        function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
-
-        function flashHeading() {
-          target.classList.remove('heading-highlight');
-          void target.offsetWidth;
-          target.classList.add('heading-highlight');
-          setTimeout(function() { target.classList.remove('heading-highlight'); }, 1600);
-        }
-
-        function doScroll() {
-          var targetY = target.getBoundingClientRect().top + window.pageYOffset - (window.innerHeight / 2) + (target.offsetHeight / 2);
-          var startY = window.pageYOffset;
-          var distance = targetY - startY;
-
-          if (Math.abs(distance) < 5) { flashHeading(); return; }
-
-          var duration = Math.min(800, Math.max(250, Math.abs(distance) * 0.4));
-          var startTime = null;
-
-          function step(now) {
-            if (!startTime) startTime = now;
-            var elapsed = now - startTime;
-            var p = Math.min(elapsed / duration, 1);
-            window.scrollTo(0, startY + distance * easeOutCubic(p));
-            if (p < 1) {
-              requestAnimationFrame(step);
-            } else {
-              flashHeading();
-            }
-          }
-          requestAnimationFrame(step);
-        }
-
-        if (prefersReducedMotion) {
-          target.scrollIntoView({ behavior: 'instant', block: 'center' });
-          flashHeading();
+        // Shared smooth scroll + highlight (defined in features.js)
+        if (window.__sbScrollToHeading) {
+          window.__sbScrollToHeading(target);
         } else {
-          doScroll();
+          target.scrollIntoView({ block: 'center' });
         }
 
         if (window.history && window.history.pushState) {
@@ -282,8 +243,6 @@
 
     // ── Init ──
     updateBoth();
-
-    window.initDualTableOfContents = initDualTableOfContents;
   }
 
   if (document.readyState === 'loading') {

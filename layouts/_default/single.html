@@ -9,12 +9,6 @@
     {{ $d = dict "dropCap" true "justify" true "noMeta" true "hideFooter" true "showReadingTime" false "showLastModified" false }}
   {{ else if eq $viewMode "docs" }}
     {{ $d = dict "numberedHeadings" true "showReadingTime" true "progressBar" true }}
-  {{ else if eq $viewMode "news" }}
-    {{ $d = dict "justify" true }}
-  {{ else if eq $viewMode "prose" }}
-    {{ $d = dict "dropCap" true "justify" true "showReadingTime" true }}
-  {{ else if eq $viewMode "list" }}
-    {{ $d = dict "showReadingTime" true }}
   {{ else if eq $viewMode "poem" }}
     {{ $d = dict "noMeta" true "hideFooter" true }}
   {{ else if eq $viewMode "minimal" }}
@@ -23,13 +17,7 @@
 
   {{ $progressBar      := .Param "progressBar"       | default (index $d "progressBar")       | default false }}
   {{ $showTOC          := .Params.showToc             | default (index $d "showToc")           | default false }}
-  {{ $dropCap          := .Param "dropCap"            | default (index $d "dropCap")           | default false }}
-  {{ $numberedHeadings := .Param "numberedHeadings"   | default (index $d "numberedHeadings")  | default false }}
-  {{ $justify          := .Param "justify"            | default (index $d "justify")           | default false }}
-  {{ $imageFullBleed   := .Param "imageFullBleed"     | default (index $d "imageFullBleed")    | default false }}
   {{ $noMeta           := .Param "noMeta"             | default (index $d "noMeta")            | default false }}
-  {{ $showReadingTime  := .Param "showReadingTime"    | default (index $d "showReadingTime")   | default .Site.Params.showReadingTime }}
-  {{ $showLastModified := .Param "showLastModified"   | default (index $d "showLastModified")  | default false }}
   {{ $hideFooter       := .Param "hideFooter"         | default (index $d "hideFooter")        | default false }}
 
   {{- /* Granular section toggles — beat noMeta/hideFooter when explicitly set */ -}}
@@ -41,6 +29,24 @@
   {{- $showRelatedPosts := (not $hideFooter) -}}{{- if ne .Params.showRelatedPosts nil }}{{ $showRelatedPosts = .Params.showRelatedPosts }}{{ end -}}
   {{- $showPostNav      := (not $hideFooter) -}}{{- if ne .Params.showPostNav nil }}{{ $showPostNav      = .Params.showPostNav }}{{ end -}}
   {{- $showComments     := (not $hideFooter) -}}{{- if ne .Params.showComments nil }}{{ $showComments     = .Params.showComments }}{{ end -}}
+
+  {{ $opts := dict
+      "dropCap"          (.Param "dropCap"          | default (index $d "dropCap")          | default false)
+      "numberedHeadings" (.Param "numberedHeadings" | default (index $d "numberedHeadings") | default false)
+      "justify"          (.Param "justify"          | default (index $d "justify")          | default false)
+      "imageFullBleed"   (.Param "imageFullBleed"   | default (index $d "imageFullBleed")   | default false)
+      "showReadingTime"  (.Param "showReadingTime"  | default (index $d "showReadingTime")  | default .Site.Params.showReadingTime)
+      "showLastModified" (.Param "showLastModified" | default (index $d "showLastModified") | default false)
+      "showTOC"          $showTOC
+      "showDate"         $showDate
+      "showAuthor"       $showAuthor
+      "showWordCount"    $showWordCount
+      "showTags"         $showTags
+      "showShare"        $showShare
+      "showRelatedPosts" $showRelatedPosts
+      "showPostNav"      $showPostNav
+      "showComments"     $showComments
+  }}
 
   {{- if $progressBar }}
   <div id="progress-bar" class="progress-bar" aria-hidden="true"></div>
@@ -57,191 +63,27 @@
 
     <div class="main-content-wrapper" data-testid="main-content-wrapper">
       <div class="container" data-testid="post-container">
-
         <div class="main-content-section" data-testid="post-content-section">
-        <main id="main-content" data-testid="post-main">
-          <article class="post" id="article"{{ if $dropCap }} data-drop-cap{{ end }}{{ if $numberedHeadings }} data-numbered-headings{{ end }}{{ if $justify }} data-justify{{ end }}{{ if $imageFullBleed }} data-full-bleed{{ end }} data-testid="post-article">
-      {{ with .Params.coverImage }}<img src="{{ . }}" class="post-cover-image" alt="{{ $.Title }}" loading="lazy">{{ end }}
-      {{ with .Params.heroImage }}<img src="{{ . }}" class="post-hero-image" alt="{{ $.Title }}" loading="lazy">{{ end }}
-          {{ with .Params.heroImage }}<img src="{{ . }}" class="post-hero-image" alt="{{ $.Title }}" loading="lazy">{{ end }}
-          {{ $showTitle := ne (index .Params "show-title") false }}
-          <header class="post-header" data-testid="post-header">
-            {{ if $showTitle }}
-            <h1 class="post-title" data-testid="post-title">{{ .Title }}</h1>
-            {{ end }}
-
-          {{ if and (in .Site.Params.mainSections .Type) (or .Date .Site.Params.author.name .ReadingTime .WordCount) }}
-            <div class="post-meta" data-testid="post-meta">
-              {{ if and .Date $showDate }}
-              <time datetime="{{ .Date.Format "2006-01-02 15:04:05 MST" }}" data-testid="post-date">
-                {{ .Date.Format "02 Jan 2006" }}
-              </time>
-              {{ end }}
-              {{ if and $showLastModified .Lastmod (ne (.Lastmod.Format "2006-01-02") (.Date.Format "2006-01-02")) }}
-              <span data-testid="post-meta-sep">·</span>
-              <span data-testid="post-lastmod">Updated {{ .Lastmod.Format "02 Jan 2006" }}</span>
-              {{ end }}
-              {{ if and .Site.Params.author.name $showAuthor }}
-              {{ if or (and .Date $showDate) (and $showLastModified .Lastmod (ne (.Lastmod.Format "2006-01-02") (.Date.Format "2006-01-02"))) }}<span data-testid="post-meta-sep">·</span>{{ end }}
-              {{ if .Params.author.homepage }}
-              <a href="{{ .Params.author.homepage }}" target="_blank" rel="noopener noreferrer" data-testid="post-author">@{{ .Site.Params.author.name }}</a>
-              {{ else }}
-              <span data-testid="post-author">@{{ .Site.Params.author.name }}</span>
-              {{ end }}
-              {{ end }}
-              {{ if and $showReadingTime .ReadingTime }}
-              <span data-testid="post-meta-sep">·</span>
-              <span data-testid="reading-time">{{ .ReadingTime }} min read</span>
-              {{ end }}
-              {{ if and .WordCount $showWordCount }}
-              <span data-testid="post-meta-sep">·</span>
-              <span data-testid="word-count">{{ .WordCount }} words</span>
-              {{ end }}
-            </div>
-            {{ end }}
-          </header>
-
-          {{ if and $showTOC .TableOfContents }}
-          <div class="toc-mobile" id="toc-mobile" data-testid="toc-mobile">
-            <button type="button" class="toc-mobile-toggle" id="toc-mobile-toggle" aria-expanded="false" data-testid="toc-mobile-toggle">
-              <span data-testid="toc-mobile-label">{{ .Param "tocTitle" | default "Contents" }}</span>
-              <span class="icon" data-testid="toc-mobile-icon">▾</span>
-            </button>
-            <div class="toc-mobile-content" id="toc-mobile-content" hidden data-testid="toc-mobile-content">
-              <nav class="toc-nav toc-main" data-testid="toc-mobile-nav">
-                {{ .TableOfContents }}
-              </nav>
-            </div>
-          </div>
-          {{ end }}
-
-          <div class="post-content" data-testid="post-content">
-            {{ with .Params.epigraph }}<blockquote class="epigraph"><p>{{ . }}</p></blockquote>{{ end }}
-            {{ with .Params.abstract }}<aside class="post-abstract" data-testid="post-abstract">{{ . }}</aside>{{ end }}
-            {{ .Site.Params.postHeaderContent | safeHTML }}
-            {{ .Content }}
-          </div>
-
-          {{ if and .Params.tags $showTags }}
-          <div class="post-tags" data-testid="post-tags">
-            {{ range .Params.tags }}
-            <a href="{{ site.LanguagePrefix }}/tags/{{ lower . | urlize }}/" class="post-tag" data-testid="post-tag">{{ . }}</a>
-            {{ end }}
-          </div>
-          {{ end }}
-
-          {{ if and (in .Site.Params.mainSections .Type) (or $showShare $showRelatedPosts $showComments $showPostNav) }}
-            {{ if $showShare }}{{ partial "share.html" . }}{{ end }}
-            {{ .Site.Params.postFooterContent | safeHTML }}
-            {{ if $showRelatedPosts }}{{ partial "related.html" . }}{{ end }}
-            {{ if .Site.Params.postAds }}
-            <div class="post-ads" data-testid="post-ads">{{ .Site.Params.postAds | safeHTML }}</div>
-            {{ end }}
-            {{ if and .Site.Params.disqus $showComments }}
-            <div class="post-comments" data-testid="post-comments">{{ partial "disqus.html" . }}</div>
-            {{ end }}
-  {{ if $showPostNav }}{{ partial "post-nav.html" . }}{{ end }}
-  {{ end }}
-          </article>
-        </main>
-        {{ partial "footer.html" . }}
+          <main id="main-content" data-testid="post-main">
+            {{ partial "post-article.html" (dict "ctx" . "opts" $opts) }}
+          </main>
+          {{ partial "footer.html" . }}
+        </div>
       </div>
     </div>
-  </div>
 
-  <aside class="toc-right" id="toc-right-sidebar" data-testid="toc-right-sidebar">
-    <div class="toc-resize-handle" data-edge="left" data-testid="toc-resize-handle-left" aria-hidden="true"></div>
-    {{ partial "toc-sub.html" . }}
-  </aside>
-</div>
+    <aside class="toc-right" id="toc-right-sidebar" data-testid="toc-right-sidebar">
+      <div class="toc-resize-handle" data-edge="left" data-testid="toc-resize-handle-left" aria-hidden="true"></div>
+      {{ partial "toc-sub.html" . }}
+    </aside>
+  </div>
   {{ else }}
   <div class="container" data-testid="post-container">
-
     <div class="main-content-section" data-testid="post-content-section">
-    <main class="main-wrapper" id="main-content" data-testid="post-main">
-      <article class="post" id="article"{{ if $dropCap }} data-drop-cap{{ end }}{{ if $numberedHeadings }} data-numbered-headings{{ end }}{{ if $justify }} data-justify{{ end }}{{ if $imageFullBleed }} data-full-bleed{{ end }} data-testid="post-article">
-      {{ with .Params.coverImage }}<img src="{{ . }}" class="post-cover-image" alt="{{ $.Title }}" loading="lazy">{{ end }}
-      {{ $showTitle := ne (index .Params "show-title") false }}
-      <header class="post-header" data-testid="post-header">
-        {{ if $showTitle }}
-        <h1 class="post-title" data-testid="post-title">{{ .Title }}</h1>
-        {{ end }}
-
-        {{ if and (in .Site.Params.mainSections .Type) (or .Date .Site.Params.author.name .ReadingTime .WordCount) }}
-        <div class="post-meta" data-testid="post-meta">
-          {{ if and .Date $showDate }}
-          <time datetime="{{ .Date.Format "2006-01-02 15:04:05 MST" }}" data-testid="post-date">
-            {{ .Date.Format "02 Jan 2006" }}
-          </time>
-          {{ end }}
-          {{ if and $showLastModified .Lastmod (ne (.Lastmod.Format "2006-01-02") (.Date.Format "2006-01-02")) }}
-          <span data-testid="post-meta-sep">·</span>
-          <span data-testid="post-lastmod">Updated {{ .Lastmod.Format "02 Jan 2006" }}</span>
-          {{ end }}
-          {{ if and .Site.Params.author.name $showAuthor }}
-          {{ if or (and .Date $showDate) (and $showLastModified .Lastmod (ne (.Lastmod.Format "2006-01-02") (.Date.Format "2006-01-02"))) }}<span data-testid="post-meta-sep">·</span>{{ end }}
-          {{ if .Params.author.homepage }}
-          <a href="{{ .Params.author.homepage }}" target="_blank" rel="noopener noreferrer" data-testid="post-author">@{{ .Site.Params.author.name }}</a>
-          {{ else }}
-          <span data-testid="post-author">@{{ .Site.Params.author.name }}</span>
-          {{ end }}
-          {{ end }}
-          {{ if and $showReadingTime .ReadingTime }}
-          <span data-testid="post-meta-sep">·</span>
-          <span data-testid="reading-time">{{ .ReadingTime }} min read</span>
-          {{ end }}
-          {{ if and .WordCount $showWordCount }}
-          <span data-testid="post-meta-sep">·</span>
-          <span data-testid="word-count">{{ .WordCount }} words</span>
-          {{ end }}
-        </div>
-        {{ end }}
-      </header>
-
-      {{ if and $showTOC .TableOfContents }}
-      <div class="toc-mobile" id="toc-mobile" data-testid="toc-mobile">
-        <button type="button" class="toc-mobile-toggle" id="toc-mobile-toggle" aria-expanded="false" data-testid="toc-mobile-toggle">
-          <span data-testid="toc-mobile-label">{{ .Param "tocTitle" | default "Contents" }}</span>
-          <span class="icon" data-testid="toc-mobile-icon">▾</span>
-        </button>
-        <div class="toc-mobile-content" id="toc-mobile-content" hidden data-testid="toc-mobile-content">
-          <nav class="toc-nav toc-main" data-testid="toc-mobile-nav">
-            {{ .TableOfContents }}
-          </nav>
-        </div>
-      </div>
-      {{ end }}
-
-      <div class="post-content" data-testid="post-content">
-        {{ with .Params.epigraph }}<blockquote class="epigraph"><p>{{ . }}</p></blockquote>{{ end }}
-        {{ with .Params.abstract }}<aside class="post-abstract" data-testid="post-abstract">{{ . }}</aside>{{ end }}
-        {{ .Site.Params.postHeaderContent | safeHTML }}
-        {{ .Content }}
-      </div>
-
-      {{ if and .Params.tags $showTags }}
-      <div class="post-tags" data-testid="post-tags">
-        {{ range .Params.tags }}
-        <a href="{{ site.LanguagePrefix }}/tags/{{ lower . | urlize }}/" class="post-tag" data-testid="post-tag">{{ . }}</a>
-        {{ end }}
-      </div>
-      {{ end }}
-
-      {{ if and (in .Site.Params.mainSections .Type) (or $showShare $showRelatedPosts $showComments $showPostNav) }}
-        {{ if $showShare }}{{ partial "share.html" . }}{{ end }}
-        {{ .Site.Params.postFooterContent | safeHTML }}
-        {{ if $showRelatedPosts }}{{ partial "related.html" . }}{{ end }}
-        {{ if .Site.Params.postAds }}
-        <div class="post-ads" data-testid="post-ads">{{ .Site.Params.postAds | safeHTML }}</div>
-        {{ end }}
-        {{ if and .Site.Params.disqus $showComments }}
-        <div class="post-comments" data-testid="post-comments">{{ partial "disqus.html" . }}</div>
-        {{ end }}
-        {{ if $showPostNav }}{{ partial "post-nav.html" . }}{{ end }}
-      {{ end }}
-    </article>
-    </main>
-    {{ partial "footer.html" . }}
+      <main id="main-content" data-testid="post-main">
+        {{ partial "post-article.html" (dict "ctx" . "opts" $opts) }}
+      </main>
+      {{ partial "footer.html" . }}
     </div>
   </div>
   {{ end }}

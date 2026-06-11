@@ -1,0 +1,24 @@
+{{- /* "Part N of M" box for posts sharing a `series` front-matter param */ -}}
+{{- with .Params.series -}}
+{{- $name := . -}}
+{{- $all := (where site.RegularPages "Params.series" $name).ByDate -}}
+{{- $total := len $all -}}
+{{- if gt $total 1 -}}
+{{- $idx := 0 -}}
+{{- range $i, $p := $all }}{{ if eq $p.Permalink $.Permalink }}{{ $idx = add $i 1 }}{{ end }}{{ end -}}
+<aside class="series-nav" aria-label="Series navigation" data-testid="series-nav">
+  <div class="series-header">
+    <span class="series-label" data-testid="series-label">Series</span>
+    <span class="series-name" data-testid="series-name">{{ $name }}</span>
+    <span class="series-count" data-testid="series-count">Part {{ $idx }} of {{ $total }}</span>
+  </div>
+  <ol class="series-list" data-testid="series-list">
+    {{ range $all }}
+    <li{{ if eq .Permalink $.Permalink }} class="is-current"{{ end }} data-testid="series-item">
+      {{ if eq .Permalink $.Permalink }}<span aria-current="page">{{ .Title }}</span>{{ else }}<a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}
+    </li>
+    {{ end }}
+  </ol>
+</aside>
+{{- end -}}
+{{- end -}}

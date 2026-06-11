@@ -2,10 +2,6 @@
   var S = window.__SPACEBOY__;
   if (!S) return;
 
-  if (!document.querySelector || !document.addEventListener) {
-    return;
-  }
-
   function loadScriptWithFallback(localSrc, cdnSrc, done) {
     if (!localSrc && !cdnSrc) {
       if (done) done();
@@ -28,19 +24,42 @@
     }
   }
 
-  function matchesSelector(el, selector) {
-    var fn = el.matches || el.msMatchesSelector || el.webkitMatchesSelector;
-    return fn ? fn.call(el, selector) : false;
-  }
-
   function closest(el, selector) {
-    while (el && el.nodeType === 1) {
-      if (matchesSelector(el, selector)) return el;
-      el = el.parentElement;
-    }
-    return null;
+    return el && el.nodeType === 1 ? el.closest(selector) : null;
   }
 
+
+  // Smooth scroll to a heading with an ease-out curve and a highlight flash.
+  // Exposed on window so toc.js (loaded after the core bundle) can reuse it.
+  function scrollToHeading(target) {
+    var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+    function flashHeading() {
+      target.classList.remove('heading-highlight');
+      void target.offsetWidth;
+      target.classList.add('heading-highlight');
+      setTimeout(function() { target.classList.remove('heading-highlight'); }, 1600);
+    }
+    if (prefersReducedMotion) {
+      target.scrollIntoView({ behavior: 'instant', block: 'center' });
+      flashHeading();
+      return;
+    }
+    var targetY = target.getBoundingClientRect().top + window.pageYOffset - (window.innerHeight / 2) + (target.offsetHeight / 2);
+    var startY = window.pageYOffset;
+    var distance = targetY - startY;
+    if (Math.abs(distance) < 5) { flashHeading(); return; }
+    var duration = Math.min(800, Math.max(250, Math.abs(distance) * 0.4));
+    var startTime = null;
+    function step(now) {
+      if (!startTime) startTime = now;
+      var p = Math.min((now - startTime) / duration, 1);
+      window.scrollTo(0, startY + distance * easeOutCubic(p));
+      if (p < 1) { requestAnimationFrame(step); } else { flashHeading(); }
+    }
+    requestAnimationFrame(step);
+  }
+  window.__sbScrollToHeading = scrollToHeading;
 
   function announce(msg) {
     var ann = document.getElementById('copy-announcement');
@@ -49,49 +68,45 @@
     setTimeout(function() { ann.textContent = ''; }, 2000);
   }
 
+  var CHECK_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+
+  // Copy with execCommand fallback for insecure contexts / older engines
+  function copyText(text, onSuccess) {
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try { if (document.execCommand('copy') && onSuccess) onSuccess(); } catch (_err) {}
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(onSuccess || function() {}, fallback);
+    } else {
+      fallback();
+    }
+  }
+
+  // Swap a button's icon for a green checkmark for 2s and announce to SRs
+  function flashCheckmark(btn, msg) {
+    var origHTML = btn.innerHTML;
+    btn.innerHTML = CHECK_SVG;
+    announce(msg);
+    setTimeout(function() { btn.innerHTML = origHTML; }, 2000);
+  }
+
   if (S.enableCopyCode && !S.legacyMode) {
     document.addEventListener('click', function(e) {
       var btn = closest(e.target, '.copy-code-btn');
       if (!btn) return;
-
       var block = closest(btn, '.code-block-wrapper');
-      var text = '';
-
-      if (block) {
-        var code = block.querySelector('code, pre');
-        if (code) {
-          text = code.textContent || '';
-        }
-      }
-
+      var code = block && block.querySelector('code, pre');
+      var text = code ? code.textContent || '' : '';
       if (!text) return;
-
-      var origHTML = btn.innerHTML;
-      function showCopied() {
-        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>';
-        announce('Copied!');
-        setTimeout(function() {
-          btn.innerHTML = origHTML;
-        }, 2000);
-      }
-
-      function fallbackCopy(t) {
-        var ta = document.createElement('textarea');
-        ta.value = t;
-        ta.style.position = 'fixed';
-        ta.style.opacity = '0';
-        document.body.appendChild(ta);
-        ta.focus();
-        ta.select();
-        try { if (document.execCommand('copy')) showCopied(); } catch (_err) {}
-        document.body.removeChild(ta);
-      }
-
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(showCopied, function() { fallbackCopy(text); });
-      } else {
-        fallbackCopy(text);
-      }
+      copyText(text, function() { flashCheckmark(btn, 'Copied!'); });
     });
   }
 
@@ -112,39 +127,44 @@
         progressBar.style.width = Math.min(100, Math.max(0, pct)) + '%';
       }
       window.addEventListener('scroll', updateProgress, { passive: true });
+      window.addEventListener('resize', updateProgress, { passive: true });
       updateProgress();
     }
   }
 
   document.addEventListener('DOMContentLoaded', function() {
     if (!S.legacyMode) {
-      // Language tooltip that follows the cursor inside code blocks
-      var langTooltip = document.createElement('div');
-      langTooltip.className = 'code-lang-tooltip';
-      document.body.appendChild(langTooltip);
+      // Language tooltip that follows the cursor inside code blocks.
+      // Only wired up when the page has labelled code blocks and a hover-capable pointer.
+      var hasHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
+      if (hasHover && document.querySelector('.code-block-wrapper[data-lang]')) {
+        var langTooltip = document.createElement('div');
+        langTooltip.className = 'code-lang-tooltip';
+        document.body.appendChild(langTooltip);
 
-      document.addEventListener('mousemove', function(e) {
-        if (closest(e.target, '.copy-code-btn')) {
-          langTooltip.classList.remove('visible');
-          return;
-        }
-        var wrapper = closest(e.target, '.code-block-wrapper[data-lang]');
-        if (wrapper) {
-          var lang = wrapper.getAttribute('data-lang');
-          if (lang) {
-            langTooltip.textContent = lang;
-            var x = e.clientX + 14;
-            var y = e.clientY + 14;
-            if (x + 80 > window.innerWidth) x = e.clientX - langTooltip.offsetWidth - 8;
-            if (y + 24 > window.innerHeight) y = e.clientY - 24;
-            langTooltip.style.left = x + 'px';
-            langTooltip.style.top = y + 'px';
-            langTooltip.classList.add('visible');
+        document.addEventListener('mousemove', function(e) {
+          if (closest(e.target, '.copy-code-btn')) {
+            langTooltip.classList.remove('visible');
+            return;
           }
-        } else {
-          langTooltip.classList.remove('visible');
-        }
-      });
+          var wrapper = closest(e.target, '.code-block-wrapper[data-lang]');
+          if (wrapper) {
+            var lang = wrapper.getAttribute('data-lang');
+            if (lang) {
+              langTooltip.textContent = lang;
+              var x = e.clientX + 14;
+              var y = e.clientY + 14;
+              if (x + 80 > window.innerWidth) x = e.clientX - langTooltip.offsetWidth - 8;
+              if (y + 24 > window.innerHeight) y = e.clientY - 24;
+              langTooltip.style.left = x + 'px';
+              langTooltip.style.top = y + 'px';
+              langTooltip.classList.add('visible');
+            }
+          } else {
+            langTooltip.classList.remove('visible');
+          }
+        });
+      }
 
       // Back-to-top button
       var backToTop = document.getElementById('back-to-top');
@@ -181,42 +201,9 @@
             anchor.addEventListener('click', function(e) {
               e.preventDefault();
               var url = window.location.pathname + window.location.search + '#' + h.id;
-              if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(window.location.origin + url).catch(function() {});
-              }
+              copyText(window.location.origin + url);
               history.pushState(null, '', url);
-              var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-              // ── Custom smooth scroll with ease-out and highlight ──
-              function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
-              function flashHeading() {
-                h.classList.remove('heading-highlight');
-                void h.offsetWidth;
-                h.classList.add('heading-highlight');
-                setTimeout(function() { h.classList.remove('heading-highlight'); }, 1600);
-              }
-              function doScroll() {
-                var targetY = h.getBoundingClientRect().top + window.pageYOffset - (window.innerHeight / 2) + (h.offsetHeight / 2);
-                var startY = window.pageYOffset;
-                var distance = targetY - startY;
-                if (Math.abs(distance) < 5) { flashHeading(); return; }
-                var duration = Math.min(800, Math.max(250, Math.abs(distance) * 0.4));
-                var startTime = null;
-                function step(now) {
-                  if (!startTime) startTime = now;
-                  var elapsed = now - startTime;
-                  var p = Math.min(elapsed / duration, 1);
-                  window.scrollTo(0, startY + distance * easeOutCubic(p));
-                  if (p < 1) { requestAnimationFrame(step); }
-                  else { flashHeading(); }
-                }
-                requestAnimationFrame(step);
-              }
-              if (prefersReducedMotion) {
-                h.scrollIntoView({ behavior: 'instant', block: 'center' });
-                flashHeading();
-              } else {
-                doScroll();
-              }
+              scrollToHeading(h);
               announce('Link copied!');
             });
             h.appendChild(anchor);
@@ -237,29 +224,215 @@
       document.addEventListener('click', function(e) {
         var btn = closest(e.target, '.post-share-copy');
         if (!btn) return;
-        var url = window.location.href;
-        var origHTML = btn.innerHTML;
-        function showShareCopied() {
-          btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>';
-          announce('Link copied!');
-          setTimeout(function() { btn.innerHTML = origHTML; }, 2000);
+        copyText(window.location.href, function() { flashCheckmark(btn, 'Link copied!'); });
+      });
+
+      // ── Image / diagram lightbox ──────────────────────────────────────
+      var lightbox = null;
+
+      function closeLightbox() {
+        if (!lightbox || lightbox.hasAttribute('hidden')) return;
+        lightbox.classList.remove('open');
+        lightbox.setAttribute('hidden', '');
+        document.body.style.overflow = '';
+      }
+
+      function openLightbox(node) {
+        if (!lightbox) {
+          lightbox = document.createElement('div');
+          lightbox.className = 'lightbox-overlay';
+          lightbox.setAttribute('role', 'dialog');
+          lightbox.setAttribute('aria-label', 'Image viewer');
+          lightbox.setAttribute('data-testid', 'lightbox');
+          lightbox.setAttribute('hidden', '');
+          lightbox.addEventListener('click', closeLightbox);
+          document.body.appendChild(lightbox);
         }
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(url).then(showShareCopied, function() {});
+        lightbox.innerHTML = '';
+        lightbox.appendChild(node);
+        lightbox.removeAttribute('hidden');
+        requestAnimationFrame(function() { lightbox.classList.add('open'); });
+        document.body.style.overflow = 'hidden';
+      }
+
+      document.addEventListener('click', function(e) {
+        if (closest(e.target, '.lightbox-overlay')) return;
+        var img = closest(e.target, '.post-content img');
+        if (img && !closest(img, 'a') && !img.classList.contains('post-cover-image') && !img.classList.contains('post-hero-image')) {
+          openLightbox(img.cloneNode(true));
+          return;
+        }
+        var diagram = closest(e.target, '.mermaid-diagram');
+        if (diagram) {
+          var svg = diagram.querySelector('svg');
+          if (svg) openLightbox(svg.cloneNode(true));
+        }
+      });
+
+      // ── Collapsible long code blocks ──────────────────────────────────
+      // --code-max-height defines roughly how many lines (X) stay visible.
+      // Up to X+5 lines: show the whole block, no controls — a "Show more"
+      // that reveals a couple of lines is just noise. From X+6 lines on:
+      // cut exactly after line X and add Show more / Show less.
+      // Caps are responsive, so everything is re-measured on resize.
+      var GRACE_LINES = 5;
+
+      function refreshCodeCollapse() {
+        var rootFont = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+        document.querySelectorAll('.code-block-wrapper').forEach(function(wrapper) {
+          if (wrapper.classList.contains('is-expanded')) return;
+          var pre = wrapper.querySelector('pre');
+          if (!pre) return;
+          var cs = getComputedStyle(pre);
+
+          var capRaw = cs.getPropertyValue('--code-max-height').trim();
+          var capPx;
+          if (capRaw.slice(-3) === 'rem') capPx = parseFloat(capRaw) * rootFont;
+          else if (capRaw.slice(-2) === 'vh') capPx = parseFloat(capRaw) / 100 * window.innerHeight;
+          else capPx = parseFloat(capRaw);
+          if (!isFinite(capPx)) capPx = parseFloat(cs.maxHeight);
+          if (!isFinite(capPx)) return;
+
+          var lineH = parseFloat(cs.lineHeight);
+          if (!isFinite(lineH)) lineH = 1.6 * parseFloat(cs.fontSize);
+          var padV = (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0);
+          var totalLines = Math.round((pre.scrollHeight - padV) / lineH);
+          var visibleLines = Math.max(3, Math.floor((capPx - padV) / lineH));
+
+          var btn = wrapper.querySelector('.code-expand-btn');
+          if (totalLines <= visibleLines + GRACE_LINES) {
+            // Within the grace zone — show everything, no clipping, no button
+            wrapper.classList.remove('is-collapsed');
+            wrapper.classList.toggle('is-uncapped', totalLines > visibleLines);
+            pre.style.maxHeight = '';
+            if (btn) btn.remove();
+            return;
+          }
+
+          // Long block — collapse to exactly `visibleLines` whole lines
+          var cutPx = Math.round(visibleLines * lineH + padV);
+          wrapper.dataset.codeCut = cutPx + 'px';
+          wrapper.classList.remove('is-uncapped');
+          wrapper.classList.add('is-collapsed');
+          pre.style.maxHeight = cutPx + 'px';
+          if (!btn) {
+            btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'code-expand-btn';
+            btn.textContent = 'Show more';
+            btn.setAttribute('data-testid', 'code-expand-btn');
+            btn.addEventListener('click', function() {
+              var expanded = wrapper.classList.toggle('is-expanded');
+              wrapper.classList.toggle('is-collapsed', !expanded);
+              pre.style.maxHeight = expanded ? 'none' : (wrapper.dataset.codeCut || '');
+              btn.textContent = expanded ? 'Show less' : 'Show more';
+              if (!expanded) wrapper.scrollIntoView({ block: 'nearest' });
+            });
+            wrapper.appendChild(btn);
+          }
+        });
+      }
+      refreshCodeCollapse();
+      // Re-measure once webfonts land — fallback-font metrics differ enough
+      // to flip blocks across the collapse threshold.
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(refreshCodeCollapse);
+      }
+      var codeCollapseTimer;
+      window.addEventListener('resize', function() {
+        clearTimeout(codeCollapseTimer);
+        codeCollapseTimer = setTimeout(refreshCodeCollapse, 200);
+      }, { passive: true });
+
+      // ── Tap-to-reveal code buttons on touch devices ───────────────────
+      // No hover on touch screens, so copy/wrap stay hidden until the
+      // reader taps the block; tapping elsewhere hides them again.
+      if (window.matchMedia && window.matchMedia('(hover: none)').matches) {
+        document.addEventListener('click', function(e) {
+          var wrapper = closest(e.target, '.code-block-wrapper');
+          var onButton = closest(e.target, '.copy-code-btn, .wrap-code-btn, .code-expand-btn');
+          document.querySelectorAll('.code-block-wrapper.clicked').forEach(function(w) {
+            if (w !== wrapper) w.classList.remove('clicked');
+          });
+          if (wrapper && !onButton) wrapper.classList.toggle('clicked');
+        });
+      }
+
+      // ── Code line-wrap toggle ─────────────────────────────────────────
+      document.addEventListener('click', function(e) {
+        var btn = closest(e.target, '.wrap-code-btn');
+        if (!btn) return;
+        var wrapper = closest(btn, '.code-block-wrapper');
+        if (!wrapper) return;
+        wrapper.classList.toggle('is-wrapped');
+        refreshCodeCollapse(); // wrapping changes the line count
+      });
+
+      // ── Keyboard shortcuts (j/k/t/?) ──────────────────────────────────
+      var kbdOverlay = null;
+
+      function toggleKbdOverlay() {
+        if (!kbdOverlay) {
+          kbdOverlay = document.createElement('div');
+          kbdOverlay.className = 'kbd-overlay';
+          kbdOverlay.setAttribute('role', 'dialog');
+          kbdOverlay.setAttribute('aria-label', 'Keyboard shortcuts');
+          kbdOverlay.setAttribute('data-testid', 'kbd-overlay');
+          kbdOverlay.innerHTML =
+            '<div class="kbd-panel">' +
+              '<h2>Keyboard shortcuts</h2>' +
+              '<div class="kbd-row"><span>Search</span><span><kbd>Ctrl</kbd> <kbd>K</kbd></span></div>' +
+              '<div class="kbd-row"><span>Toggle theme</span><kbd>t</kbd></div>' +
+              '<div class="kbd-row"><span>Older post</span><kbd>j</kbd></div>' +
+              '<div class="kbd-row"><span>Newer post</span><kbd>k</kbd></div>' +
+              '<div class="kbd-row"><span>This help</span><kbd>?</kbd></div>' +
+              '<div class="kbd-row"><span>Close</span><kbd>Esc</kbd></div>' +
+            '</div>';
+          kbdOverlay.addEventListener('click', function(e) {
+            if (!closest(e.target, '.kbd-panel')) kbdOverlay.setAttribute('hidden', '');
+          });
+          document.body.appendChild(kbdOverlay);
+          return;
+        }
+        if (kbdOverlay.hasAttribute('hidden')) {
+          kbdOverlay.removeAttribute('hidden');
+        } else {
+          kbdOverlay.setAttribute('hidden', '');
+        }
+      }
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          closeLightbox();
+          if (kbdOverlay) kbdOverlay.setAttribute('hidden', '');
+          return;
+        }
+        if (e.ctrlKey || e.metaKey || e.altKey) return;
+        var t = e.target;
+        if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+        var modal = document.getElementById('search-modal');
+        if (modal && !modal.hasAttribute('hidden')) return;
+
+        if (e.key === '?') {
+          e.preventDefault();
+          toggleKbdOverlay();
+        } else if (e.key === 'j' || e.key === 'k') {
+          var link = document.querySelector(e.key === 'j' ? '.post-nav-older' : '.post-nav-newer');
+          if (link) window.location.href = link.href;
+        } else if (e.key === 't') {
+          if (window.toggleTheme) window.toggleTheme();
         }
       });
     }
 
     // ── Search ────────────────────────────────────────────────────────────
-    if (S.enableSearch && !S.legacyMode) {
-      var searchModal   = document.getElementById('search-modal');
-      var searchInput   = document.getElementById('search-input');
+    var searchModal   = document.getElementById('search-modal');
+    var searchInput   = document.getElementById('search-input');
+    if (S.enableSearch && !S.legacyMode && searchModal && searchInput) {
       var searchResults = document.getElementById('search-results');
       var searchToggle  = document.getElementById('search-toggle');
       var searchClose   = document.getElementById('search-close');
       var searchBackdrop = document.getElementById('search-backdrop');
-
-      if (!searchModal || !searchInput) return;
 
       var fuseInstance  = null;
       var searchLoading = false;
@@ -280,6 +453,7 @@
         searchResults.innerHTML = '<p class="search-hint">Type to search…</p>';
         activeIdx = -1;
         document.body.style.overflow = '';
+        if (searchToggle) searchToggle.focus();
       }
 
       function setActive(idx) {
@@ -386,12 +560,23 @@
         }
         if (!searchModal.hasAttribute('hidden')) {
           if (e.key === 'Escape') { closeSearch(); }
+          if (e.key === 'Tab') {
+            // Keep focus inside the modal
+            var focusables = searchModal.querySelectorAll('input, button, a[href]');
+            if (focusables.length) {
+              var first = focusables[0];
+              var last = focusables[focusables.length - 1];
+              if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+              else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+            }
+          }
           if (e.key === 'ArrowDown') { e.preventDefault(); setActive(activeIdx + 1); }
           if (e.key === 'ArrowUp')   { e.preventDefault(); setActive(activeIdx - 1); }
           if (e.key === 'Enter') {
             var items = searchResults.querySelectorAll('.search-result-item');
-            if (activeIdx >= 0 && items[activeIdx]) {
-              window.location.href = items[activeIdx].getAttribute('href');
+            var pick = activeIdx >= 0 ? items[activeIdx] : items[0];
+            if (pick) {
+              window.location.href = pick.getAttribute('href');
             }
           }
         }

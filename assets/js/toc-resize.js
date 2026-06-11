@@ -1,6 +1,4 @@
 (function() {
-  if (!document.querySelector || !document.addEventListener) return;
-
   var LS_LEFT  = 'toc-left-width';
   var LS_RIGHT = 'toc-right-width';
   var MIN_W = 140;
@@ -19,64 +17,39 @@
 
     var startX, startW, rafId;
 
-    function pointerX(e) {
-      return e.clientX !== undefined ? e.clientX : e.touches[0].clientX;
-    }
-
-    function getWidth() {
-      return sidebar.getBoundingClientRect().width;
-    }
-
     function onDown(e) {
-      // Only primary button for mouse
-      if (e.button && e.button !== 0) return;
-      startX = pointerX(e);
-      startW = getWidth();
-      document.body.style.cursor = 'col-resize';
+      if (e.button !== 0) return;
+      startX = e.clientX;
+      startW = sidebar.getBoundingClientRect().width;
       document.body.classList.add('toc-resize-active');
-      document.addEventListener('pointermove', onMove);
-      document.addEventListener('pointerup', onUp);
-      // Fallback for environments without pointer events
-      document.addEventListener('mousemove', onMove);
-      document.addEventListener('mouseup', onUp);
-      document.addEventListener('touchmove', onMove, { passive: false });
-      document.addEventListener('touchend', onUp);
-      document.addEventListener('touchcancel', onUp);
+      if (handle.setPointerCapture) {
+        try { handle.setPointerCapture(e.pointerId); } catch (_err) {}
+      }
+      handle.addEventListener('pointermove', onMove);
+      handle.addEventListener('pointerup', onUp);
+      handle.addEventListener('pointercancel', onUp);
+      e.preventDefault();
     }
 
     function onMove(e) {
-      e.preventDefault();
       if (rafId) return;
+      var x = e.clientX;
       rafId = requestAnimationFrame(function() {
         rafId = null;
-        var dx = pointerX(e) - startX;
-        var newW;
-        if (edge === 'right') {
-          newW = startW + dx;
-        } else {
-          newW = startW - dx;
-        }
+        var dx = x - startX;
+        var newW = edge === 'right' ? startW + dx : startW - dx;
         newW = Math.max(MIN_W, Math.min(MAX_W, Math.round(newW)));
         sidebar.style.setProperty('width', newW + 'px', 'important');
-        if (edge === 'right') {
-          page.style.setProperty('--toc-left-width', newW + 'px');
-        } else {
-          page.style.setProperty('--toc-right-width', newW + 'px');
-        }
+        page.style.setProperty(edge === 'right' ? '--toc-left-width' : '--toc-right-width', newW + 'px');
       });
     }
 
     function onUp() {
       if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
-      document.body.style.cursor = '';
       document.body.classList.remove('toc-resize-active');
-      document.removeEventListener('pointermove', onMove);
-      document.removeEventListener('pointerup', onUp);
-      document.removeEventListener('mousemove', onMove);
-      document.removeEventListener('mouseup', onUp);
-      document.removeEventListener('touchmove', onMove);
-      document.removeEventListener('touchend', onUp);
-      document.removeEventListener('touchcancel', onUp);
+      handle.removeEventListener('pointermove', onMove);
+      handle.removeEventListener('pointerup', onUp);
+      handle.removeEventListener('pointercancel', onUp);
       try {
         var w = sidebar.style.width;
         if (w) localStorage.setItem(edge === 'right' ? LS_LEFT : LS_RIGHT, parseInt(w) + 'px');
@@ -84,8 +57,6 @@
     }
 
     handle.addEventListener('pointerdown', onDown);
-    handle.addEventListener('mousedown', onDown);
-    handle.addEventListener('touchstart', onDown, { passive: true });
   }
 
   // Restore saved widths

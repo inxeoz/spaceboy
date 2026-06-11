@@ -2,10 +2,6 @@
   var S = window.__SPACEBOY__;
   if (!S) return;
 
-  if (!document.querySelector || !document.addEventListener) {
-    return;
-  }
-
   var root = document.documentElement;
   var themeKey = 'theme';
 
@@ -22,28 +18,24 @@
     } catch (_err) {}
   }
 
-  function updateThemeIcons() {
-    var btn = document.getElementById('theme-toggle');
+  // Show `onSel` icon when `isOn`, otherwise `offSel`
+  function swapIcons(btnId, offSel, onSel, isOn) {
+    var btn = document.getElementById(btnId);
     if (!btn) return;
-    var moonIcon = btn.querySelector('.moon-icon');
-    var sunIcon = btn.querySelector('.sun-icon');
-    var isDark = root.getAttribute('data-theme') === 'dark';
-    if (moonIcon && sunIcon) {
-      moonIcon.style.display = isDark ? 'none' : 'inline';
-      sunIcon.style.display = isDark ? 'inline' : 'none';
+    var off = btn.querySelector(offSel);
+    var on = btn.querySelector(onSel);
+    if (off && on) {
+      off.style.display = isOn ? 'none' : 'inline';
+      on.style.display = isOn ? 'inline' : 'none';
     }
   }
 
+  function updateThemeIcons() {
+    swapIcons('theme-toggle', '.moon-icon', '.sun-icon', root.getAttribute('data-theme') === 'dark');
+  }
+
   function updateLayoutIcons() {
-    var btn = document.getElementById('layout-toggle');
-    if (!btn) return;
-    var gridIcon = btn.querySelector('.grid-icon');
-    var listIcon = btn.querySelector('.list-icon');
-    var isList = document.documentElement.classList.contains('list-layout');
-    if (gridIcon && listIcon) {
-      gridIcon.style.display = isList ? 'none' : 'inline';
-      listIcon.style.display = isList ? 'inline' : 'none';
-    }
+    swapIcons('layout-toggle', '.grid-icon', '.list-icon', root.classList.contains('list-layout'));
   }
 
   window.updateThemeIcons = updateThemeIcons;
@@ -57,9 +49,8 @@
   };
 
   window.toggleLayout = function() {
-    var isList = document.documentElement.classList.contains('list-layout');
-    document.documentElement.classList.toggle('list-layout', !isList);
-    safeSet('layout', !isList ? 'list' : 'card');
+    var isList = root.classList.toggle('list-layout');
+    safeSet('layout', isList ? 'list' : 'card');
     updateLayoutIcons();
   };
 
@@ -73,11 +64,12 @@
   }
   updateThemeIcons();
 
-  var savedLayout = safeGet('layout');
-  if (savedLayout === 'list') {
+  // Default is list layout; only an explicit 'card' choice opts out.
+  // Must match the inline script in head.html to avoid a layout flash.
+  if (safeGet('layout') !== 'card') {
     root.classList.add('list-layout');
-  } else if (savedLayout === null) {
-    root.classList.add('list-layout');
+  } else {
+    root.classList.remove('list-layout');
   }
   updateLayoutIcons();
 
