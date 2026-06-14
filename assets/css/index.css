@@ -3414,3 +3414,21 @@ html {
         outline: 3px solid Highlight;
     }
 }
+
+/* Prevent long KaTeX equations from overflowing on narrow viewports */
+.katex-display,
+.post-content .katex-block {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    max-width: 100%;
+}
+@media (max-width: 480px) {
+    .katex {
+        font-size: 1.05em;
+    }
+    .katex-display {
+        font-size: 0.95em;
+    }
+}
