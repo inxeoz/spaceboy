@@ -24,7 +24,7 @@ for (const [, entry] of Object.entries(SENTINEL_CFG.sentinelColors)) {
 // sentinel config it forms a fingerprint: when it differs from the one stored
 // in the manifest, every diagram is re-rendered (cache files are keyed only by
 // diagram source, so config changes would otherwise never propagate).
-const RENDERER_VERSION = 5;
+const RENDERER_VERSION = 12;
 const CONFIG_FINGERPRINT = createHash('sha256')
   .update(JSON.stringify(SENTINEL_CFG))
   .update(`v${RENDERER_VERSION}`)
@@ -35,6 +35,16 @@ function buildMermaidConfig() {
   const themeVariables = {};
   for (const [key, entry] of Object.entries(SENTINEL_CFG.sentinelColors)) {
     themeVariables[key] = entry.sentinel;
+  }
+  if (SENTINEL_CFG.xyChartThemeVariables) {
+    themeVariables.xyChart = {};
+    for (const [key, value] of Object.entries(SENTINEL_CFG.xyChartThemeVariables)) {
+      if (key === 'plotColorPalette') {
+        themeVariables.xyChart[key] = value;
+      } else {
+        themeVariables.xyChart[key] = SENTINEL_CFG.sentinelColors[value]?.sentinel || value;
+      }
+    }
   }
   return { theme: 'default', themeVariables };
 }
@@ -161,7 +171,55 @@ function postProcessSvg(svg) {
     const escaped = rule.from.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     result = result.replaceAll(escaped, rule.to);
   }
-  return themeUserColors(result);
+  result = themeUserColors(result);
+  result = injectChartColors(result);
+  return injectOriginGridlines(result);
+}
+
+// Distinct chart-line palette that works across all themes.
+// Same accent colors used by the article's interactive demos.
+function injectChartColors(svg) {
+  const palette = {
+    '--chart-line-1': { light: '#c0492b', dark: '#ff7b5a' },
+    '--chart-line-2': { light: '#176b63', dark: '#5ab8b0' },
+    '--chart-line-3': { light: '#cf952a', dark: '#ffcc5a' },
+  };
+  let css = ':root{';
+  for (const [v, c] of Object.entries(palette)) css += `${v}:${c.light};`;
+  css += '}[data-theme="dark"]{';
+  for (const [v, c] of Object.entries(palette)) css += `${v}:${c.dark};`;
+  css += '}';
+  return svg.replace(/(<svg[^>]*>)/, `$1<style>${css}</style>`);
+}
+
+// Draw dashed gridlines through the origin (x=0, y=0) so the 4 quadrants
+// are visible at a glance. Extracts axis positions from the rendered SVG.
+function injectOriginGridlines(svg) {
+  const xAxis = svg.match(/<g class="bottom-axis">([\s\S]*?)<\/g>\s*<g class="left-axis">/);
+  const yAxis = svg.match(/<g class="left-axis">([\s\S]*?)<\/g>\s*<\/g>/);
+  if (!xAxis || !yAxis) return svg;
+
+  const xLabel = xAxis[1].match(/<text[^>]*transform="[^"]*translate\(([\d.]+),\s*[\d.]+\)[^"]*"[^>]*>0<\//);
+  const yLabel = yAxis[1].match(/<text[^>]*transform="[^"]*translate\([\d.]+,\s*([\d.]+)\)[^"]*"[^>]*>0<\//);
+  if (!xLabel || !yLabel) return svg;
+
+  const xLine = xAxis[1].match(/d="M\s*([\d.]+),\s*[\d.]+\s*L\s*([\d.]+),\s*[\d.]+"/);
+  const yLine = yAxis[1].match(/d="M\s*[\d.]+,\s*([\d.]+)\s*L\s*[\d.]+,\s*([\d.]+)"/);
+  if (!xLine || !yLine) return svg;
+
+  const x0 = parseFloat(xLabel[1]);
+  const y0 = parseFloat(yLabel[1]);
+  const left = parseFloat(xLine[1]);
+  const right = parseFloat(xLine[2]);
+  const top = parseFloat(yLine[1]);
+  const bottom = parseFloat(yLine[2]);
+
+  const html = `<g class="gridlines">
+  <line x1="${left}" y1="${y0}" x2="${right}" y2="${y0}" stroke="var(--border-color)" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="${x0}" y1="${top}" x2="${x0}" y2="${bottom}" stroke="var(--border-color)" stroke-width="1" stroke-dasharray="4,4"/>
+</g>`;
+
+  return svg.replace('</g></g><g class="bottom-axis">', `</g></g>${html}<g class="bottom-axis">`);
 }
 
 function getMermaidVersion() {

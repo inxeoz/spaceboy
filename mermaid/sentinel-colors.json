@@ -19,7 +19,32 @@
     "noteBorderColor":       { "sentinel": "#EFBE2D", "mapsTo": "var(--mermaid-note-border)" },
     "noteTextColor":         { "sentinel": "#FFCE3D", "mapsTo": "var(--mermaid-note-text)"   },
     "activationBkgColor":    { "sentinel": "#D0AE4D", "mapsTo": "var(--surface-color)"  },
-    "activationBorderColor": { "sentinel": "#E0BE5D", "mapsTo": "var(--secondary-text)" }
+    "activationBorderColor": { "sentinel": "#E0BE5D", "mapsTo": "var(--secondary-text)" },
+    "xychartLine1":          { "sentinel": "#0A1929", "mapsTo": "var(--chart-line-1)" },
+    "xychartLine2":          { "sentinel": "#1B2D3F", "mapsTo": "var(--chart-line-2)" },
+    "xychartLine3":          { "sentinel": "#2C4A5E", "mapsTo": "var(--chart-line-3)" },
+    "xAxisLabelColor":       { "sentinel": "#3D5E70", "mapsTo": "var(--secondary-text)"     },
+    "yAxisLabelColor":       { "sentinel": "#4F7183", "mapsTo": "var(--secondary-text)"     },
+    "xAxisTitleColor":       { "sentinel": "#608595", "mapsTo": "var(--text-color)"         },
+    "yAxisTitleColor":       { "sentinel": "#7198A8", "mapsTo": "var(--text-color)"         },
+    "xAxisLineColor":        { "sentinel": "#82ABBB", "mapsTo": "var(--border-color)"       },
+    "yAxisLineColor":        { "sentinel": "#93BECE", "mapsTo": "var(--border-color)"       },
+    "xAxisTickColor":        { "sentinel": "#A4D1E1", "mapsTo": "var(--secondary-text)"     },
+    "yAxisTickColor":        { "sentinel": "#B5E4F4", "mapsTo": "var(--secondary-text)"     }
+  },
+  "xyChartThemeVariables": {
+    "plotColorPalette": "#0A1929, #1B2D3F, #2C4A5E",
+    "backgroundColor": "background",
+    "titleColor": "titleColor",
+    "dataLabelColor": "primaryTextColor",
+    "xAxisLabelColor": "xAxisLabelColor",
+    "yAxisLabelColor": "yAxisLabelColor",
+    "xAxisTitleColor": "xAxisTitleColor",
+    "yAxisTitleColor": "yAxisTitleColor",
+    "xAxisLineColor": "xAxisLineColor",
+    "yAxisLineColor": "yAxisLineColor",
+    "xAxisTickColor": "xAxisTickColor",
+    "yAxisTickColor": "yAxisTickColor"
   },
   "hardcodedDefaults": [
     { "from": "stroke:#333333", "to": "stroke:var(--link-color)" },
@@ -29,6 +54,9 @@
     { "from": "color:#333333",  "to": "color:var(--text-color)"  },
     { "from": "color:#333",     "to": "color:var(--text-color)"  },
     { "from": "fill:black",     "to": "fill:var(--text-color)"   },
-    { "from": "color:black",    "to": "color:var(--text-color)"  }
+    { "from": "color:black",    "to": "color:var(--text-color)"  },
+    { "from": "fill:white",     "to": "fill:var(--bg-color)"     },
+    { "from": "fill:#131300",   "to": "fill:var(--text-color)"   },
+    { "from": "color:#131300",  "to": "color:var(--text-color)"  }
   ]
 }
