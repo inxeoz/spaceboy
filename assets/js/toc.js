@@ -24,17 +24,6 @@
     var hasH3 = headings.some(function(h) { return h.level >= 3; });
     var hasH2 = headings.some(function(h) { return h.level === 2; });
 
-    // ── Inject dot spans into Hugo-generated left TOC links ──
-    if (mainTocNav) {
-      mainTocNav.querySelectorAll('a').forEach(function(a) {
-        if (!a.querySelector('.dot')) {
-          var dot = document.createElement('span');
-          dot.className = 'dot';
-          a.insertBefore(dot, a.firstChild);
-        }
-      });
-    }
-
     // ── Scroll TOC container so the active link stays visible ──
     function scrollTocToActive(container, link) {
       var cRect = container.getBoundingClientRect();
@@ -145,7 +134,7 @@
         var html = '<ul>';
         subs.forEach(function(h) {
           var displayLevel = h.level > 4 ? 4 : h.level;
-          html += '<li><a href="#' + h.id + '" data-level="' + displayLevel + '"><span class="dot"></span>' + h.text + '</a></li>';
+          html += '<li><a href="#' + h.id + '" data-level="' + displayLevel + '">' + h.text + '</a></li>';
         });
         html += '</ul>';
         subTocNav.innerHTML = html;
