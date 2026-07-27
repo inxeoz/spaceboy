@@ -93,14 +93,19 @@
 
     function generateSmoothDiagonalPath(items, itemArray) {
       if (itemArray.length === 0) return '';
+
+      var firstEl = itemArray[0];
+      var lastEl = itemArray[itemArray.length - 1];
+      var first = getItemCoords(items, firstEl);
+      var last = getItemCoords(items, lastEl);
+
       if (itemArray.length === 1) {
-        var c = getItemCoords(items, itemArray[0]);
-        return 'M ' + c.x + ',' + c.y + ' L ' + c.x + ',' + c.y;
+        return 'M ' + first.x + ',' + firstEl.offsetTop + ' L ' + first.x + ',' + (firstEl.offsetTop + firstEl.offsetHeight);
       }
 
       var d = '';
-      var first = getItemCoords(items, itemArray[0]);
-      d += 'M ' + first.x + ',' + first.y + ' ';
+      d += 'M ' + first.x + ',' + firstEl.offsetTop + ' ';
+      d += 'L ' + first.x + ',' + first.y + ' ';
 
       for (var i = 0; i < itemArray.length - 1; i++) {
         var curr = getItemCoords(items, itemArray[i]);
@@ -119,6 +124,8 @@
           d += 'L ' + next.x + ',' + next.y + ' ';
         }
       }
+
+      d += 'L ' + last.x + ',' + (lastEl.offsetTop + lastEl.offsetHeight) + ' ';
 
       return d;
     }
@@ -222,23 +229,7 @@
         }
       }
 
-      // Update SVG paths
-      if (svg && bgPath && activePath) {
-        var fullPath = generateSmoothDiagonalPath(items, items);
-
-        // Find active range
-        var activeItems = items.filter(function(a) { return a.classList.contains('active'); });
-        var activeRangePath = '';
-        if (activeItems.length > 0) {
-          var firstIdx = items.indexOf(activeItems[0]);
-          var lastIdx = items.indexOf(activeItems[activeItems.length - 1]);
-          var activeRange = items.slice(firstIdx, lastIdx + 1);
-          activeRangePath = generateSmoothDiagonalPath(items, activeRange);
-        }
-
-        bgPath.setAttribute('d', fullPath);
-        activePath.setAttribute('d', activeRangePath);
-      }
+      updatePaths(items);
 
       // Scroll active into view
       var activeLink = subTocNav.querySelector('a.active');
@@ -299,12 +290,36 @@
       }, { passive: true });
     }
 
-    // ── Resize handler for SVG ──
-    window.addEventListener('resize', function() {
-      if (subTocNav && svg) {
-        svg.style.height = subTocNav.offsetHeight + 'px';
+    function updatePaths(items) {
+      if (!svg || !bgPath || !activePath) return;
+      if (!items || items.length === 0) return;
+
+      var fullPath = generateSmoothDiagonalPath(items, items);
+      bgPath.setAttribute('d', fullPath);
+
+      var activeItems = items.filter(function(a) { return a.classList.contains('active'); });
+      var activeRangePath = '';
+      if (activeItems.length > 0) {
+        var firstIdx = items.indexOf(activeItems[0]);
+        var lastIdx = items.indexOf(activeItems[activeItems.length - 1]);
+        var activeRange = items.slice(firstIdx, lastIdx + 1);
+        activeRangePath = generateSmoothDiagonalPath(items, activeRange);
       }
-    });
+      activePath.setAttribute('d', activeRangePath);
+    }
+
+    // ── ResizeObserver: recalc paths when sidebar resizes (window, drag handle, etc.) ──
+    if (window.ResizeObserver && subTocNav) {
+      var ro = new ResizeObserver(function() {
+        if (subTocNav && svg) {
+          svg.style.height = subTocNav.offsetHeight + 'px';
+        }
+        if (subItemElements.length > 0 && bgPath && activePath) {
+          updatePaths(subItemElements);
+        }
+      });
+      ro.observe(subTocNav);
+    }
 
     // ── Mobile toggle ──
     var toggleBtn = document.getElementById('toc-mobile-toggle');

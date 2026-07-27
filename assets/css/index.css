@@ -2354,7 +2354,7 @@ body.toc-resize-active {
 }
 
 .bg-curvy-path {
-    stroke: var(--border-color);
+    stroke: var(--link-color);
     stroke-width: 2.5px;
     fill: none;
     stroke-linecap: round;
@@ -2425,6 +2425,12 @@ body.toc-resize-active {
     font-size: 0.76rem;
     font-weight: 450;
     opacity: 0.85;
+}
+
+.toc-sub-nav li + li {
+    border-top: 1px solid var(--border-color);
+    padding-top: 0.25rem;
+    margin-top: 0.25rem;
 }
 
 .toc-sub-nav a[data-level="5"] {
