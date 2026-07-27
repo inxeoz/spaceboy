@@ -1,6 +1,12 @@
 <div class="toc-card" data-testid="toc-sub-card">
   <div class="toc-header" id="sub-toc-header" data-testid="toc-sub-header">{{ .Param "tocSubTitle" | default "In this section" }}</div>
-  <nav class="toc-nav toc-sub-nav" id="toc-sub-nav" data-testid="toc-sub-nav">
-    <p class="sub-toc-empty" data-testid="toc-sub-empty">Scroll to a section</p>
-  </nav>
+  <div class="toc-sub-curvy">
+    <svg class="toc-sub-svg" id="toc-sub-svg" aria-hidden="true">
+      <path class="bg-curvy-path" id="bg-curvy-path" />
+      <path class="active-curvy-path" id="active-curvy-path" />
+    </svg>
+    <nav class="toc-nav toc-sub-nav" id="toc-sub-nav" data-testid="toc-sub-nav">
+      <p class="sub-toc-empty" data-testid="toc-sub-empty">Scroll to a section</p>
+    </nav>
+  </div>
 </div>
