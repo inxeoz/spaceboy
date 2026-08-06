@@ -38,7 +38,16 @@
     swapIcons('layout-toggle', '.grid-icon', '.list-icon', root.classList.contains('list-layout'));
   }
 
+  function updateTocIcons() {
+    var btn = document.getElementById('toc-toggle');
+    if (!btn) return;
+    var hidden = root.classList.contains('toc-hidden');
+    btn.setAttribute('aria-pressed', String(!hidden));
+    swapIcons('toc-toggle', '.toc-show-icon', '.toc-hide-icon', !hidden);
+  }
+
   window.updateThemeIcons = updateThemeIcons;
+  window.updateTocIcons = updateTocIcons;
 
   window.toggleTheme = function() {
     if (window.clearPalette) clearPalette();
@@ -52,6 +61,12 @@
     var isList = root.classList.toggle('list-layout');
     safeSet('layout', isList ? 'list' : 'card');
     updateLayoutIcons();
+  };
+
+  window.toggleToc = function() {
+    var isHidden = root.classList.toggle('toc-hidden');
+    safeSet('toc', isHidden ? 'hide' : 'show');
+    updateTocIcons();
   };
 
   var savedTheme = safeGet(themeKey);
@@ -72,6 +87,15 @@
     root.classList.remove('list-layout');
   }
   updateLayoutIcons();
+
+  // TOC visibility preference (toggled from the header). Only affects pages
+  // that render the TOC layout. Must match the inline script in head.html.
+  if (safeGet('toc') === 'hide') {
+    root.classList.add('toc-hidden');
+  } else {
+    root.classList.remove('toc-hidden');
+  }
+  updateTocIcons();
 
   document.addEventListener('DOMContentLoaded', function() {
     var header = document.getElementById('site-header');

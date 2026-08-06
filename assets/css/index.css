@@ -44,8 +44,8 @@
 
     --content-max-width: clamp(320px, 95vw, 1200px);
 
-    /* Readable column for article bodies (single post pages) */
-    --readable-width: 46rem;
+    /* Readable column for article bodies (single post pages) — scales with viewport */
+    --readable-width: clamp(320px, 39vw + 440px, 1170px);
 
     /* Corner radius scale */
     --radius-sm: 4px;
@@ -302,7 +302,8 @@ nav {
 /* Header icon buttons: theme, layout, search */
 .theme-toggle,
 .layout-toggle,
-.search-toggle {
+.search-toggle,
+.toc-toggle {
     background: transparent;
     border: none;
     color: var(--link-color);
@@ -317,12 +318,14 @@ nav {
 }
 .theme-toggle:hover,
 .layout-toggle:hover,
-.search-toggle:hover {
+.search-toggle:hover,
+.toc-toggle:hover {
     background: var(--toc-hover-bg);
 }
 .theme-toggle svg,
 .layout-toggle svg,
-.search-toggle svg {
+.search-toggle svg,
+.toc-toggle svg {
     display: block;
     stroke: var(--link-color);
     fill: none;
@@ -2137,12 +2140,28 @@ pre {
     flex-direction: column;
     padding: 1.2rem clamp(0.5rem, 3vw, 1.25rem) 1rem;
     will-change: transform;
+    /* Raise the sidebar stacking contexts above the content column so the
+       resize handles (which straddle the sidebar/content boundary) stay
+       hit-testable on both sides. */
+    z-index: 1;
 }
 .toc-left {
     grid-area: left;
 }
 .toc-right {
     grid-area: right;
+}
+
+/* TOC hidden state — toggled from the header button */
+html.toc-hidden .toc-left,
+html.toc-hidden .toc-right,
+html.toc-hidden .toc-resize-handle,
+html.toc-hidden .toc-mobile {
+    display: none;
+}
+html.toc-hidden .page {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "center";
 }
 
 .main-content-wrapper {
@@ -2190,10 +2209,18 @@ pre {
     padding: 0 3px;
 }
 .toc-left .toc-resize-handle {
-    right: -5px;
+    right: 0;
+    padding: 0 0 0 6px;
+}
+.toc-left .toc-resize-handle::after {
+    margin: 0 0 0 auto;
 }
 .toc-right .toc-resize-handle {
-    left: -5px;
+    left: 0;
+    padding: 0 6px 0 0;
+}
+.toc-right .toc-resize-handle::after {
+    margin: 0 auto 0 0;
 }
 .toc-resize-handle::after {
     content: '';
@@ -2201,15 +2228,21 @@ pre {
     height: 100%;
     width: 4px;
     border-radius: 2px;
-    background: transparent;
-    transition: background 0.2s;
+    background: var(--border-color);
+    opacity: 0.45;
+    transition: background 0.2s, opacity 0.2s, width 0.15s;
     margin: 0 auto;
 }
 .toc-resize-handle:hover::after,
-.toc-resize-handle:active::after,
 .toc-resize-active .toc-resize-handle::after {
     background: var(--link-color);
-    opacity: 0.35;
+    opacity: 0.7;
+    width: 4px;
+}
+.toc-resize-handle:active::after {
+    background: var(--link-color);
+    opacity: 0.9;
+    width: 5px;
 }
 body.toc-resize-active {
     cursor: col-resize;
