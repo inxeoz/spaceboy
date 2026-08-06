@@ -2135,7 +2135,7 @@ pre {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    padding: 1.2rem 0 1rem 0;
+    padding: 1.2rem clamp(0.5rem, 3vw, 1.25rem) 1rem;
     will-change: transform;
 }
 .toc-left {
