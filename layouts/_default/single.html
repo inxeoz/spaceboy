@@ -2,7 +2,7 @@
 <html lang="{{ .Site.Language.Lang }}" prefix="og: http://ogp.me/ns#">
 {{ partial "head.html" . }}
 
-<body>
+<body class="post-page">
   {{ $viewMode := .Param "viewMode" }}
   {{ $d := dict }}
   {{ if eq $viewMode "goofy" }}

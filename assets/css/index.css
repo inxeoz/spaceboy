@@ -44,6 +44,13 @@
 
     --content-max-width: clamp(320px, 95vw, 1200px);
 
+    /* Readable column for article bodies (single post pages) */
+    --readable-width: 46rem;
+
+    /* Corner radius scale */
+    --radius-sm: 4px;
+    --radius-md: 6px;
+
     /* Default collapsed height of code blocks; responsive overrides below */
     --code-max-height: 32rem;
 
@@ -193,11 +200,7 @@ body {
 }
 
 .site-header-container.scrolled {
-    box-shadow: none;
-}
-
-.site-header-container.scrolled .container {
-    box-shadow: var(--shadow);
+    box-shadow: 0 6px 16px -10px rgba(0, 0, 0, 0.18);
 }
 
 .site-header-container.nav-hidden {
@@ -205,15 +208,18 @@ body {
     box-shadow: none;
 }
 
-.site-header-container .container {
-    transition: box-shadow 0.3s ease;
-}
-
 .container {
     width: 100%;
     max-width: var(--content-max-width);
     margin: 0 auto;
     padding: 0 clamp(0.5rem, 3vw, 1.5rem);
+}
+
+/* Single post pages: constrain the article + footer to a readable measure */
+.post-page .main-content-section {
+    max-width: var(--readable-width);
+    margin-inline: auto;
+    width: 100%;
 }
 
 a {
@@ -253,7 +259,7 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.5rem 0 1rem;
+    padding: 0.75rem 0;
 }
 .nav-left,
 .nav-right {
@@ -268,7 +274,7 @@ nav {
 }
 .nav-right {
     justify-content: flex-end;
-    gap: 0.75rem;
+    gap: 0.5rem;
     flex-shrink: 0;
 }
 
@@ -276,29 +282,20 @@ nav {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    padding: 0.25rem 0.5rem;
-    min-height: 32px;
-    background: var(--nav-group-bg, var(--link-color));
-    color: var(--nav-group-text, var(--bg-color));
-    overflow-x: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-.nav-group::-webkit-scrollbar {
-    display: none;
+    gap: 0.25rem;
 }
 .nav-group .nav-link {
-    color: var(--nav-group-text, var(--bg-color));
     white-space: nowrap;
-    min-height: unset;
+    padding: 0.375rem 0.5rem;
+    border-radius: var(--radius-sm);
+    transition:
+        color 0.15s ease,
+        background-color 0.15s ease;
 }
 .nav-group .nav-link:hover {
-    color: var(--nav-group-text, var(--bg-color));
-    opacity: 0.8;
+    background: var(--toc-hover-bg);
 }
 .nav-group .nav-link svg {
-    stroke: var(--nav-group-text, var(--bg-color));
     fill: none;
 }
 
@@ -310,9 +307,18 @@ nav {
     border: none;
     color: var(--link-color);
     cursor: pointer;
-    padding: 0.25rem 0.5rem;
+    width: 2.25rem;
+    height: 2.25rem;
     display: flex;
     align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    transition: background-color 0.15s ease;
+}
+.theme-toggle:hover,
+.layout-toggle:hover,
+.search-toggle:hover {
+    background: var(--toc-hover-bg);
 }
 .theme-toggle svg,
 .layout-toggle svg,
@@ -435,7 +441,7 @@ nav {
 .search-result-item {
     display: block;
     padding: 0.65rem 0.75rem;
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     text-decoration: none !important;
     color: var(--text-color);
     transition: background 0.12s ease;
@@ -539,8 +545,8 @@ main {
 
 /* Post Single */
 .post-header {
-    margin-bottom: clamp(1rem, 4vw, 2rem);
-    text-align: center;
+    margin-bottom: clamp(1rem, 3vw, 1.75rem);
+    text-align: left;
 }
 
 .back-link {
@@ -557,14 +563,14 @@ main {
 .post-title {
     font: var(--font-weight-bold) clamp(1.25rem, 5vw, 2.25rem)/1.3
         var(--font-body);
-    margin: 0 0 1.5rem;
-    text-align: center;
+    margin: 0 0 1.25rem;
+    text-align: left;
     letter-spacing: var(--letter-spacing-tight);
 }
 .post-meta {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: clamp(0.5rem, 3vw, 1.25rem);
     color: var(--secondary-text);
     font-size: clamp(0.8rem, 2vw, 0.9rem);
@@ -575,7 +581,7 @@ main {
 .post-tags {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     gap: clamp(0.25rem, 1.5vw, 0.5rem);
     margin-top: clamp(0.75rem, 3vw, 1.5rem);
@@ -586,6 +592,7 @@ main {
     background-color: var(--surface-color);
     color: var(--secondary-text);
     text-decoration: none !important;
+    border-radius: var(--radius-sm);
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 .post-tag:hover {
@@ -598,7 +605,7 @@ main {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    justify-content: center;
+    justify-content: flex-start;
     margin-top: clamp(0.75rem, 3vw, 1.5rem);
     padding-top: clamp(0.75rem, 3vw, 1.5rem);
     border-top: 1px solid var(--border-color);
@@ -623,6 +630,7 @@ main {
     cursor: pointer;
     padding: 0;
     font-family: inherit;
+    border-radius: var(--radius-md);
     transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 .post-share-btn:hover {
@@ -784,7 +792,7 @@ main {
     -webkit-overflow-scrolling: touch;
     margin: 1.75em 0;
     border: 1px solid var(--border-color);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     scrollbar-width: thin;
     scrollbar-color: var(--link-color) var(--surface-color);
     /* scroll-shadow: local mask covers the shadow when scrolled to an edge */
@@ -847,7 +855,7 @@ main {
     -webkit-overflow-scrolling: touch;
     max-height: var(--code-max-height, 32rem);
     margin: 1.75em 0;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     line-height: 1.6;
 }
 
@@ -1033,6 +1041,7 @@ pre {
     color: var(--secondary-text);
     border: 1px solid var(--border-color);
     background: var(--surface-color);
+    border-radius: var(--radius-sm);
     text-decoration: none !important;
     transition:
         color 0.2s ease,
@@ -1062,7 +1071,7 @@ pre {
     border-top: 1px solid var(--border-color);
 }
 .related-content {
-    text-align: center;
+    text-align: left;
 }
 .related-content h3,
 .related-title {
@@ -1168,6 +1177,7 @@ pre {
     background: var(--surface-color);
     color: var(--secondary-text);
     border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
     text-decoration: none !important;
     transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
@@ -1236,7 +1246,7 @@ pre {
 }
 .gallery-item {
     overflow: hidden;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     background: var(--surface-color);
 }
 .gallery-item img {
@@ -1290,29 +1300,25 @@ pre {
 .post-card {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     padding: 1.5rem;
-    transition:
-        box-shadow 0.2s ease,
-        transform 0.2s ease;
+    transition: border-color 0.2s ease;
     contain: layout style paint;
 }
 
 .post-card:hover {
-    box-shadow: var(--shadow);
-    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--link-color) 55%, transparent);
 }
 
 [data-theme="dark"] .post-card {
     border-color: var(--border-color);
-    box-shadow: none;
 }
 
 [data-theme="dark"] .post-year {
     opacity: 0.85;
 }
 [data-theme="dark"] .post-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+    border-color: color-mix(in srgb, var(--link-color) 55%, transparent);
 }
 
 /* List Layout */
@@ -1525,7 +1531,7 @@ pre {
 .post-excerpt img {
     max-width: 100%;
     height: auto;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     margin: 0.5rem 0;
 }
 
@@ -2150,15 +2156,10 @@ pre {
     padding: 0 1rem;
 }
 
-/* ── TOC Card (frosted glass) ── */
+/* ── TOC Card (flat sidebar) ── */
 .toc-card {
-    background: var(--toc-bg);
-    border-radius: 8px;
-    padding: 0.75rem;
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    border: 1px solid var(--border-color);
-    box-shadow: var(--shadow);
+    background: transparent;
+    padding: 0;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -2168,15 +2169,10 @@ pre {
     contain: layout style;
 }
 
-/* screen-edge radius: flat on screen side, round on inner */
-.toc-left .toc-card {
-    border-radius: 0 8px 8px 0;
-    border-left: none;
-}
-
+.toc-left .toc-card,
 .toc-right .toc-card {
-    border-radius: 8px 0 0 8px;
-    border-right: none;
+    border-radius: 0;
+    border: none;
 }
 
 
@@ -2292,7 +2288,7 @@ body.toc-resize-active {
     padding: 0.25rem 0.4rem;
     color: var(--secondary-text);
     opacity: 0.7;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     transition: opacity 0.18s ease, color 0.18s ease, background-color 0.18s ease;
     position: relative;
     text-decoration: none;
@@ -2334,46 +2330,9 @@ body.toc-resize-active {
     font-weight: 480;
 }
 
-/* ── Right: Curvy SVG Sub TOC ── */
-.toc-sub-curvy {
-    position: relative;
-    display: flex;
-    flex: 1;
-    min-height: 0;
-}
-
-.toc-sub-svg {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 36px;
-    height: 100%;
-    pointer-events: none;
-    overflow: visible;
-    flex-shrink: 0;
-}
-
-.bg-curvy-path {
-    stroke: var(--link-color);
-    stroke-width: 2.5px;
-    fill: none;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    opacity: 0.5;
-}
-
-.active-curvy-path {
-    stroke: var(--accent-color);
-    stroke-width: 2.5px;
-    fill: none;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent-color) 50%, transparent));
-    transition: d 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
+/* ── Right: Flat Sub TOC ── */
 .toc-sub-nav {
-    padding-left: 28px;
+    padding-left: 0;
     width: 100%;
 }
 
@@ -2394,10 +2353,10 @@ body.toc-resize-active {
     gap: 0.35rem;
     min-width: 0;
     word-break: break-word;
-    padding: 0.25rem 0.4rem 0.25rem 0;
+    padding: 0.25rem 0.4rem 0.25rem 0.5rem;
     color: var(--secondary-text);
     opacity: 0.7;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     transition: opacity 0.18s ease, color 0.18s ease, background-color 0.18s ease;
     position: relative;
     text-decoration: none;
@@ -2412,8 +2371,19 @@ body.toc-resize-active {
 
 .toc-sub-nav a.active {
     opacity: 1;
-    color: var(--accent-color);
+    color: var(--accent-color, var(--link-color));
     font-weight: 530;
+}
+.toc-sub-nav a.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 1.1em;
+    border-radius: 2px;
+    background: var(--accent-color, var(--link-color));
 }
 
 .toc-sub-nav a[data-level="3"] {
@@ -2462,7 +2432,7 @@ body.toc-resize-active {
     padding: 0.6rem 1rem;
     background: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-radius: 6px;
+    border-radius: var(--radius-md);
     color: var(--text-color);
     font-family: var(--font-body);
     font-size: 0.8rem;
@@ -2487,7 +2457,7 @@ body.toc-resize-active {
     background: var(--card-bg);
     border: 1px solid var(--border-color);
     border-top: 0;
-    border-radius: 0 0 6px 6px;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
     padding: 0.5rem;
     max-height: 50vh;
     max-height: 50dvh;
@@ -2637,7 +2607,7 @@ body.toc-resize-active {
    Callout / Admonition Blocks (docs)
    ═══════════════════════════════════════ */
 .callout {
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     padding: 0.9rem 1.2rem;
     margin: 1.5rem 0;
     border-left: 3px solid;
@@ -2842,7 +2812,7 @@ body.toc-resize-active {
    ═══════════════════════════════════════ */
 .spoiler {
     border: 1px solid var(--border-color);
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     margin: 1.5rem 0;
     overflow: hidden;
 }
@@ -2896,7 +2866,7 @@ kbd {
    ═══════════════════════════════════════ */
 .post-details {
     border: 1px solid var(--border-color);
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     margin: 1.25rem 0;
     overflow: hidden;
 }
@@ -2963,9 +2933,6 @@ kbd {
 
 /* ── Responsive ── */
 @media (max-width: 1000px) {
-    .toc-left .toc-card {
-        padding: 0.5rem;
-    }
     .toc-nav {
         font-size: 0.75rem;
     }
@@ -3017,7 +2984,7 @@ kbd {
     background: rgba(0, 0, 0, 0.07);
     color: var(--secondary-text);
     border: 1px solid var(--border-color);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     text-decoration: none;
     transition:
         border-color 0.2s ease,
@@ -3283,7 +3250,7 @@ html {
     border: 1px solid var(--border-color);
     border-left: 3px solid var(--link-color);
     background: var(--surface-color);
-    border-radius: 5px;
+    border-radius: var(--radius-sm);
     padding: 0.9rem 1.1rem;
     margin: 0 0 2rem;
     font-size: 0.88rem;
@@ -3394,9 +3361,6 @@ html {
         forced-color-adjust: none;
         background: Canvas;
         color: CanvasText;
-    }
-    .nav-group {
-        border: 1px solid ButtonText;
     }
     .post-tag,
     .post-category {

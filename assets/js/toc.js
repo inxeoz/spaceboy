@@ -1,15 +1,10 @@
 (function() {
-  function initCurvyTableOfContents() {
+  function initTableOfContents() {
     var mainTocNav = document.getElementById('toc-nav');
     var subTocNav = document.getElementById('toc-sub-nav');
 
     var article = document.getElementById('article');
     if (!article) return;
-
-    // ── SVG elements ──
-    var bgPath = document.getElementById('bg-curvy-path');
-    var activePath = document.getElementById('active-curvy-path');
-    var svg = document.getElementById('toc-sub-svg');
 
     // ── Collect headings ──
     var headings = [];
@@ -81,55 +76,6 @@
       }
     }
 
-    // ── Curvy SVG path helpers ──
-    var LEVEL_X = { 3: 8, 4: 18, 5: 28 };
-
-    function getItemCoords(items, item) {
-      var level = parseInt(item.getAttribute('data-level')) || 3;
-      var x = LEVEL_X[level] || 28;
-      var y = item.offsetTop + item.offsetHeight / 2;
-      return { x: x, y: y };
-    }
-
-    function generateSmoothDiagonalPath(items, itemArray) {
-      if (itemArray.length === 0) return '';
-
-      var firstEl = itemArray[0];
-      var lastEl = itemArray[itemArray.length - 1];
-      var first = getItemCoords(items, firstEl);
-      var last = getItemCoords(items, lastEl);
-
-      if (itemArray.length === 1) {
-        return 'M ' + first.x + ',' + firstEl.offsetTop + ' L ' + first.x + ',' + (firstEl.offsetTop + firstEl.offsetHeight);
-      }
-
-      var d = '';
-      d += 'M ' + first.x + ',' + firstEl.offsetTop + ' ';
-      d += 'L ' + first.x + ',' + first.y + ' ';
-
-      for (var i = 0; i < itemArray.length - 1; i++) {
-        var curr = getItemCoords(items, itemArray[i]);
-        var next = getItemCoords(items, itemArray[i + 1]);
-
-        if (curr.x !== next.x) {
-          var dy = next.y - curr.y;
-          var startY = curr.y + dy * 0.2;
-          var endY = curr.y + dy * 0.8;
-          var midY = (startY + endY) / 2;
-
-          d += 'L ' + curr.x + ',' + startY + ' ';
-          d += 'C ' + curr.x + ',' + midY + ' ' + next.x + ',' + midY + ' ' + next.x + ',' + endY + ' ';
-          d += 'L ' + next.x + ',' + next.y + ' ';
-        } else {
-          d += 'L ' + next.x + ',' + next.y + ' ';
-        }
-      }
-
-      d += 'L ' + last.x + ',' + (lastEl.offsetTop + lastEl.offsetHeight) + ' ';
-
-      return d;
-    }
-
     // ── Build sub items from headings ──
     var lastSubParentId = null;
     var subItemElements = [];
@@ -199,19 +145,13 @@
       }
     }
 
-    // ── Update sub (right) curvy TOC ──
-    function updateSubCurvy(activeIdx) {
+    // ── Update sub (right) TOC ──
+    function updateSub(activeIdx) {
       if (!subTocNav) return;
 
       buildSubItems(activeIdx);
       var items = subItemElements;
-      if (!items.length) {
-        if (svg) svg.style.height = '0';
-        return;
-      }
-
-      // Set SVG height to match the nav content
-      if (svg) svg.style.height = subTocNav.offsetHeight + 'px';
+      if (!items.length) return;
 
       // Range-based active: all items from first to current active
       var foundActive = false;
@@ -229,8 +169,6 @@
         }
       }
 
-      updatePaths(items);
-
       // Scroll active into view
       var activeLink = subTocNav.querySelector('a.active');
       if (activeLink) scrollTocToActive(subTocNav, activeLink);
@@ -239,13 +177,13 @@
     function updateBoth() {
       var idx = getActiveIndex();
       updateMain(idx);
-      updateSubCurvy(idx);
+      updateSub(idx);
     }
 
     // ── Force active state for a specific index ──
     function activateIndex(idx) {
       updateMain(idx);
-      updateSubCurvy(idx);
+      updateSub(idx);
     }
 
     // ── Smooth scroll on click ──
@@ -290,37 +228,6 @@
       }, { passive: true });
     }
 
-    function updatePaths(items) {
-      if (!svg || !bgPath || !activePath) return;
-      if (!items || items.length === 0) return;
-
-      var fullPath = generateSmoothDiagonalPath(items, items);
-      bgPath.setAttribute('d', fullPath);
-
-      var activeItems = items.filter(function(a) { return a.classList.contains('active'); });
-      var activeRangePath = '';
-      if (activeItems.length > 0) {
-        var firstIdx = items.indexOf(activeItems[0]);
-        var lastIdx = items.indexOf(activeItems[activeItems.length - 1]);
-        var activeRange = items.slice(firstIdx, lastIdx + 1);
-        activeRangePath = generateSmoothDiagonalPath(items, activeRange);
-      }
-      activePath.setAttribute('d', activeRangePath);
-    }
-
-    // ── ResizeObserver: recalc paths when sidebar resizes (window, drag handle, etc.) ──
-    if (window.ResizeObserver && subTocNav) {
-      var ro = new ResizeObserver(function() {
-        if (subTocNav && svg) {
-          svg.style.height = subTocNav.offsetHeight + 'px';
-        }
-        if (subItemElements.length > 0 && bgPath && activePath) {
-          updatePaths(subItemElements);
-        }
-      });
-      ro.observe(subTocNav);
-    }
-
     // ── Mobile toggle ──
     var toggleBtn = document.getElementById('toc-mobile-toggle');
     var mobileContent = document.getElementById('toc-mobile-content');
@@ -345,8 +252,8 @@
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCurvyTableOfContents);
+    document.addEventListener('DOMContentLoaded', initTableOfContents);
   } else {
-    initCurvyTableOfContents();
+    initTableOfContents();
   }
 })();
