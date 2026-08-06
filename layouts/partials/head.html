@@ -47,8 +47,8 @@
     {{ $css = $css | append . }}
   {{ end }}
 {{ end }}
-{{ with $css | resources.Concat "css/bundle.css" | minify }}
-  <style>{{ .Content | safeCSS }}</style>
+{{ with $css | resources.Concat "css/bundle.css" | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
 {{ end }}
 
 {{- /* Syntax highlighting — loaded non-blocking */ -}}
@@ -59,7 +59,7 @@
 <noscript><link rel="stylesheet" href="{{ $syntax.RelPermalink }}"></noscript>
 
 
-  {{ $needsKaTeX := and .IsPage (or (.HasShortcode "katex") (in .RawContent "$$") (in .RawContent "$")) }}
+  {{ $needsKaTeX := and .IsPage (or (.HasShortcode "katex") (findRE `\$\$[\s\S]*\$\$` .RawContent) (findRE `\$[^$\n]*\\[a-zA-Z]{2,}[^$\n]*\$` .RawContent) (findRE `\$[^$\n]*[\^_][^$\n]*\$` .RawContent)) }}
   {{ $enableCDNFallback := ne .Site.Params.enableCDNFallback false }}
   {{- if and $enableCDNFallback $needsKaTeX }}
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -201,6 +201,7 @@
     <style>
       .toggle-group { display: none !important; }
       .copy-code-btn { display: none !important; }
+      .post-content pre { max-height: none !important; }
     </style>
   </noscript>
 

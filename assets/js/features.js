@@ -229,12 +229,15 @@
 
       // ── Image / diagram lightbox ──────────────────────────────────────
       var lightbox = null;
+      var lastLightboxFocus = null;
 
       function closeLightbox() {
         if (!lightbox || lightbox.hasAttribute('hidden')) return;
         lightbox.classList.remove('open');
         lightbox.setAttribute('hidden', '');
         document.body.style.overflow = '';
+        if (lastLightboxFocus && lastLightboxFocus.focus) lastLightboxFocus.focus();
+        lastLightboxFocus = null;
       }
 
       function openLightbox(node) {
@@ -243,15 +246,21 @@
           lightbox.className = 'lightbox-overlay';
           lightbox.setAttribute('role', 'dialog');
           lightbox.setAttribute('aria-label', 'Image viewer');
+          lightbox.setAttribute('aria-modal', 'true');
+          lightbox.setAttribute('tabindex', '-1');
           lightbox.setAttribute('data-testid', 'lightbox');
           lightbox.setAttribute('hidden', '');
           lightbox.addEventListener('click', closeLightbox);
+          lightbox.addEventListener('keydown', function(e) {
+            if (e.key === 'Tab') { e.preventDefault(); lightbox.focus(); }
+          });
           document.body.appendChild(lightbox);
         }
+        lastLightboxFocus = document.activeElement;
         lightbox.innerHTML = '';
         lightbox.appendChild(node);
         lightbox.removeAttribute('hidden');
-        requestAnimationFrame(function() { lightbox.classList.add('open'); });
+        requestAnimationFrame(function() { lightbox.classList.add('open'); lightbox.focus(); });
         document.body.style.overflow = 'hidden';
       }
 
@@ -321,6 +330,7 @@
             btn.className = 'code-expand-btn';
             btn.textContent = 'Show more';
             btn.setAttribute('data-testid', 'code-expand-btn');
+            btn.setAttribute('aria-expanded', 'false');
             btn.addEventListener('click', function() {
               btn.blur();
               var scroller = document.scrollingElement || document.documentElement;
@@ -329,6 +339,7 @@
               wrapper.classList.toggle('is-collapsed', !expanded);
               pre.style.maxHeight = expanded ? 'none' : (wrapper.dataset.codeCut || '');
               btn.textContent = expanded ? 'Show less' : 'Show more';
+              btn.setAttribute('aria-expanded', String(expanded));
               if (!expanded) {
                 wrapper.scrollIntoView({ block: 'nearest' });
               } else {

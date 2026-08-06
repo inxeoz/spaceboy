@@ -79,8 +79,11 @@
     // ── Build sub items from headings ──
     var lastSubParentId = null;
     var subItemElements = [];
+    var headingsSig = '';
 
     function buildSubItems(activeIdx) {
+      var sig = headings.map(function(h) { return h.id; }).join('|');
+      if (sig !== headingsSig) { headingsSig = sig; lastSubParentId = null; }
       var subs = [];
       var currentH2 = null;
       var currentH2Id = null;

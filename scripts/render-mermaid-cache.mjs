@@ -21,13 +21,15 @@ for (const [, entry] of Object.entries(SENTINEL_CFG.sentinelColors)) {
 }
 
 // Bump RENDERER_VERSION when post-processing logic changes. Together with the
-// sentinel config it forms a fingerprint: when it differs from the one stored
-// in the manifest, every diagram is re-rendered (cache files are keyed only by
-// diagram source, so config changes would otherwise never propagate).
+// sentinel config and the mermaid-cli version it forms a fingerprint: when it
+// differs from the one stored in the manifest, every diagram is re-rendered
+// (cache files are keyed only by diagram source, so config or renderer changes
+// would otherwise never propagate).
 const RENDERER_VERSION = 12;
 const CONFIG_FINGERPRINT = createHash('sha256')
   .update(JSON.stringify(SENTINEL_CFG))
   .update(`v${RENDERER_VERSION}`)
+  .update(`mmdc:${getMermaidVersion()}`)
   .digest('hex')
   .slice(0, 16);
 

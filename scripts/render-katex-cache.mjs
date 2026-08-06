@@ -12,6 +12,11 @@ const CONTENT_DIR = join(SITE_ROOT, 'content');
 const DATA_DIR = join(SITE_ROOT, 'data');
 const CACHE_PATH = join(DATA_DIR, 'katex-cache.json');
 
+// Bump when the cache schema or render settings change — a mismatch forces a
+// full re-render instead of trusting stale cached HTML (e.g. entries that were
+// rendered with throwOnError:false and silently contain error markup).
+const CACHE_VERSION = 2;
+
 function* walkDir(dir) {
   const entries = readdirSync(dir, { withFileTypes: true });
   for (const entry of entries) {
@@ -60,7 +65,7 @@ function cacheKey(type, source) {
 function render(source, type) {
   return katex.renderToString(source, {
     displayMode: type === 'block',
-    throwOnError: false,
+    throwOnError: true,
     output: 'html',
   });
 }
@@ -89,11 +94,16 @@ function main() {
   let existing = {};
   if (existsSync(CACHE_PATH)) {
     try { existing = JSON.parse(readFileSync(CACHE_PATH, 'utf-8')); } catch {}
+    if (existing._version !== CACHE_VERSION) {
+      process.stdout.write('[katex-cache] Cache version changed — re-rendering all expressions.\n');
+      existing = {};
+    }
   }
 
   let rendered = 0;
   let cached = 0;
-  const result = {};
+  let failed = 0;
+  const result = { _version: CACHE_VERSION };
 
   for (const [key, { source, type }] of found) {
     if (existing[key]) {
@@ -105,12 +115,14 @@ function main() {
       result[key] = render(source, type);
       rendered++;
     } catch (err) {
-      process.stderr.write(`[katex-cache] Failed to render "${source}": ${err.message}\n`);
+      failed++;
+      process.stderr.write(`[katex-cache] FAILED to render "${source}": ${err.message}\n`);
     }
   }
 
   writeCache(result);
-  process.stdout.write(`[katex-cache] Done: ${rendered} rendered, ${cached} cached.\n`);
+  process.stdout.write(`[katex-cache] Done: ${rendered} rendered, ${cached} cached, ${failed} failed.\n`);
+  if (failed > 0) process.exitCode = 1;
 }
 
 function writeCache(data) {

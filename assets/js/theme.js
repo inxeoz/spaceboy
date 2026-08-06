@@ -5,13 +5,6 @@
   var root = document.documentElement;
   var themeKey = 'theme';
 
-  function safeGet(key) {
-    try {
-      if (window.localStorage) return window.localStorage.getItem(key);
-    } catch (_err) {}
-    return null;
-  }
-
   function safeSet(key, value) {
     try {
       if (window.localStorage) window.localStorage.setItem(key, value);
@@ -69,32 +62,11 @@
     updateTocIcons();
   };
 
-  var savedTheme = safeGet(themeKey);
-  if (savedTheme) {
-    root.setAttribute('data-theme', savedTheme);
-  } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    root.setAttribute('data-theme', 'dark');
-  } else {
-    root.setAttribute('data-theme', 'light');
-  }
+  // Theme/layout/toc/palette are applied to the DOM by the inline script in
+  // head.html before first paint (anti-FOUC). Here we only sync the header
+  // icons to whatever state is already active.
   updateThemeIcons();
-
-  // Default is list layout; only an explicit 'card' choice opts out.
-  // Must match the inline script in head.html to avoid a layout flash.
-  if (safeGet('layout') !== 'card') {
-    root.classList.add('list-layout');
-  } else {
-    root.classList.remove('list-layout');
-  }
   updateLayoutIcons();
-
-  // TOC visibility preference (toggled from the header). Only affects pages
-  // that render the TOC layout. Must match the inline script in head.html.
-  if (safeGet('toc') === 'hide') {
-    root.classList.add('toc-hidden');
-  } else {
-    root.classList.remove('toc-hidden');
-  }
   updateTocIcons();
 
   document.addEventListener('DOMContentLoaded', function() {
