@@ -896,6 +896,7 @@ main {
     margin: 16px 0;
     min-height: 72px;
     width: 100%;
+    overflow-anchor: none;
 }
 
 /* Stretch the highlighted block to fill the wrapper so both buttons
@@ -3266,7 +3267,7 @@ html {
     font: var(--font-weight-normal) 0.75rem var(--font-body);
     background: var(--surface-color);
     border: 1px solid var(--border-color);
-    border-top: none;
+    border-top: 2px dotted var(--secondary-text);
     border-radius: 0 0 4px 4px;
     color: var(--secondary-text);
     cursor: pointer;
@@ -3274,6 +3275,11 @@ html {
 }
 .code-expand-btn:hover {
     color: var(--link-color);
+}
+.code-block-wrapper:has(.code-expand-btn) pre {
+    margin-bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
 /* ═══════════════════════════════════════

@@ -322,11 +322,19 @@
             btn.textContent = 'Show more';
             btn.setAttribute('data-testid', 'code-expand-btn');
             btn.addEventListener('click', function() {
+              btn.blur();
+              var scroller = document.scrollingElement || document.documentElement;
+              var prevY = scroller.scrollTop;
               var expanded = wrapper.classList.toggle('is-expanded');
               wrapper.classList.toggle('is-collapsed', !expanded);
               pre.style.maxHeight = expanded ? 'none' : (wrapper.dataset.codeCut || '');
               btn.textContent = expanded ? 'Show less' : 'Show more';
-              if (!expanded) wrapper.scrollIntoView({ block: 'nearest' });
+              if (!expanded) {
+                wrapper.scrollIntoView({ block: 'nearest' });
+              } else {
+                scroller.scrollTop = prevY;
+                requestAnimationFrame(function() { scroller.scrollTop = prevY; });
+              }
             });
             wrapper.appendChild(btn);
           }
