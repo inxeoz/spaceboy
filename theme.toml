@@ -1,7 +1,9 @@
 features = ["blog"]
-license = "MIT"
+license = "MIT + Visible Attribution"
 min_version = "0.132.0"
 name = "spaceboy"
+description = "Minimal Hugo blog with dark/light mode, 33 color palettes, pre-rendered Mermaid/KaTeX, and multiple view modes."
+author = "Purushottam Singram"
 
 [params]
 staticPrefix = ""
@@ -9,3 +11,4 @@ staticPrefix = ""
 extraCSSFiles = []
 
 [params.author]
+name = "Purushottam Singram"

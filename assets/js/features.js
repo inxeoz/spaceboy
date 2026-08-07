@@ -2,7 +2,7 @@
   var S = window.__SPACEBOY__;
   if (!S) return;
 
-  function loadScriptWithFallback(localSrc, cdnSrc, done) {
+  function loadScriptWithFallback(localSrc, cdnSrc, done, integrity) {
     if (!localSrc && !cdnSrc) {
       if (done) done();
       return;
@@ -12,6 +12,10 @@
       var script = document.createElement('script');
       script.src = src;
       script.async = true;
+      if (integrity && src === cdnSrc) {
+        script.integrity = integrity;
+        script.crossOrigin = 'anonymous';
+      }
       script.onload = function() { if (done) done(); };
       script.onerror = onError || function() { if (done) done(); };
       document.head.appendChild(script);
@@ -534,7 +538,7 @@
         if (fuseInstance) { cb(); return; }
         if (searchLoading) { return; }
         searchLoading = true;
-        loadScriptWithFallback(S.fuseJSLocal, S.fuseJSCDN, function() {
+        function fuseLoaded() {
           if (typeof Fuse === 'undefined') { searchLoading = false; return; }
           fetch(indexUrl)
             .then(function(r) { return r.json(); })
@@ -557,7 +561,8 @@
               cb();
             })
             .catch(function() { searchLoading = false; });
-        });
+        }
+        loadScriptWithFallback(S.fuseJSLocal, S.fuseJSCDN, fuseLoaded, S.fuseJSCDNIntegrity || undefined);
       }
 
       // open/close wiring

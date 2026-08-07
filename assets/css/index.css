@@ -3039,9 +3039,9 @@ kbd {
    ═══════════════════════════════════════ */
 .palette-dropdown {
     margin-top: 0;
-    border-top: 1px solid #444;
-    border-bottom: 1px solid #444;
-    background: #1e1e30;
+    border-top: 1px solid var(--border-color, rgba(128, 128, 128, 0.3));
+    border-bottom: 1px solid var(--border-color, rgba(128, 128, 128, 0.3));
+    background: var(--bg-color, #1e1e30);
     overflow: hidden;
 }
 .palette-dropdown[hidden] {
@@ -3051,13 +3051,13 @@ kbd {
     max-height: min(60vh, 360px);
     overflow-y: auto;
     scrollbar-width: thin;
-    scrollbar-color: #555 transparent;
+    scrollbar-color: var(--secondary-text, #555) transparent;
 }
 .palette-dropdown-list::-webkit-scrollbar {
     width: 5px;
 }
 .palette-dropdown-list::-webkit-scrollbar-thumb {
-    background: #555;
+    background: var(--secondary-text, #555);
     border-radius: 4px;
 }
 .palette-sep {
@@ -3066,7 +3066,7 @@ kbd {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: #999;
+    color: var(--secondary-text, #999);
 }
 .sbtn {
     padding: 0.3rem 0.75rem;
@@ -3095,9 +3095,14 @@ kbd {
 .palette-row:hover {
     background: rgba(255, 255, 255, 0.07);
 }
+.palette-row.palette-focused {
+    background: rgba(255, 255, 255, 0.12);
+    outline: 2px solid var(--link-color, #4a9eff);
+    outline-offset: -2px;
+}
 .palette-name {
     font-size: 0.82rem;
-    color: #ddd;
+    color: var(--text-color, #ddd);
 }
 .palette-row[aria-pressed="true"] {
     background: rgba(255, 255, 255, 0.14);

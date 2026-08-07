@@ -67,9 +67,9 @@
   {{ $katexCSSLocal := default (default (printf "%s%s" .Site.Params.staticPrefix ("/vendor/katex/katex.min.css" | relURL)) .Site.Params.katexCSS) .Site.Params.katexCSSLocal }}
   {{ $katexCSSCDN := default "https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css" .Site.Params.katexCSSCDN }}
   {{ if $needsKaTeX }}
-  {{ $katexCSSFinal := $katexCSSLocal }}
+  {{ $katexCSSFinal := $katexCSSCDN }}
   {{ if and $enableCDNFallback (ne $katexCSSLocal $katexCSSCDN) }}
-    {{ $katexCSSFinal = $katexCSSCDN }}
+    {{ $katexCSSFinal = $katexCSSLocal }}
   {{ end }}
   <link rel="stylesheet" href="{{ $katexCSSFinal }}" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="{{ $katexCSSFinal }}"></noscript>

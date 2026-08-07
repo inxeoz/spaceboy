@@ -51,7 +51,7 @@
     });
   })();
 
-  var dropdown, btn, saved;
+  var dropdown, btn, saved, focusedIdx;
 
   window.clearPalette = function () {
     document.documentElement.removeAttribute('data-palette');
@@ -78,6 +78,8 @@
 
     var list = document.createElement('div');
     list.className = 'palette-dropdown-list';
+    list.setAttribute('role', 'listbox');
+    list.setAttribute('aria-label', 'Color palettes');
     list.setAttribute('data-testid', 'palette-list');
 
     var activeId = currentPalette();
@@ -86,6 +88,7 @@
       if (p.sep) {
         var sep = document.createElement('div');
         sep.className = 'palette-sep';
+        sep.setAttribute('role', 'presentation');
         sep.setAttribute('data-testid', 'palette-sep-' + p.sep);
         sep.textContent = p.sep;
         list.appendChild(sep);
@@ -94,9 +97,11 @@
 
       var row = document.createElement('div');
       row.className = 'palette-row';
+      row.setAttribute('role', 'option');
       row.setAttribute('data-testid', 'palette-row-' + p.id);
       row.setAttribute('data-palette', p.id);
       row.setAttribute('aria-pressed', p.id === activeId ? 'true' : 'false');
+      row.setAttribute('aria-selected', p.id === activeId ? 'true' : 'false');
 
       var name = document.createElement('span');
       name.className = 'palette-name';
@@ -104,12 +109,16 @@
       name.textContent = p.label;
 
       row.addEventListener('click', function () { select(p.id); });
-      row.addEventListener('mouseenter', function () { preview(p.id); });
+      row.addEventListener('mouseenter', function () {
+        focusedIdx = getRowFocusIndex(row);
+        highlightRow(row);
+      });
       row.appendChild(name);
       list.appendChild(row);
     });
 
-    dropdown.addEventListener('mouseleave', function () {
+    list.addEventListener('mouseleave', function () {
+      focusedIdx = -1;
       var cur = currentPalette();
       if (cur !== (saved || '')) {
         if (saved) {
@@ -124,11 +133,65 @@
 
     dropdown.appendChild(list);
 
+    // Keyboard navigation
+    dropdown.addEventListener('keydown', function (e) {
+      var rows = getFocusableRows();
+      if (!rows.length) return;
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        focusedIdx = focusedIdx < 0 ? 0 : Math.min(focusedIdx + 1, rows.length - 1);
+        highlightRow(rows[focusedIdx]);
+        rows[focusedIdx].focus();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        focusedIdx = focusedIdx < 0 ? rows.length - 1 : Math.max(focusedIdx - 1, 0);
+        highlightRow(rows[focusedIdx]);
+        rows[focusedIdx].focus();
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        focusedIdx = 0;
+        highlightRow(rows[focusedIdx]);
+        rows[focusedIdx].focus();
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        focusedIdx = rows.length - 1;
+        highlightRow(rows[focusedIdx]);
+        rows[focusedIdx].focus();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        close();
+        btn.focus();
+      } else if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        if (focusedIdx >= 0 && rows[focusedIdx]) {
+          var palId = rows[focusedIdx].getAttribute('data-palette');
+          select(palId);
+        }
+      }
+    });
+
     // Insert right after the theme's setting-row, so it sits below it
-    var row = btn.closest('.setting-row');
-    if (row && row.parentNode) {
-      row.parentNode.insertBefore(dropdown, row.nextSibling);
+    var settingRow = btn.closest('.setting-row');
+    if (settingRow && settingRow.parentNode) {
+      settingRow.parentNode.insertBefore(dropdown, settingRow.nextSibling);
     }
+  }
+
+  function getFocusableRows() {
+    if (!dropdown) return [];
+    return Array.prototype.slice.call(dropdown.querySelectorAll('.palette-row'));
+  }
+
+  function getRowFocusIndex(row) {
+    var rows = getFocusableRows();
+    return rows.indexOf(row);
+  }
+
+  function highlightRow(row) {
+    var rows = getFocusableRows();
+    rows.forEach(function (r) { r.classList.remove('palette-focused'); });
+    if (row) row.classList.add('palette-focused');
   }
 
   function currentPalette() {
@@ -146,9 +209,12 @@
     if (!dropdown) return;
     var cur = value != null && value !== '' ? value : document.documentElement.getAttribute('data-palette') || '';
     var rows = dropdown.querySelectorAll('.palette-row');
+    focusedIdx = -1;
     for (var i = 0; i < rows.length; i++) {
       var active = rows[i].getAttribute('data-palette') === cur;
       rows[i].setAttribute('aria-pressed', active ? 'true' : 'false');
+      rows[i].setAttribute('aria-selected', active ? 'true' : 'false');
+      if (active) focusedIdx = i;
     }
   }
 
@@ -177,8 +243,14 @@
   function open() {
     dropdown.hidden = false;
     updateUI(currentPalette());
-    var active = dropdown.querySelector('[aria-pressed="true"]');
-    if (active) active.focus();
+    highlightRow(null);
+    var rows = getFocusableRows();
+    if (focusedIdx >= 0 && rows[focusedIdx]) {
+      rows[focusedIdx].focus();
+    } else if (rows.length) {
+      rows[0].focus();
+      focusedIdx = 0;
+    }
   }
 
   function close() {
