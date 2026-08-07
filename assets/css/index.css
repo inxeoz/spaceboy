@@ -44,6 +44,9 @@
 
     --content-max-width: clamp(320px, 95vw, 1200px);
 
+    /* Header width — ViewModes narrow --content-max-width (article column) but never the header */
+    --header-max-width: clamp(320px, 95vw, 1200px);
+
     /* Readable column for article bodies (single post pages) — scales with viewport */
     --readable-width: clamp(320px, 39vw + 440px, 1170px);
 
@@ -201,6 +204,10 @@ body {
 
 .site-header-container.scrolled {
     box-shadow: 0 6px 16px -10px rgba(0, 0, 0, 0.18);
+}
+
+.site-header-container .container {
+    max-width: var(--header-max-width);
 }
 
 .site-header-container.nav-hidden {
@@ -2075,6 +2082,7 @@ pre {
 @media (min-width: 1600px) {
     :root {
         --content-max-width: 1100px;
+        --header-max-width: 1100px;
     }
 
     .posts-container {
