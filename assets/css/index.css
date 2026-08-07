@@ -2405,19 +2405,9 @@ body.toc-resize-active {
 
 .toc-sub-nav a.active {
     opacity: 1;
-    color: var(--accent-color, var(--link-color));
+    color: var(--link-color);
     font-weight: 530;
-}
-.toc-sub-nav a.active::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 3px;
-    height: 1.1em;
-    border-radius: 2px;
-    background: var(--accent-color, var(--link-color));
+    background: var(--toc-active-bg);
 }
 
 .toc-sub-nav a[data-level="3"] {

@@ -156,19 +156,16 @@
       var items = subItemElements;
       if (!items.length) return;
 
-      // Range-based active: all items from first to current active
-      var foundActive = false;
+      // Single active: only the heading currently in view
       for (var i = 0; i < items.length; i++) {
         var link = items[i];
-        if (!foundActive) {
+        var isActive = link.getAttribute('href') === '#' + headings[activeIdx].id;
+        if (isActive) {
           link.classList.add('active');
           link.setAttribute('aria-current', 'location');
         } else {
           link.classList.remove('active');
           link.removeAttribute('aria-current');
-        }
-        if (link.getAttribute('href') === '#' + headings[activeIdx].id) {
-          foundActive = true;
         }
       }
 
