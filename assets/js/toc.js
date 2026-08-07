@@ -198,12 +198,13 @@
         if (!target) return;
 
         var idx = headings.findIndex(function(h) { return h.id === rawId; });
-        if (idx >= 0) activateIndex(idx);
+        var activate = function() { if (idx >= 0) activateIndex(idx); };
 
         if (window.__sbScrollToHeading) {
-          window.__sbScrollToHeading(target);
+          window.__sbScrollToHeading(target, activate);
         } else {
           target.scrollIntoView({ block: 'center' });
+          activate();
         }
 
         if (window.history && window.history.pushState) {

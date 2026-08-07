@@ -441,6 +441,16 @@ nav {
     margin: 0;
     opacity: 0.7;
 }
+.search-recent-title {
+    font-size: 0.65rem;
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--secondary-text);
+    padding: 0.4rem 0.75rem 0.15rem;
+    margin: 0;
+    opacity: 0.7;
+}
 .search-result-item {
     display: block;
     padding: 0.65rem 0.75rem;

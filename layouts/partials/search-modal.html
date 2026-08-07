@@ -25,7 +25,26 @@
     </div>
     <div id="search-results" class="search-results" role="listbox"
          aria-label="Search results" data-testid="search-results">
-      <p class="search-hint" data-testid="search-hint">Type to search…</p>
+      <div id="search-recent" class="search-recent" data-testid="search-recent">
+        <p class="search-recent-title" data-testid="search-recent-title">Recent posts</p>
+        {{- $recent := where site.RegularPages "Type" "in" site.Params.mainSections | first 5 }}
+        {{- range $recent }}
+        <a class="search-result-item" href="{{ .RelPermalink }}" role="option"
+           aria-selected="false" data-testid="search-result">
+          <div class="search-result-title">{{ .Title }}</div>
+          <div class="search-result-meta">
+            <span class="search-result-date">{{ .Date.Format "02 Jan 2006" }}</span>
+            {{- with .Params.tags }}
+            <span class="search-result-tags">
+              {{- range . | first 4 }}
+              <span class="search-tag">{{ . }}</span>
+              {{- end }}
+            </span>
+            {{- end }}
+          </div>
+        </a>
+        {{- end }}
+      </div>
     </div>
     <div class="search-footer" aria-hidden="true">
       <span class="search-key"><kbd>↑↓</kbd> navigate</span>

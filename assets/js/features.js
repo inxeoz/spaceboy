@@ -35,7 +35,7 @@
 
   // Smooth scroll to a heading with an ease-out curve and a highlight flash.
   // Exposed on window so toc.js (loaded after the core bundle) can reuse it.
-  function scrollToHeading(target) {
+  function scrollToHeading(target, done) {
     var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
     function flashHeading() {
@@ -45,21 +45,23 @@
       setTimeout(function() { target.classList.remove('heading-highlight'); }, 1600);
     }
     if (prefersReducedMotion) {
-      target.scrollIntoView({ behavior: 'instant', block: 'center' });
+      target.scrollIntoView({ behavior: 'instant', block: 'start' });
       flashHeading();
+      if (done) done();
       return;
     }
-    var targetY = target.getBoundingClientRect().top + window.pageYOffset - (window.innerHeight / 2) + (target.offsetHeight / 2);
+    var offset = parseFloat(getComputedStyle(target).scrollMarginTop) || 90;
+    var targetY = target.getBoundingClientRect().top + window.pageYOffset - offset;
     var startY = window.pageYOffset;
     var distance = targetY - startY;
-    if (Math.abs(distance) < 5) { flashHeading(); return; }
+    if (Math.abs(distance) < 5) { flashHeading(); if (done) done(); return; }
     var duration = Math.min(800, Math.max(250, Math.abs(distance) * 0.4));
     var startTime = null;
     function step(now) {
       if (!startTime) startTime = now;
       var p = Math.min((now - startTime) / duration, 1);
       window.scrollTo(0, startY + distance * easeOutCubic(p));
-      if (p < 1) { requestAnimationFrame(step); } else { flashHeading(); }
+      if (p < 1) { requestAnimationFrame(step); } else { flashHeading(); if (done) done(); }
     }
     requestAnimationFrame(step);
   }
@@ -461,6 +463,7 @@
       var searchLoading = false;
       var searchDebounce = null;
       var activeIdx     = -1;
+      var searchIdleHTML = searchResults.innerHTML;
 
       var indexUrl = (S.staticPrefix || '') + '/index.json';
 
@@ -473,7 +476,7 @@
       function closeSearch() {
         searchModal.setAttribute('hidden', '');
         searchInput.value = '';
-        searchResults.innerHTML = '<p class="search-hint">Type to search…</p>';
+        searchResults.innerHTML = searchIdleHTML;
         activeIdx = -1;
         document.body.style.overflow = '';
         if (searchToggle) searchToggle.focus();
@@ -522,7 +525,7 @@
       function runSearch(q) {
         q = q.trim();
         if (!q) {
-          searchResults.innerHTML = '<p class="search-hint">Type to search…</p>';
+          searchResults.innerHTML = searchIdleHTML;
           activeIdx = -1;
           return;
         }
