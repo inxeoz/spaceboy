@@ -1,9 +1,9 @@
-{{- $source := trim .Inner "\n\r " -}}
+{{- $source := trim .Inner "\n\r\t " -}}
 {{- $key := printf "%s:%s" .Type $source | sha256 -}}
 {{- $html := index (index site.Data "katex-cache") $key -}}
 {{- if $html -}}
   {{- $html | safeHTML -}}
 {{- else -}}
   {{- if eq .Type "block" -}}<div class="katex-block katex-fallback"><code>{{ $source }}</code></div>
-  {{- else -}}<code class="katex-fallback">{{ $source }}</code>{{- end -}}
+  {{- else -}}<span class="katex-inline-fallback">{{ $source }}</span>{{- end -}}
 {{- end -}}

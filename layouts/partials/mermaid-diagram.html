@@ -1,4 +1,4 @@
-{{ $source := trim .Inner "\n\r " }}
+{{ $source := trim .Inner "\n\r\t " }}
 {{ $hash := sha256 $source }}
 {{ $svgPath := printf "static/mermaid-cache/%s.svg" $hash }}
 {{ if (fileExists $svgPath) }}

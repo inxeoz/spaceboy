@@ -9,10 +9,10 @@
     <h1 class="post-title" data-testid="post-title">{{ $p.Title }}</h1>
     {{ end }}
 
-    {{ if and (in $p.Site.Params.mainSections $p.Type) (or $p.Date $p.Site.Params.author.name $p.ReadingTime $p.WordCount) }}
+    {{ if and (in $p.Site.Params.mainSections $p.Type) (or (not $p.Date.IsZero) $p.Site.Params.author.name $p.ReadingTime $p.WordCount) }}
     {{- $showLastmod := and $o.showLastModified $p.Lastmod (ne ($p.Lastmod.Format "2006-01-02") ($p.Date.Format "2006-01-02")) -}}
     <div class="post-meta" data-testid="post-meta">
-      {{ if and $p.Date $o.showDate }}
+      {{ if and (not $p.Date.IsZero) $o.showDate }}
       <time datetime="{{ $p.Date.Format "2006-01-02 15:04:05 MST" }}" data-testid="post-date">
         {{ $p.Date.Format "02 Jan 2006" }}
       </time>
@@ -22,7 +22,7 @@
       <span data-testid="post-lastmod">Updated {{ $p.Lastmod.Format "02 Jan 2006" }}</span>
       {{ end }}
       {{ if and $p.Site.Params.author.name $o.showAuthor }}
-      {{ if or (and $p.Date $o.showDate) $showLastmod }}<span data-testid="post-meta-sep">·</span>{{ end }}
+      {{ if or (and (not $p.Date.IsZero) $o.showDate) $showLastmod }}<span data-testid="post-meta-sep">·</span>{{ end }}
       {{ if $p.Params.author.homepage }}
       <a href="{{ $p.Params.author.homepage }}" target="_blank" rel="noopener noreferrer" data-testid="post-author">@{{ $p.Site.Params.author.name }}</a>
       {{ else }}

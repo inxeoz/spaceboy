@@ -69,6 +69,16 @@ function extractMathExpressions(content) {
     if (src) exprs.push({ source: src, type: 'inline' });
   }
 
+  // Shortcode: {{< katex >}}...{{< /katex >}} (inline) and
+  // {{< katex block >}}... / {{< katex block="true" >}}... (block)
+  const shortcodeRe = /\{\{<\s*katex\b([^>]*)>\}\}([\s\S]*?)\{\{<\s*\/katex\s*>\}\}/g;
+  while ((m = shortcodeRe.exec(base)) !== null) {
+    const args = m[1] || '';
+    const isBlock = /block\s*=\s*"true"/.test(args) || /(^|\s)block(\s|$)/.test(args);
+    const src = m[2].trim();
+    if (src) exprs.push({ source: src, type: isBlock ? 'block' : 'inline' });
+  }
+
   // Inline: $...$ — require at least one LaTeX character to avoid matching
   // JS $('selector') calls, currency amounts, etc.
   const inlineRe = /(?<!\$)\$(?!\$)([^\n$]+?)(?<!\$)\$(?!\$)/g;

@@ -27,6 +27,10 @@ $$
 | `\(...\)` | Inline (alternative) | `\(\frac{1}{2}\)` |
 | `\[...\]` | Block (alternative) | `\[\int_a^b f(x) dx\]` |
 
+A `{{< katex >}}` shortcode also works for both forms (`{{< katex >}}...{{< /katex >}}`
+inline, `{{< katex block >}}...{{< /katex >}}` for display). It renders from the
+same pre-rendered cache as the delimiters.
+
 ### Detection heuristic
 
 The pre-render script scans markdown files for `$...$`, `$$...$$`, `\(...\)`, and `\[...\]` expressions. To avoid false positives (jQuery selectors, currency amounts), inline `$...$` must contain at least one LaTeX command (`\frac`, `\sum`, etc.) or a `^`/`_` character.

@@ -9,7 +9,7 @@
   "date":       {{ $p.Date.Format "2006-01-02" | jsonify }},
   "tags":       {{ $p.Params.tags | default slice | jsonify }},
   "categories": {{ $p.Params.categories | default slice | jsonify }},
-  "summary":    {{ $p.Summary | plainify | truncate 200 | jsonify }},
+  "summary":    {{ $p.Summary | plainify | truncate 200 | htmlUnescape | replaceRE "[\u200b\u200c\u200d\u2060]" "" | jsonify }},
   "imageAlts":  [
     {{- $alts := slice -}}
     {{- range findRE `!\[[^\]]+\]` $p.RawContent -}}

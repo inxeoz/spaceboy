@@ -4,11 +4,3 @@ min_version = "0.132.0"
 name = "spaceboy"
 description = "Minimal Hugo blog with dark/light mode, 33 color palettes, pre-rendered Mermaid/KaTeX, and multiple view modes."
 author = "Purushottam Singram"
-
-[params]
-staticPrefix = ""
-# extraCSSFiles = ["css/foo.css", "css/bar.css"]
-extraCSSFiles = []
-
-[params.author]
-name = "Purushottam Singram"

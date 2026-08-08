@@ -25,7 +25,7 @@ for (const [, entry] of Object.entries(SENTINEL_CFG.sentinelColors)) {
 // differs from the one stored in the manifest, every diagram is re-rendered
 // (cache files are keyed only by diagram source, so config or renderer changes
 // would otherwise never propagate).
-const RENDERER_VERSION = 12;
+const RENDERER_VERSION = 13;
 const CONFIG_FINGERPRINT = createHash('sha256')
   .update(JSON.stringify(SENTINEL_CFG))
   .update(`v${RENDERER_VERSION}`)
@@ -53,12 +53,15 @@ function buildMermaidConfig() {
 
 function extractMermaidBlocks(content) {
   const blocks = [];
-  const fencedRegex = /```mermaid\n([\s\S]*?)```/g;
+  // Fenced ```mermaid ... ``` / ````` ````mermaid ... ```` ````` / ~~~mermaid ...
+  // (fence run of 3+, optional info attributes, up to 3 leading spaces)
+  const fencedRegex = /^\s*(`{3,}|~{3,})\s*mermaid\b[^\n]*\n([\s\S]*?)^\s*\1\s*$/gm;
   let match;
   while ((match = fencedRegex.exec(content)) !== null) {
-    blocks.push(match[1].trim());
+    blocks.push(match[2].trim());
   }
-  const shortcodeRegex = /\{\{<\s*mermaid\s*>\}\}([\s\S]*?)\{\{<\s*\/mermaid\s*>\}\}/g;
+  // {{< mermaid >}}...{{< /mermaid >}} (with optional params)
+  const shortcodeRegex = /\{\{<\s*mermaid\b[^>]*>\}\}([\s\S]*?)\{\{<\s*\/mermaid\s*>\}\}/g;
   while ((match = shortcodeRegex.exec(content)) !== null) {
     blocks.push(match[1].trim());
   }
@@ -161,8 +164,12 @@ function themeUserColors(svg) {
   return out.replace(/(<svg[^>]*>)/, `$1<style>${css}</style>`);
 }
 
-function postProcessSvg(svg) {
+function postProcessSvg(svg, hash) {
   let result = svg;
+  // mermaid-cli stamps every diagram with id="my-svg"; multiple diagrams on one
+  // page then duplicate that id. Scoped re-id to the diagram hash keeps each
+  // SVG self-consistent (internal url(#...) refs and CSS selectors included).
+  result = result.replaceAll('my-svg', `mmd-${hash}`);
   for (const [sentinel, cssVar] of Object.entries(CSS_VAR_MAP)) {
     result = result.replaceAll(`"${sentinel}"`, `"${cssVar}"`);
     result = result.replaceAll(`:${sentinel}`, `:${cssVar}`);
@@ -366,7 +373,7 @@ async function main() {
 
     try {
       const svg = renderWithMmdc(source);
-      const processed = postProcessSvg(svg);
+      const processed = postProcessSvg(svg, hash);
       writeFileSync(outputPath, processed, 'utf-8');
       rendered++;
     } catch (err) {
