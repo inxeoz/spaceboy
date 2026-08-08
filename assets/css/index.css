@@ -890,6 +890,11 @@ main {
     padding: 0.25em 0.5em;
     letter-spacing: var(--letter-spacing-normal);
 }
+.post-content .katex:not(.katex-display) {
+    background-color: var(--code-bg);
+    padding: 0.25em 0.5em;
+    border-radius: var(--radius-sm);
+}
 .post-content pre code {
     padding: 0;
     background: none;
@@ -3424,6 +3429,9 @@ html {
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
     max-width: 100%;
+    background-color: var(--code-bg);
+    padding: 1.25rem;
+    border-radius: var(--radius-sm);
 }
 @media (max-width: 480px) {
     .katex {

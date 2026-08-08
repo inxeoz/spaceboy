@@ -59,7 +59,7 @@
 <noscript><link rel="stylesheet" href="{{ $syntax.RelPermalink }}"></noscript>
 
 
-  {{ $needsKaTeX := and .IsPage (or (.HasShortcode "katex") (findRE `\$\$[\s\S]*\$\$` .RawContent) (findRE `\$[^$\n]*\\[a-zA-Z]{2,}[^$\n]*\$` .RawContent) (findRE `\$[^$\n]*[\^_][^$\n]*\$` .RawContent)) }}
+  {{ $needsKaTeX := and .IsPage (or (.HasShortcode "katex") (findRE `\$\$[\s\S]*\$\$` .RawContent) (findRE `\$[^$\n]*\\[a-zA-Z]{2,}[^$\n]*\$` .RawContent) (findRE `\$[^$\n]*[\^_][^$\n]*\$` .RawContent) (findRE `\\\[[\s\S]*?\\\]` .RawContent) (findRE `\\\([^\n]*?\\\)` .RawContent)) }}
   {{ $enableCDNFallback := ne .Site.Params.enableCDNFallback false }}
   {{- if and $enableCDNFallback $needsKaTeX }}
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>

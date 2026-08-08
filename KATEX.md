@@ -29,9 +29,9 @@ $$
 
 ### Detection heuristic
 
-The pre-render script scans markdown files for `$...$` and `$$...$$` expressions. To avoid false positives (jQuery selectors, currency amounts), inline `$...$` must contain at least one LaTeX command (`\frac`, `\sum`, etc.) or a `^`/`_` character.
+The pre-render script scans markdown files for `$...$`, `$$...$$`, `\(...\)`, and `\[...\]` expressions. To avoid false positives (jQuery selectors, currency amounts), inline `$...$` must contain at least one LaTeX command (`\frac`, `\sum`, etc.) or a `^`/`_` character.
 
-Bare `$x$` or `$('selector')` patterns are ignored.
+Bare `$x$` or `$('selector')` patterns are ignored. The `\(...\)` and `\[...\]` delimiters are unambiguous math delimiters, so no LaTeX-character requirement applies — bare expressions like `\( n = 10 \)` render normally.
 
 ### Pre-render after changes
 

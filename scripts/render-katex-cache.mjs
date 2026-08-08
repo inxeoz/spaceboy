@@ -31,20 +31,42 @@ function* walkDir(dir) {
 const LATEX_INDICATOR = /\\[a-zA-Z]{2,}|[\^_]/;
 
 function extractMathExpressions(content) {
-  const stripped = content
+  // base = frontmatter, fenced code, and inline code stripped. Indented-code
+  // stripping is applied separately AFTER the \(...\) / \[...\] passes: math
+  // nested inside list items is 4-space indented (valid passthrough for
+  // goldmark, not a code block), and the crude line-based indented-code regex
+  // would otherwise swallow it. Over-extracting into the cache is harmless
+  // (unused entries) — under-extracting causes the fallback.
+  const base = content
     .replace(/^---[\s\S]*?^---\s*\n/m, '')         // strip frontmatter
     .replace(/^```[^\n]*\n[\s\S]*?^```\s*\n?/gm, '') // strip fenced code blocks
-    .replace(/^(    |\t)[^\n]+$/gm, '')              // strip indented code blocks
     .replace(/`[^`\n]+`/g, '');                      // strip inline code
+
+  const stripped = base.replace(/^(    |\t)[^\n]+$/gm, ''); // strip indented code blocks
 
   const exprs = [];
 
+  // Block: \[...\] (may span multiple lines, may be nested in list items)
+  const altBlockRe = /\\\[([\s\S]*?)\\\]/g;
+  let m;
+  while ((m = altBlockRe.exec(base)) !== null) {
+    const src = m[1].trim();
+    if (src) exprs.push({ source: src, type: 'block' });
+  }
+
   // Block: $$...$$ (may span multiple lines)
   const blockRe = /\$\$([\s\S]*?)\$\$/g;
-  let m;
   while ((m = blockRe.exec(stripped)) !== null) {
     const src = m[1].trim();
     if (src) exprs.push({ source: src, type: 'block' });
+  }
+
+  // Inline: \(...\) — unlike $, these are unambiguous math delimiters, so no
+  // LaTeX-character requirement (covers bare expressions like \( n = 10 \)).
+  const altInlineRe = /\\\(([^\n]*?)\\\)/g;
+  while ((m = altInlineRe.exec(base)) !== null) {
+    const src = m[1].trim();
+    if (src) exprs.push({ source: src, type: 'inline' });
   }
 
   // Inline: $...$ — require at least one LaTeX character to avoid matching
