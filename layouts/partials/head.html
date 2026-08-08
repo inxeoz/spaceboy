@@ -64,11 +64,11 @@
   {{- if and $enableCDNFallback $needsKaTeX }}
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   {{- end }}
-  {{ $katexCSSLocal := default (default (printf "%s%s" .Site.Params.staticPrefix ("/vendor/katex/katex.min.css" | relURL)) .Site.Params.katexCSS) .Site.Params.katexCSSLocal }}
+  {{ $katexCSSLocal := default .Site.Params.katexCSSLocal .Site.Params.katexCSS }}
   {{ $katexCSSCDN := default "https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css" .Site.Params.katexCSSCDN }}
   {{ if $needsKaTeX }}
   {{ $katexCSSFinal := $katexCSSCDN }}
-  {{ if and $enableCDNFallback (ne $katexCSSLocal $katexCSSCDN) }}
+  {{ if and $enableCDNFallback $katexCSSLocal (ne $katexCSSLocal $katexCSSCDN) }}
     {{ $katexCSSFinal = $katexCSSLocal }}
   {{ end }}
   <link rel="stylesheet" href="{{ $katexCSSFinal }}" media="print" onload="this.media='all'">
