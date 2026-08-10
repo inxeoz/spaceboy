@@ -290,6 +290,15 @@ formats, only templates):
 
 The template lives in the theme at `layouts/_default/single.markdown.md`.
 
+> **Cloudflare Pages:** it serves `.md` files as `application/octet-stream`,
+> so browsers download them instead of rendering. Add a `_headers` file to the
+> build output to force the correct content type:
+>
+> ```txt
+> /*.md
+>   Content-Type: text/markdown; charset=utf-8
+> ```
+
 ## Color Palettes
 
 33 palettes are defined in `data/color-schemes.yaml`. Switch palettes at runtime
