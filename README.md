@@ -261,6 +261,35 @@ Or from the site root: `npm run build:diagrams`
 contains a LaTeX command (`\frac`, `\sum`, `\times`, etc.) or `^`/`_`. This
 avoids false positives from JavaScript `$('selector')` patterns.
 
+## Raw Markdown Output
+
+Every regular page is also published as its **raw markdown source**, served at
+the page URL followed by `.md` — e.g.
+
+```
+https://example.com/posts/my-post/      → rendered HTML
+https://example.com/posts/my-post/.md   → raw markdown source
+```
+
+The markdown is emitted unprocessed via `.RawContent` (front matter stripped;
+shortcodes, KaTeX and Mermaid blocks stay in their source form), so it can be
+fetched directly, piped into tools, or imported into note apps.
+
+This is powered by Hugo's built-in `markdown` output format. It is **opt-in** —
+enable it in the site config (Hugo does not allow themes to define output
+formats, only templates):
+
+```toml
+# hugo.toml
+[outputFormats.markdown]
+  baseName = ""          # publish as <page-url>.md instead of <page-url>/index.md
+
+[outputs]
+  page = ["HTML", "markdown"]
+```
+
+The template lives in the theme at `layouts/_default/single.markdown.md`.
+
 ## Color Palettes
 
 33 palettes are defined in `data/color-schemes.yaml`. Switch palettes at runtime
