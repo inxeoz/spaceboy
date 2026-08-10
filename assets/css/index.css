@@ -930,7 +930,8 @@ main {
     box-sizing: border-box;
 }
 .copy-code-btn,
-.wrap-code-btn {
+.wrap-code-btn,
+.lang-code-btn {
     position: absolute;
     top: 8px;
     padding: 4px 8px;
@@ -954,12 +955,22 @@ main {
 .wrap-code-btn {
     right: 44px;
 }
+.lang-code-btn {
+    right: 80px;
+    height: 26px;
+    line-height: 1;
+    cursor: default;
+    text-transform: lowercase;
+    letter-spacing: 0.05em;
+}
 
 .code-block-wrapper:hover .copy-code-btn,
 .code-block-wrapper.clicked .copy-code-btn,
 .code-block-wrapper:hover .wrap-code-btn,
 .code-block-wrapper.clicked .wrap-code-btn,
-.code-block-wrapper.is-wrapped .wrap-code-btn {
+.code-block-wrapper.is-wrapped .wrap-code-btn,
+.code-block-wrapper:hover .lang-code-btn,
+.code-block-wrapper.clicked .lang-code-btn {
     opacity: 1;
 }
 @media (hover: none) {
@@ -982,28 +993,6 @@ main {
     opacity: 1;
     outline: 3px solid var(--link-color);
     outline-offset: 2px;
-}
-
-/* Code language cursor-following tooltip */
-.code-lang-tooltip {
-    position: fixed;
-    pointer-events: none;
-    z-index: 9998;
-    font-size: 0.65rem;
-    font-family: var(--font-mono);
-    color: var(--secondary-text);
-    background: var(--code-bg);
-    border: 1px solid var(--secondary-text);
-    padding: 2px 8px;
-    letter-spacing: 0.05em;
-    text-transform: lowercase;
-    white-space: nowrap;
-    line-height: 1.6;
-    opacity: 0;
-    transition: opacity 0.12s ease;
-}
-.code-lang-tooltip.visible {
-    opacity: 1;
 }
 
 code,
@@ -2681,10 +2670,11 @@ body.toc-resize-active {
     .site-header-container,
     .toc-left, .toc-right, .toc-mobile,
     .progress-bar, .copy-code-btn,
+    .wrap-code-btn, .lang-code-btn,
     .post-tags, .related-content, .related-posts,
     .post-ads, .post-comments,
     .back-to-top, .post-share, .heading-anchor,
-    .code-lang-tooltip, .post-nav,
+    .post-nav,
     .search-modal, .search-toggle,
     nav, .skip-link { display: none; }
 
@@ -3236,7 +3226,8 @@ html {
     opacity: 1;
 }
 .code-block-wrapper:has(.code-title) .copy-code-btn,
-.code-block-wrapper:has(.code-title) .wrap-code-btn {
+.code-block-wrapper:has(.code-title) .wrap-code-btn,
+.code-block-wrapper:has(.code-title) .lang-code-btn {
     top: 40px;
 }
 .code-block-wrapper.is-wrapped .wrap-code-btn {

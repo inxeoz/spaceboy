@@ -140,38 +140,6 @@
 
   document.addEventListener('DOMContentLoaded', function() {
     if (!S.legacyMode) {
-      // Language tooltip that follows the cursor inside code blocks.
-      // Only wired up when the page has labelled code blocks and a hover-capable pointer.
-      var hasHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
-      if (hasHover && document.querySelector('.code-block-wrapper[data-lang]')) {
-        var langTooltip = document.createElement('div');
-        langTooltip.className = 'code-lang-tooltip';
-        document.body.appendChild(langTooltip);
-
-        document.addEventListener('mousemove', function(e) {
-          if (closest(e.target, '.copy-code-btn')) {
-            langTooltip.classList.remove('visible');
-            return;
-          }
-          var wrapper = closest(e.target, '.code-block-wrapper[data-lang]');
-          if (wrapper) {
-            var lang = wrapper.getAttribute('data-lang');
-            if (lang) {
-              langTooltip.textContent = lang;
-              var x = e.clientX + 14;
-              var y = e.clientY + 14;
-              if (x + 80 > window.innerWidth) x = e.clientX - langTooltip.offsetWidth - 8;
-              if (y + 24 > window.innerHeight) y = e.clientY - 24;
-              langTooltip.style.left = x + 'px';
-              langTooltip.style.top = y + 'px';
-              langTooltip.classList.add('visible');
-            }
-          } else {
-            langTooltip.classList.remove('visible');
-          }
-        });
-      }
-
       // Back-to-top button
       var backToTop = document.getElementById('back-to-top');
       if (backToTop) {
@@ -375,7 +343,7 @@
       if (window.matchMedia && window.matchMedia('(hover: none)').matches) {
         document.addEventListener('click', function(e) {
           var wrapper = closest(e.target, '.code-block-wrapper');
-          var onButton = closest(e.target, '.copy-code-btn, .wrap-code-btn, .code-expand-btn');
+          var onButton = closest(e.target, '.copy-code-btn, .wrap-code-btn, .lang-code-btn, .code-expand-btn');
           document.querySelectorAll('.code-block-wrapper.clicked').forEach(function(w) {
             if (w !== wrapper) w.classList.remove('clicked');
           });

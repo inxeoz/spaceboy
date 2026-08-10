@@ -2,6 +2,9 @@
   {{- with .Attributes.title }}
   <div class="code-title" data-testid="code-title">{{ . }}</div>
   {{- end }}
+  {{- with .Type }}
+  <span class="lang-code-btn" aria-label="Code language: {{ . }}" data-testid="lang-code-btn">{{ . }}</span>
+  {{- end }}
   <button class="wrap-code-btn" aria-label="Toggle line wrap" title="Toggle line wrap" data-testid="wrap-code-btn">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><path d="M3 12h15a3 3 0 1 1 0 6h-4"></path><polyline points="16 16 14 18 16 20"></polyline><line x1="3" y1="18" x2="10" y2="18"></line></svg>
   </button>
