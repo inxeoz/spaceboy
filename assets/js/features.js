@@ -337,20 +337,6 @@
         codeCollapseTimer = setTimeout(refreshCodeCollapse, 200);
       }, { passive: true });
 
-      // ── Tap-to-reveal code buttons on touch devices ───────────────────
-      // No hover on touch screens, so copy/wrap stay hidden until the
-      // reader taps the block; tapping elsewhere hides them again.
-      if (window.matchMedia && window.matchMedia('(hover: none)').matches) {
-        document.addEventListener('click', function(e) {
-          var wrapper = closest(e.target, '.code-block-wrapper');
-          var onButton = closest(e.target, '.copy-code-btn, .wrap-code-btn, .lang-code-btn, .code-expand-btn');
-          document.querySelectorAll('.code-block-wrapper.clicked').forEach(function(w) {
-            if (w !== wrapper) w.classList.remove('clicked');
-          });
-          if (wrapper && !onButton) wrapper.classList.toggle('clicked');
-        });
-      }
-
       // ── Code line-wrap toggle ─────────────────────────────────────────
       document.addEventListener('click', function(e) {
         var btn = closest(e.target, '.wrap-code-btn');

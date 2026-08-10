@@ -916,62 +916,81 @@ main {
 .code-block-wrapper {
     position: relative;
     margin: 16px 0;
-    min-height: 72px;
     width: 100%;
     overflow-anchor: none;
 }
-
-/* Stretch the highlighted block to fill the wrapper so both buttons
-   stay visually inside the code area even on single-line snippets */
 .code-block-wrapper .chroma,
 .code-block-wrapper > pre {
-    min-height: 72px;
     width: 100%;
     box-sizing: border-box;
 }
-.copy-code-btn,
-.wrap-code-btn,
-.lang-code-btn {
-    position: absolute;
-    top: 8px;
-    padding: 4px 8px;
-    font-size: 12px;
-    background: var(--code-bg);
-    color: var(--text-color);
-    border: 1px solid var(--secondary-text);
-    cursor: pointer;
-    opacity: 0;
-    transition:
-        opacity 0.2s,
-        background-color 0.2s;
-    font-family: inherit;
-    z-index: 10;
+
+/* Toolbar strip above the code block: language badge + actions */
+.code-toolbar {
     display: flex;
     align-items: center;
-}
-.copy-code-btn {
-    right: 8px;
-}
-.wrap-code-btn {
-    right: 44px;
+    justify-content: flex-end;
+    gap: 0.25rem;
+    padding: 0.3rem 0.55rem;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 4px 4px 0 0;
+    z-index: 10;
 }
 .lang-code-btn {
-    right: 80px;
-    height: 26px;
-    line-height: 1;
-    cursor: default;
-    text-transform: lowercase;
+    margin-right: auto;
+    font: var(--font-weight-medium) 0.72rem var(--font-mono);
     letter-spacing: 0.05em;
+    text-transform: lowercase;
+    color: var(--secondary-text);
+    cursor: default;
+}
+.copy-code-btn,
+.wrap-code-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    background: none;
+    border: none;
+    border-radius: 4px;
+    color: var(--secondary-text);
+    cursor: pointer;
+    font-family: inherit;
+    z-index: 10;
+    transition:
+        color 0.15s ease,
+        background-color 0.15s ease;
+}
+.copy-code-btn:hover,
+.wrap-code-btn:hover {
+    color: var(--link-color);
+    background-color: var(--code-bg);
+}
+.copy-code-btn:focus-visible,
+.wrap-code-btn:focus-visible {
+    outline: 3px solid var(--link-color);
+    outline-offset: 2px;
+}
+.copy-code-btn.copied {
+    color: #22c55e;
+}
+.code-block-wrapper.is-wrapped .wrap-code-btn {
+    color: var(--link-color);
 }
 
-.code-block-wrapper:hover .copy-code-btn,
-.code-block-wrapper.clicked .copy-code-btn,
-.code-block-wrapper:hover .wrap-code-btn,
-.code-block-wrapper.clicked .wrap-code-btn,
-.code-block-wrapper.is-wrapped .wrap-code-btn,
-.code-block-wrapper:hover .lang-code-btn,
-.code-block-wrapper.clicked .lang-code-btn {
-    opacity: 1;
+/* Toolbar and title connect to the code block below them */
+.code-block-wrapper:has(.code-toolbar) pre,
+.code-block-wrapper:has(.code-title) pre {
+    margin-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+.code-block-wrapper:has(.code-title) .code-toolbar {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
 @media (hover: none) {
 
@@ -982,17 +1001,6 @@ main {
         min-height: 44px;
         min-width: 44px;
     }
-}
-.copy-code-btn:hover {
-    opacity: 0.5 !important;
-}
-.copy-code-btn.copied {
-    color: #22c55e;
-}
-.copy-code-btn:focus-visible {
-    opacity: 1;
-    outline: 3px solid var(--link-color);
-    outline-offset: 2px;
 }
 
 code,
@@ -3219,21 +3227,6 @@ html {
     border-top-right-radius: 0;
 }
 
-.wrap-code-btn:hover {
-    color: var(--link-color);
-}
-.wrap-code-btn:focus-visible {
-    opacity: 1;
-}
-.code-block-wrapper:has(.code-title) .copy-code-btn,
-.code-block-wrapper:has(.code-title) .wrap-code-btn,
-.code-block-wrapper:has(.code-title) .lang-code-btn {
-    top: 40px;
-}
-.code-block-wrapper.is-wrapped .wrap-code-btn {
-    color: var(--link-color);
-    border-color: var(--link-color);
-}
 .code-block-wrapper.is-wrapped pre,
 .code-block-wrapper.is-wrapped pre code {
     white-space: pre-wrap;
