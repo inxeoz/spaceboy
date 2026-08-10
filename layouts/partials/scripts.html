@@ -4,6 +4,7 @@ window.__SPACEBOY__ = {
   legacyMode: {{ .Site.Params.legacyMode | default false }},
   lazyImage: {{ and .Site.Params.lazyImage (not .IsHome) }},
   enableSearch: {{ ne .Site.Params.enableSearch false }},
+  enableTableResize: {{ ne .Site.Params.enableTableResize false }},
   fuseJSLocal: {{ default "" .Site.Params.fuseJSLocal | jsonify | safeJS }},
   fuseJSCDN: {{ default "https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js" .Site.Params.fuseJSCDN | jsonify | safeJS }},
   fuseJSCDNIntegrity: {{ default "" .Site.Params.fuseJSCDNIntegrity | jsonify | safeJS }},

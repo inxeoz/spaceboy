@@ -192,6 +192,246 @@
           table.parentNode.insertBefore(wrapper, table);
           wrapper.appendChild(table);
         });
+
+        // ── Resizable table columns + row height ───────────────────────────
+        // Session-only. The affordances are the table's own borders; the
+        // cursor plus a faint highlight of the native gridline reveal them
+        // (no separate handles). Column separators drag from the header row;
+        // the table's bottom edge drags to grow vertical row padding.
+        // Keyboard: focus a separator and use arrows (Shift = bigger step);
+        // Esc cancels an in-progress drag.
+        function enableTableResize() {
+          if (S.enableTableResize === false) return;
+          content.querySelectorAll('.table-scroll').forEach(function(wrapper) {
+            if (wrapper.classList.contains('has-col-resize')) return;
+            var table = wrapper.querySelector('table');
+            if (!table || !table.rows.length) return;
+            var headerRow = (table.tHead && table.tHead.rows[0]) || table.rows[0];
+            var colCount = headerRow ? headerRow.cells.length : 0;
+            if (colCount < 2) return;
+            wrapper.classList.add('has-col-resize');
+
+            var colgroup = null;
+
+            function measureColWidths() {
+              var widths = [];
+              for (var i = 0; i < colCount; i++) {
+                widths.push(headerRow.cells[i].getBoundingClientRect().width);
+              }
+              return widths;
+            }
+
+            function ensureColgroup() {
+              if (colgroup) return colgroup;
+              colgroup = document.createElement('colgroup');
+              for (var i = 0; i < colCount; i++) colgroup.appendChild(document.createElement('col'));
+              table.insertBefore(colgroup, table.firstChild);
+              return colgroup;
+            }
+
+            function applyColWidths(widths) {
+              var group = ensureColgroup();
+              for (var i = 0; i < widths.length; i++) {
+                group.children[i].style.width = Math.round(widths[i]) + 'px';
+              }
+            }
+
+            // Clamp a column pair to the minimum while preserving their sum,
+            // so the table's total width never drifts.
+            function clampPair(a, b) {
+              var min = 48;
+              if (a < min) { b += min - a; a = min; }
+              if (b < min) { a += min - b; b = min; }
+              return [a, b];
+            }
+
+            // Freeze the current render into px so drags reproduce it exactly.
+            // Widths must be measured BEFORE switching to fixed layout — fixed
+            // with no colgroup yet distributes columns equally, which would
+            // corrupt the baseline.
+            function lockLayout() {
+              if (table.style.tableLayout === 'fixed') return;
+              var widths = measureColWidths();
+              var measured = table.getBoundingClientRect().width;
+              table.style.tableLayout = 'fixed';
+              table.style.width = Math.round(measured) + 'px';
+              table.style.minWidth = '0';
+              applyColWidths(widths);
+              wrapper.classList.add('is-resized');
+            }
+
+            // Column handles live inside header cells, straddling the table's
+            // native column border — the header separator itself is the grip.
+            for (var i = 0; i < colCount - 1; i++) {
+              (function(idx) {
+                var cell = headerRow.cells[idx];
+                var handle = document.createElement('div');
+                handle.className = 'table-col-resizer';
+                handle.setAttribute('role', 'separator');
+                handle.setAttribute('aria-orientation', 'vertical');
+                handle.setAttribute('aria-label', 'Resize column');
+                handle.setAttribute('data-testid', 'table-col-resizer');
+                handle.tabIndex = 0;
+                cell.appendChild(handle);
+
+                var startX, startWidths, lastX, rafId, dragging;
+
+                function applyResize(x) {
+                  var pair = clampPair(startWidths[idx] + (x - startX), startWidths[idx + 1] - (x - startX));
+                  var widths = startWidths.slice();
+                  widths[idx] = pair[0];
+                  widths[idx + 1] = pair[1];
+                  applyColWidths(widths);
+                }
+
+                function onMove(e) {
+                  lastX = e.clientX;
+                  if (rafId) return;
+                  rafId = requestAnimationFrame(function() {
+                    rafId = null;
+                    applyResize(lastX);
+                  });
+                }
+
+                function onUp(cancelled) {
+                  if (lastX !== undefined && !cancelled) applyResize(lastX);
+                  if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+                  dragging = false;
+                  document.body.classList.remove('table-col-resize-active');
+                  window.removeEventListener('pointermove', onMove);
+                  window.removeEventListener('pointerup', onUp);
+                  window.removeEventListener('pointercancel', onUp);
+                  window.removeEventListener('keydown', onKeyDown);
+                }
+
+                function onKeyDown(e) {
+                  if (e.key === 'Escape') {
+                    if (!dragging) return;
+                    applyColWidths(startWidths);
+                    onUp(true);
+                    return;
+                  }
+                  var step = e.shiftKey ? 30 : 10;
+                  var dir = e.key === 'ArrowRight' ? step : (e.key === 'ArrowLeft' ? -step : 0);
+                  if (!dir) return;
+                  e.preventDefault();
+                  lockLayout();
+                  var widths = measureColWidths();
+                  var pair = clampPair(widths[idx] + dir, widths[idx + 1] - dir);
+                  widths[idx] = pair[0];
+                  widths[idx + 1] = pair[1];
+                  applyColWidths(widths);
+                }
+
+                function onDown(e) {
+                  if (e.button !== 0) return;
+                  lockLayout();
+                  startX = e.clientX;
+                  startWidths = measureColWidths();
+                  lastX = undefined;
+                  dragging = true;
+                  document.body.classList.add('table-col-resize-active');
+                  if (handle.setPointerCapture) {
+                    try { handle.setPointerCapture(e.pointerId); } catch (_err) {}
+                  }
+                  window.addEventListener('pointermove', onMove);
+                  window.addEventListener('pointerup', onUp);
+                  window.addEventListener('pointercancel', onUp);
+                  window.addEventListener('keydown', onKeyDown);
+                  e.preventDefault();
+                }
+
+                handle.addEventListener('pointerdown', onDown);
+                handle.addEventListener('keydown', onKeyDown);
+              })(i);
+            }
+
+            // Row-height handle: an invisible strip on the table's own bottom
+            // edge, spanning the full table width so wide (scrolled) tables
+            // stay grabbable. Dragging it grows/shrinks vertical row padding.
+            var rowHandle = document.createElement('div');
+            rowHandle.className = 'table-row-resizer';
+            rowHandle.setAttribute('role', 'separator');
+            rowHandle.setAttribute('aria-orientation', 'horizontal');
+            rowHandle.setAttribute('aria-label', 'Adjust row height');
+            rowHandle.setAttribute('data-testid', 'table-row-resizer');
+            rowHandle.tabIndex = 0;
+            wrapper.appendChild(rowHandle);
+
+            function positionRowHandle() {
+              rowHandle.style.width = Math.round(table.getBoundingClientRect().width) + 'px';
+              rowHandle.style.bottom = (wrapper.offsetHeight - wrapper.clientHeight) + 'px';
+            }
+            positionRowHandle();
+            window.addEventListener('resize', positionRowHandle, { passive: true });
+            if (document.fonts && document.fonts.ready) {
+              document.fonts.ready.then(positionRowHandle);
+            }
+
+            var rowStartY, rowStartPad, rowLastY, rowRafId, rowDragging;
+
+            function applyRowPad(y) {
+              var pad = Math.max(0, Math.min(60, Math.round(rowStartPad + (y - rowStartY))));
+              wrapper.style.setProperty('--table-row-extra', pad + 'px');
+            }
+
+            function rowOnMove(e) {
+              rowLastY = e.clientY;
+              if (rowRafId) return;
+              rowRafId = requestAnimationFrame(function() {
+                rowRafId = null;
+                applyRowPad(rowLastY);
+              });
+            }
+
+            function rowOnUp(cancelled) {
+              if (rowLastY !== undefined && !cancelled) applyRowPad(rowLastY);
+              if (rowRafId) { cancelAnimationFrame(rowRafId); rowRafId = null; }
+              rowDragging = false;
+              document.body.classList.remove('table-row-resize-active');
+              window.removeEventListener('pointermove', rowOnMove);
+              window.removeEventListener('pointerup', rowOnUp);
+              window.removeEventListener('pointercancel', rowOnUp);
+              window.removeEventListener('keydown', rowOnKeyDown);
+            }
+
+            function rowOnKeyDown(e) {
+              if (e.key === 'Escape') {
+                if (!rowDragging) return;
+                wrapper.style.setProperty('--table-row-extra', rowStartPad + 'px');
+                rowOnUp(true);
+                return;
+              }
+              var step = e.shiftKey ? 12 : 4;
+              var dir = e.key === 'ArrowDown' ? step : (e.key === 'ArrowUp' ? -step : 0);
+              if (!dir) return;
+              e.preventDefault();
+              var cur = parseFloat(getComputedStyle(wrapper).getPropertyValue('--table-row-extra')) || 0;
+              wrapper.style.setProperty('--table-row-extra', Math.max(0, Math.min(60, Math.round(cur + dir))) + 'px');
+            }
+
+            function rowOnDown(e) {
+              if (e.button !== 0) return;
+              rowStartY = e.clientY;
+              rowStartPad = parseFloat(getComputedStyle(wrapper).getPropertyValue('--table-row-extra')) || 0;
+              rowLastY = undefined;
+              rowDragging = true;
+              document.body.classList.add('table-row-resize-active');
+              if (rowHandle.setPointerCapture) {
+                try { rowHandle.setPointerCapture(e.pointerId); } catch (_err) {}
+              }
+              window.addEventListener('pointermove', rowOnMove);
+              window.addEventListener('pointerup', rowOnUp);
+              window.addEventListener('pointercancel', rowOnUp);
+              window.addEventListener('keydown', rowOnKeyDown);
+              e.preventDefault();
+            }
+
+            rowHandle.addEventListener('pointerdown', rowOnDown);
+            rowHandle.addEventListener('keydown', rowOnKeyDown);
+          });
+        }
+        enableTableResize();
       }
 
       // Share: copy-link button

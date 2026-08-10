@@ -851,7 +851,7 @@ main {
 
 .post-content th,
 .post-content td {
-    padding: 0.55em 0.85em;
+    padding: calc(0.55em + var(--table-row-extra, 0px)) 0.85em;
     border: 1px solid var(--border-color);
     text-align: left;
     vertical-align: top;
@@ -866,6 +866,100 @@ main {
 
 .post-content tr:nth-child(even) td {
     background: var(--surface-color);
+}
+
+/* ── Resizable tables (columns + row height) ── */
+/* Handles are transparent hit-areas that ride ON the table's native border
+   lines: column separators resize from the header row, the table's bottom
+   edge grows vertical row padding. No separate visuals — the native gridline
+   itself lights up while hovering/dragging so the affordance is discoverable,
+   and a col-resize/row-resize cursor signals it. */
+.post-content .table-scroll {
+    position: relative;
+}
+
+.post-content .table-scroll.has-col-resize th {
+    position: relative;
+}
+.post-content .table-col-resizer {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: -5px;
+    width: 10px;
+    cursor: col-resize;
+    touch-action: none;
+    z-index: 3;
+    background: transparent;
+    outline: none;
+}
+.post-content .table-col-resizer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 3.5px;
+    width: 3px;
+    border-radius: 2px;
+    background: var(--link-color);
+    opacity: 0;
+    transition: opacity 0.15s, width 0.15s;
+}
+.post-content .table-col-resizer:hover::after,
+.post-content .table-col-resizer:focus-visible::after {
+    opacity: 0.55;
+}
+body.table-col-resize-active .post-content .table-col-resizer::after {
+    opacity: 0.8;
+    left: 3px;
+    width: 4px;
+}
+
+.post-content .table-row-resizer {
+    position: absolute;
+    left: 0;
+    height: 12px;
+    cursor: row-resize;
+    touch-action: none;
+    z-index: 3;
+    background: transparent;
+    outline: none;
+}
+.post-content .table-row-resizer::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--link-color);
+    opacity: 0;
+    transition: opacity 0.15s, height 0.15s;
+}
+.post-content .table-row-resizer:hover::after,
+.post-content .table-row-resizer:focus-visible::after {
+    opacity: 0.55;
+}
+body.table-row-resize-active .post-content .table-row-resizer::after {
+    opacity: 0.8;
+    height: 4px;
+}
+
+body.table-col-resize-active {
+    cursor: col-resize;
+    user-select: none;
+}
+body.table-row-resize-active {
+    cursor: row-resize;
+    user-select: none;
+}
+
+/* Once a table is actually resized (fixed layout), long unbreakable content
+   is allowed to wrap instead of overflowing its column. */
+.post-content .table-scroll.is-resized th,
+.post-content .table-scroll.is-resized td {
+    overflow-wrap: anywhere;
 }
 
 .post-content pre {
