@@ -1076,6 +1076,14 @@ body.table-row-resize-active {
 .copy-code-btn.copied {
     color: #22c55e;
 }
+/* Wrap toggle only shows when lines actually overflow (mostly mobile);
+   JS toggles .has-h-overflow on measure. */
+.wrap-code-btn {
+    display: none;
+}
+.code-block-wrapper.has-h-overflow .wrap-code-btn {
+    display: inline-flex;
+}
 .code-block-wrapper.is-wrapped .wrap-code-btn {
     color: var(--link-color);
 }

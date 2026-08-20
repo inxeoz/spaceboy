@@ -503,8 +503,18 @@
       function refreshCodeCollapse() {
         var rootFont = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
         document.querySelectorAll('.code-block-wrapper').forEach(function(wrapper) {
-          if (wrapper.classList.contains('is-expanded')) return;
+          // Show the wrap toggle only when lines actually overflow the block,
+          // so desktop (wide content) doesn't get a useless button. Run before
+          // the is-expanded early return so expanded blocks stay correct too.
           var pre = wrapper.querySelector('pre');
+          if (pre) {
+            var overflows = pre.scrollWidth > pre.clientWidth + 1;
+            // While wrapped there is no horizontal overflow to measure — keep
+            // the button so the user can still unwrap.
+            if (wrapper.classList.contains('is-wrapped')) overflows = true;
+            wrapper.classList.toggle('has-h-overflow', overflows);
+          }
+          if (wrapper.classList.contains('is-expanded')) return;
           if (!pre) return;
           var cs = getComputedStyle(pre);
 
