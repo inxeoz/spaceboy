@@ -1666,6 +1666,17 @@ pre {
     margin: 0.5rem 0;
 }
 
+.post-excerpt-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+.post-excerpt-link:hover,
+.post-excerpt-link:visited {
+    color: inherit;
+    text-decoration: none;
+}
+
 .post-title-link {
     font: var(--font-weight-semibold) 1.35rem var(--font-body);
     color: var(--text-color);
