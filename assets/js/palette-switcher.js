@@ -252,7 +252,7 @@
     }
 };
 
-  var dropdown, btn, saved, focusedIdx, headerDropdown, themeBtn, headerCloseTimer;
+  var dropdown, btn, saved, focusedIdx, headerDropdown, themeBtn, paletteBtn, headerCloseTimer;
 
   window.clearPalette = function () {
     document.documentElement.removeAttribute('data-palette');
@@ -265,7 +265,9 @@
     try { saved = localStorage.getItem('palette'); } catch (_) {}
 
     themeBtn = document.getElementById('theme-toggle');
-    if (themeBtn) setupHeaderHover();
+    paletteBtn = document.getElementById('palette-toggle');
+    if (themeBtn && paletteBtn) setupHeaderPalette();
+    else if (themeBtn) { /* fallback: theme only, no palette toggle */ }
 
     btn = document.getElementById('sbtn-palette');
     if (!btn) return;
@@ -274,17 +276,23 @@
     document.addEventListener('click', onDocClick);
   }
 
-  function setupHeaderHover() {
+  function setupHeaderPalette() {
     ensureHeaderDropdown();
-    var openDelay;
-    themeBtn.addEventListener('mouseenter', function () {
-      clearTimeout(headerCloseTimer);
-      clearTimeout(openDelay);
-      openDelay = setTimeout(function () { openHeader(); }, 80);
+    paletteBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (headerDropdown.hidden) openHeader();
+      else closeHeader();
     });
-    themeBtn.addEventListener('mouseleave', function () { scheduleHeaderClose(); });
-    themeBtn.addEventListener('focus', function () { openHeader(); });
+    // close when hovering away from split (optional hover preview kept for quick glance)
+    var split = paletteBtn.closest('.theme-split');
+    if (split) {
+      split.addEventListener('mouseleave', function () { scheduleHeaderClose(); });
+      split.addEventListener('mouseenter', function () { clearTimeout(headerCloseTimer); });
+    }
+    headerDropdown.addEventListener('mouseleave', function () { scheduleHeaderClose(); });
+    headerDropdown.addEventListener('mouseenter', function () { clearTimeout(headerCloseTimer); });
     document.addEventListener('click', onHeaderDocClick);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !headerDropdown.hidden) { closeHeader(); } });
   }
 
   function ensureHeaderDropdown() {
@@ -361,12 +369,14 @@
   function openHeader() {
     if (!headerDropdown) return;
     headerDropdown.hidden = false;
+    if (paletteBtn) paletteBtn.setAttribute('aria-expanded', 'true');
     updateHeaderUI(currentPalette());
   }
 
   function closeHeader() {
     if (!headerDropdown || headerDropdown.hidden) return;
     headerDropdown.hidden = true;
+    if (paletteBtn) paletteBtn.setAttribute('aria-expanded', 'false');
     var cur = currentPalette();
     if (cur !== (saved || '')) {
       if (saved) { document.documentElement.setAttribute('data-palette', saved); updateHeaderUI(saved); updateUI(saved); }
@@ -414,7 +424,9 @@
 
   function onHeaderDocClick(e) {
     if (!headerDropdown || headerDropdown.hidden) return;
-    if (!headerDropdown.contains(e.target) && e.target !== themeBtn && !themeBtn.contains(e.target)) {
+    var split = paletteBtn ? paletteBtn.closest('.theme-split') : null;
+    var inSplit = split && split.contains(e.target);
+    if (!headerDropdown.contains(e.target) && !inSplit && e.target !== themeBtn && !(themeBtn && themeBtn.contains(e.target))) {
       closeHeader();
     }
   }

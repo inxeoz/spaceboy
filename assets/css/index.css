@@ -3128,6 +3128,29 @@ kbd {
 .toggle-group {
     position: relative;
 }
+.theme-split {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+.theme-split .theme-toggle,
+.theme-split .palette-toggle {
+    background: transparent;
+    border: none;
+    color: var(--link-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s ease;
+}
+.theme-split .theme-toggle { width: 2.5rem; height: 2.5rem; }
+.theme-split .palette-toggle { width: 1.6rem; height: 2.5rem; border-left: 1px solid var(--border-color); }
+.theme-split .theme-toggle:hover,
+.theme-split .palette-toggle:hover { background: var(--toc-hover-bg); }
+.theme-split .palette-toggle[aria-expanded="true"] { background: var(--toc-active-bg); }
 .palette-dropdown-list {
     max-height: min(60vh, 360px);
     overflow-y: auto;
