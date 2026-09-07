@@ -303,6 +303,7 @@
       row.setAttribute('data-palette', p.id);
       row.setAttribute('aria-pressed', p.id === activeId ? 'true' : 'false');
       row.setAttribute('aria-selected', p.id === activeId ? 'true' : 'false');
+      row.tabIndex = 0;
 
       var name = document.createElement('span');
       name.className = 'palette-name';
