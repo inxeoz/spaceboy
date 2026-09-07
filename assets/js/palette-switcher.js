@@ -51,6 +51,207 @@
     });
   })();
 
+  var PALETTE_DEMO = {
+    "90s": {
+        "bg": "#e8e8e8",
+        "text": "#404040",
+        "border": "#c8c8c8",
+        "link": "#0860b8"
+    },
+    "Modern": {
+        "bg": "#ffffff",
+        "text": "#6b7280",
+        "border": "#d8dbe1",
+        "link": "#2563eb"
+    },
+    "Neon": {
+        "bg": "#f5f5fc",
+        "text": "#15152a",
+        "border": "#d0cfe6",
+        "link": "#bf00bf"
+    },
+    "Anime": {
+        "bg": "#fdf6f0",
+        "text": "#3d2e2a",
+        "border": "#e4d1c3",
+        "link": "#d91c55"
+    },
+    "Maharaja": {
+        "bg": "#faf3e8",
+        "text": "#3a2a1a",
+        "border": "#dcc8a8",
+        "link": "#c0392b"
+    },
+    "Nature": {
+        "bg": "#f5f0e8",
+        "text": "#2a2a1a",
+        "border": "#d0c8b8",
+        "link": "#2a7642"
+    },
+    "Galaxy": {
+        "bg": "#f0edf5",
+        "text": "#1a1830",
+        "border": "#c8c4d8",
+        "link": "#7443ff"
+    },
+    "Ocean": {
+        "bg": "#f0f5f8",
+        "text": "#0a1a28",
+        "border": "#c0d0da",
+        "link": "#0070ac"
+    },
+    "BlackWhite": {
+        "bg": "#ffffff",
+        "text": "#000000",
+        "border": "#d0d0d0",
+        "link": "#000000"
+    },
+    "C-Looney-Tunes": {
+        "bg": "#fff7e8",
+        "text": "#2a1a0a",
+        "border": "#dcc8a8",
+        "link": "#7c3aed"
+    },
+    "C-Disney": {
+        "bg": "#fef8f0",
+        "text": "#2a1a10",
+        "border": "#dccfc0",
+        "link": "#1a3d7c"
+    },
+    "Hacker": {
+        "bg": "#f2f7ec",
+        "text": "#0a1a0a",
+        "border": "#c8d8c0",
+        "link": "#1a7a1a"
+    },
+    "2d-game": {
+        "bg": "#fef8e8",
+        "text": "#1a1a0a",
+        "border": "#dccca8",
+        "link": "#db1c2a"
+    },
+    "Herdr": {
+        "bg": "#0c0c0b",
+        "text": "#f0ece0",
+        "border": "#292926",
+        "link": "#4a9eff"
+    },
+    "Taat": {
+        "bg": "#0c0c0b",
+        "text": "#f0ece0",
+        "border": "#292926",
+        "link": "#4a9eff"
+    },
+    "Catppuccin": {
+        "bg": "#11111b",
+        "text": "#f5e0dc",
+        "border": "#313244",
+        "link": "#89b4fa"
+    },
+    "Terminal": {
+        "bg": "#0a0a0a",
+        "text": "#e6e6e6",
+        "border": "#222222",
+        "link": "#4a9eff"
+    },
+    "Tokyo-Night": {
+        "bg": "#1a1b26",
+        "text": "#d5dcff",
+        "border": "#2f3549",
+        "link": "#7aa2f7"
+    },
+    "Dracula": {
+        "bg": "#282a36",
+        "text": "#e6e6e6",
+        "border": "#44475a",
+        "link": "#bd93f9"
+    },
+    "Nord": {
+        "bg": "#2e3440",
+        "text": "#e6e6e6",
+        "border": "#434c5e",
+        "link": "#88c0d0"
+    },
+    "Gruvbox": {
+        "bg": "#282828",
+        "text": "#fbf1c7",
+        "border": "#504945",
+        "link": "#d79921"
+    },
+    "One-Dark": {
+        "bg": "#282c34",
+        "text": "#d7dae0",
+        "border": "#3e4451",
+        "link": "#61afef"
+    },
+    "Solarized": {
+        "bg": "#002b36",
+        "text": "#eee8d5",
+        "border": "#164a57",
+        "link": "#3295da"
+    },
+    "Kanagawa": {
+        "bg": "#1f1f28",
+        "text": "#f3ead3",
+        "border": "#363646",
+        "link": "#7e9cd8"
+    },
+    "Rose-Pine": {
+        "bg": "#191724",
+        "text": "#f4f0ff",
+        "border": "#312f45",
+        "link": "#c4a7e7"
+    },
+    "Vesper": {
+        "bg": "#101010",
+        "text": "#e6e6e6",
+        "border": "#2c2c2c",
+        "link": "#ffc799"
+    },
+    "Catppuccin-Latte": {
+        "bg": "#eff1f5",
+        "text": "#1e1e2e",
+        "border": "#ccd0da",
+        "link": "#145ff5"
+    },
+    "Tokyo-Night-Day": {
+        "bg": "#e1e2e7",
+        "text": "#1f2f66",
+        "border": "#b6bbd1",
+        "link": "#155fc5"
+    },
+    "Gruvbox-Light": {
+        "bg": "#fbf1c7",
+        "text": "#282828",
+        "border": "#d5c4a1",
+        "link": "#076678"
+    },
+    "One-Light": {
+        "bg": "#fafafa",
+        "text": "#202228",
+        "border": "#d9d9db",
+        "link": "#2d6af1"
+    },
+    "Solarized-Light": {
+        "bg": "#fdf6e3",
+        "text": "#073642",
+        "border": "#d6ceb8",
+        "link": "#2074af"
+    },
+    "Kanagawa-Lotus": {
+        "bg": "#f2ecbc",
+        "text": "#2a2a37",
+        "border": "#c7c7cd",
+        "link": "#4d699b"
+    },
+    "Rose-Pine-Dawn": {
+        "bg": "#faf4ed",
+        "text": "#191724",
+        "border": "#ddd2c9",
+        "link": "#7b6298"
+    }
+};
+
   var dropdown, btn, saved, focusedIdx;
 
   window.clearPalette = function () {
@@ -108,10 +309,20 @@
       name.setAttribute('data-testid', 'palette-name-' + p.id);
       name.textContent = p.label;
 
+      // Demo theme effect: each row previews its palette's bg/text/border
+      var demo = PALETTE_DEMO[p.id];
+      if (demo) {
+        row.style.backgroundColor = demo.bg;
+        row.style.color = demo.text;
+        row.style.borderColor = demo.border;
+        row.style.borderLeftColor = demo.link;
+        name.style.color = demo.text;
+      }
       row.addEventListener('click', function () { select(p.id); });
       row.addEventListener('mouseenter', function () {
         focusedIdx = getRowFocusIndex(row);
         highlightRow(row);
+        preview(p.id);
       });
       row.appendChild(name);
       list.appendChild(row);
