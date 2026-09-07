@@ -40,6 +40,7 @@
     { id: 'Solarized-Light',    label: 'solarized light',   color: '#268bd2' },
     { id: 'Kanagawa-Lotus',     label: 'kanagawa lotus',    color: '#4d699b' },
     { id: 'Rose-Pine-Dawn',     label: 'rose pine dawn',    color: '#907aa9' },
+    { id: 'classic-codecademy-light', label: 'codecademy light', color: '#3A10E5' },
   ];
 
   var PALETTE_THEME = {};
@@ -249,6 +250,12 @@
         "text": "#191724",
         "border": "#ddd2c9",
         "link": "#7b6298"
+    },
+    "classic-codecademy-light": {
+        "bg": "#FFF0E5",
+        "text": "#10162F",
+        "border": "#E0E0E0",
+        "link": "#3A10E5"
     }
 };
 
