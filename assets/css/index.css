@@ -253,6 +253,10 @@ a:visited {
     color: var(--link-color);
 }
 
+.nav-left:has(.back-btn) .site-title {
+    display: none;
+}
+
 .back-btn {
     display: flex;
     align-items: center;
