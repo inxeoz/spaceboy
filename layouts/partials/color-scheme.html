@@ -1,5 +1,6 @@
 {{- $cs := .cs -}}
-{{- $scheme := index (index site.Data "color-schemes") $cs -}}
+{{- $csData := "" }}{{- if hugo.Data }}{{- $csData = hugo.Data }}{{- else }}{{- $csData = site.Data }}{{- end }}
+{{- $scheme := index (index $csData "color-schemes") $cs -}}
 {{- if $scheme -}}
 <style>:root{ {{ $scheme.light | safeCSS }} }[data-theme="dark"]{ {{ $scheme.dark | safeCSS }} }</style>
 {{- end -}}
