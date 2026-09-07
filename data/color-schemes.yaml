@@ -103,10 +103,10 @@ Hacker:
   mermaid-dark: ""
 
 Herdr:
-  light: '--bg-color:#0c0c0b;--surface-color:#2c2c2a;--code-bg:#131312;--border-color:#292926;--link-color:#4a9eff;--secondary-text:#93938a;--blockquote-border:#4a9eff;--accent-color:#00d4aa;--text-color:#f0ece0;--toc-bg:rgba(12,12,11,0.08);--toc-active-bg:rgba(74,158,255,0.08);--toc-hover-bg:rgba(74,158,255,0.04);--nav-group-bg:#4a9eff;--nav-group-text:#0c0c0b'
-  dark: '--bg-color:#0c0c0b;--surface-color:#2c2c2a;--code-bg:#131312;--border-color:#292926;--link-color:#4a9eff;--secondary-text:#93938a;--blockquote-border:#4a9eff;--accent-color:#00d4aa;--text-color:#f0ece0;--toc-bg:rgba(12,12,11,0.08);--toc-active-bg:rgba(74,158,255,0.08);--toc-hover-bg:rgba(74,158,255,0.04);--nav-group-bg:#4a9eff;--nav-group-text:#0c0c0b'
-  syntax-light: "--syn-bg:#131312;--syn-text:#f0ece0;--syn-keyword:#4a9eff;--syn-type:#00d4aa;--syn-func:#4a9eff;--syn-const:#ffd700;--syn-string:#90ee90;--syn-builtin:#ffa07a;--syn-comment:#8a8a80;--syn-line-hl:#1c1c1b"
-  syntax-dark: "--syn-bg:#131312;--syn-text:#f0ece0;--syn-keyword:#4a9eff;--syn-type:#00d4aa;--syn-func:#4a9eff;--syn-const:#ffd700;--syn-string:#90ee90;--syn-builtin:#ffa07a;--syn-comment:#8a8a80;--syn-line-hl:#1c1c1b"
+  light: '--bg-color:#efece5;--surface-color:#e7e3da;--code-bg:#e7e3da;--border-color:#e2ded4;--link-color:#8839ef;--secondary-text:#86826f;--blockquote-border:#8839ef;--accent-color:#8839ef;--text-color:#15140f;--toc-bg:rgba(21,20,15,0.04);--toc-active-bg:rgba(136,57,239,0.08);--toc-hover-bg:rgba(136,57,239,0.04);--nav-group-bg:#8839ef;--nav-group-text:#ffffff'
+  dark: '--bg-color:#17171a;--surface-color:#1e1e22;--code-bg:#1e1e22;--border-color:#26262b;--link-color:#cba6f7;--secondary-text:#b0afb6;--blockquote-border:#cba6f7;--accent-color:#cba6f7;--text-color:#eae8ee;--toc-bg:rgba(255,255,255,0.04);--toc-active-bg:rgba(203,166,247,0.10);--toc-hover-bg:rgba(203,166,247,0.05);--nav-group-bg:#cba6f7;--nav-group-text:#17171a'
+  syntax-light: "--syn-bg:#e7e3da;--syn-text:#15140f;--syn-keyword:#8839ef;--syn-type:#6b5a30;--syn-func:#8839ef;--syn-const:#5a3d9e;--syn-string:#5a6b3d;--syn-builtin:#8a5530;--syn-comment:#928e79;--syn-line-hl:#e2ded4"
+  syntax-dark: "--syn-bg:#1e1e22;--syn-text:#eae8ee;--syn-keyword:#cba6f7;--syn-type:#c4b5fd;--syn-func:#cba6f7;--syn-const:#f5c2e7;--syn-string:#a6e3a1;--syn-builtin:#f9e2af;--syn-comment:#908f96;--syn-line-hl:#26262b"
   mermaid-light: ""
   mermaid-dark: ""
 

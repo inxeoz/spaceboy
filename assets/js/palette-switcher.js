@@ -18,7 +18,7 @@
     { id: '2d-game',        label: '2D Game',        color: '#e63946' },
 
     { sep: 'dark' },
-    { id: 'Herdr',           label: 'herdr',          color: '#4a9eff' },
+    { id: 'Herdr',           label: 'herdr',          color: '#cba6f7' },
     { id: 'Taat',            label: 'taat',           color: '#4a9eff' },
     { id: 'Catppuccin',      label: 'catppuccin',     color: '#89b4fa' },
     { id: 'Terminal',        label: 'terminal',       color: '#4a9eff' },
@@ -131,10 +131,10 @@
         "link": "#db1c2a"
     },
     "Herdr": {
-        "bg": "#0c0c0b",
-        "text": "#f0ece0",
-        "border": "#292926",
-        "link": "#4a9eff"
+        "bg": "#17171a",
+        "text": "#eae8ee",
+        "border": "#26262b",
+        "link": "#cba6f7"
     },
     "Taat": {
         "bg": "#0c0c0b",
@@ -411,7 +411,7 @@
   }
 
   function setPalette(value) {
-    value = value || 'Modern';
+    value = value || 'Herdr';
     document.documentElement.setAttribute('data-palette', value);
     try { localStorage.setItem('palette', value); saved = value; } catch (_) {}
     updateUI(value);
