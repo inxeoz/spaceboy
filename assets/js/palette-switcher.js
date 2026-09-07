@@ -252,21 +252,171 @@
     }
 };
 
-  var dropdown, btn, saved, focusedIdx;
+  var dropdown, btn, saved, focusedIdx, headerDropdown, themeBtn, headerCloseTimer;
 
   window.clearPalette = function () {
     document.documentElement.removeAttribute('data-palette');
     try { localStorage.removeItem('palette'); saved = null; } catch (_) {}
     updateUI('');
+    updateHeaderUI('');
   };
 
   function init() {
+    try { saved = localStorage.getItem('palette'); } catch (_) {}
+
+    themeBtn = document.getElementById('theme-toggle');
+    if (themeBtn) setupHeaderHover();
+
     btn = document.getElementById('sbtn-palette');
     if (!btn) return;
 
-    try { saved = localStorage.getItem('palette'); } catch (_) {}
     ensureDropdown();
     document.addEventListener('click', onDocClick);
+  }
+
+  function setupHeaderHover() {
+    ensureHeaderDropdown();
+    var openDelay;
+    themeBtn.addEventListener('mouseenter', function () {
+      clearTimeout(headerCloseTimer);
+      clearTimeout(openDelay);
+      openDelay = setTimeout(function () { openHeader(); }, 80);
+    });
+    themeBtn.addEventListener('mouseleave', function () { scheduleHeaderClose(); });
+    themeBtn.addEventListener('focus', function () { openHeader(); });
+    document.addEventListener('click', onHeaderDocClick);
+  }
+
+  function ensureHeaderDropdown() {
+    if (headerDropdown) return;
+    headerDropdown = document.createElement('div');
+    headerDropdown.id = 'palette-dropdown-header';
+    headerDropdown.className = 'palette-dropdown palette-dropdown--header';
+    headerDropdown.setAttribute('data-testid', 'palette-dropdown-header');
+    headerDropdown.hidden = true;
+
+    var list = document.createElement('div');
+    list.className = 'palette-dropdown-list';
+    list.setAttribute('role', 'listbox');
+    list.setAttribute('aria-label', 'Color palettes');
+    list.setAttribute('data-testid', 'palette-list-header');
+
+    var activeId = currentPalette();
+    PALETTES.forEach(function (p) {
+      if (p.sep) {
+        var sep = document.createElement('div');
+        sep.className = 'palette-sep';
+        sep.setAttribute('role', 'presentation');
+        sep.setAttribute('data-testid', 'palette-sep-header-' + p.sep);
+        sep.textContent = p.sep;
+        list.appendChild(sep);
+        return;
+      }
+      var row = document.createElement('div');
+      row.className = 'palette-row';
+      row.setAttribute('role', 'option');
+      row.setAttribute('data-testid', 'palette-row-header-' + p.id);
+      row.setAttribute('data-palette', p.id);
+      row.setAttribute('aria-pressed', p.id === activeId ? 'true' : 'false');
+      row.setAttribute('aria-selected', p.id === activeId ? 'true' : 'false');
+      row.tabIndex = 0;
+      var name = document.createElement('span');
+      name.className = 'palette-name';
+      name.setAttribute('data-testid', 'palette-name-header-' + p.id);
+      name.textContent = p.label;
+      var demo = PALETTE_DEMO[p.id];
+      if (demo) {
+        row.style.backgroundColor = demo.bg;
+        row.style.color = demo.text;
+        row.style.borderColor = demo.border;
+        row.style.borderLeftColor = demo.link;
+        name.style.color = demo.text;
+      }
+      row.addEventListener('click', function (e) { e.stopPropagation(); selectHeader(p.id); });
+      row.addEventListener('mouseenter', function () { preview(p.id); highlightHeaderRow(row); });
+      row.appendChild(name);
+      list.appendChild(row);
+    });
+
+    list.addEventListener('mouseleave', function () {
+      var cur = currentPalette();
+      if (cur !== (saved || '')) {
+        if (saved) { document.documentElement.setAttribute('data-palette', saved); updateHeaderUI(saved); updateUI(saved); }
+        else { document.documentElement.removeAttribute('data-palette'); updateHeaderUI(''); updateUI(''); }
+      }
+    });
+
+    headerDropdown.appendChild(list);
+    headerDropdown.addEventListener('mouseenter', function () { clearTimeout(headerCloseTimer); });
+    headerDropdown.addEventListener('mouseleave', function () { scheduleHeaderClose(); });
+    headerDropdown.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { e.preventDefault(); closeHeader(); themeBtn.focus(); }
+    });
+
+    var group = themeBtn.closest('.toggle-group');
+    if (group) group.appendChild(headerDropdown);
+    else document.body.appendChild(headerDropdown);
+  }
+
+  function openHeader() {
+    if (!headerDropdown) return;
+    headerDropdown.hidden = false;
+    updateHeaderUI(currentPalette());
+  }
+
+  function closeHeader() {
+    if (!headerDropdown || headerDropdown.hidden) return;
+    headerDropdown.hidden = true;
+    var cur = currentPalette();
+    if (cur !== (saved || '')) {
+      if (saved) { document.documentElement.setAttribute('data-palette', saved); updateHeaderUI(saved); updateUI(saved); }
+      else { document.documentElement.removeAttribute('data-palette'); updateHeaderUI(''); updateUI(''); clearPalette(); }
+    }
+  }
+
+  function scheduleHeaderClose() {
+    clearTimeout(headerCloseTimer);
+    headerCloseTimer = setTimeout(function () { closeHeader(); }, 180);
+  }
+
+  function updateHeaderUI(value) {
+    if (!headerDropdown) return;
+    var cur = value != null && value !== '' ? value : document.documentElement.getAttribute('data-palette') || '';
+    var rows = headerDropdown.querySelectorAll('.palette-row');
+    for (var i = 0; i < rows.length; i++) {
+      var active = rows[i].getAttribute('data-palette') === cur;
+      rows[i].setAttribute('aria-pressed', active ? 'true' : 'false');
+      rows[i].setAttribute('aria-selected', active ? 'true' : 'false');
+    }
+  }
+
+  function highlightHeaderRow(row) {
+    if (!headerDropdown) return;
+    var rows = headerDropdown.querySelectorAll('.palette-row');
+    rows.forEach(function (r) { r.classList.remove('palette-focused'); });
+    if (row) row.classList.add('palette-focused');
+  }
+
+  function selectHeader(value) {
+    setPalette(value);
+    var group = PALETTE_THEME[value];
+    if (group === 'dark' || group === 'light') {
+      var root = document.documentElement;
+      root.setAttribute('data-theme', group);
+      try { localStorage.setItem('theme', group); } catch (_) {}
+      if (window.updateThemeIcons) window.updateThemeIcons();
+      if (window.__refreshThemeButtons) window.__refreshThemeButtons();
+    }
+    updateHeaderUI(value);
+    updateUI(value);
+    closeHeader();
+  }
+
+  function onHeaderDocClick(e) {
+    if (!headerDropdown || headerDropdown.hidden) return;
+    if (!headerDropdown.contains(e.target) && e.target !== themeBtn && !themeBtn.contains(e.target)) {
+      closeHeader();
+    }
   }
 
   function ensureDropdown() {
@@ -415,6 +565,7 @@
     document.documentElement.setAttribute('data-palette', value);
     try { localStorage.setItem('palette', value); saved = value; } catch (_) {}
     updateUI(value);
+    updateHeaderUI(value);
   }
 
   function updateUI(value) {
@@ -445,6 +596,7 @@
   function preview(value) {
     document.documentElement.setAttribute('data-palette', value);
     updateUI(value);
+    updateHeaderUI(value);
   }
 
   function toggle() {
