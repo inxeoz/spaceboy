@@ -30,6 +30,7 @@
     { id: 'Solarized',       label: 'solarized',      color: '#268bd2' },
     { id: 'Kanagawa',        label: 'kanagawa',       color: '#7e9cd8' },
     { id: 'Rose-Pine',       label: 'rose pine',      color: '#c4a7e7' },
+    { id: 'mojolang-dark',    label: 'mojo dark',       color: '#ff552a' },
     { id: 'Vesper',          label: 'vesper',          color: '#ffc799' },
 
     { sep: 'light' },
@@ -41,6 +42,7 @@
     { id: 'Kanagawa-Lotus',     label: 'kanagawa lotus',    color: '#4d699b' },
     { id: 'Rose-Pine-Dawn',     label: 'rose pine dawn',    color: '#907aa9' },
     { id: 'classic-codecademy-light', label: 'codecademy light', color: '#3A10E5' },
+    { id: 'mojolang-light',    label: 'mojo light',      color: '#ff552a' },
   ];
 
   var PALETTE_THEME = {};
@@ -256,6 +258,18 @@
         "text": "#10162F",
         "border": "#E0E0E0",
         "link": "#3A10E5"
+    },
+    "mojolang-light": {
+        "bg": "#ffffff",
+        "text": "#020c13",
+        "border": "#d4dae4",
+        "link": "#ff552a"
+    },
+    "mojolang-dark": {
+        "bg": "#020c13",
+        "text": "#eef0f4",
+        "border": "#353d42",
+        "link": "#ff552a"
     }
 };
 
