@@ -159,7 +159,7 @@
 
   {{- /* ── Color schemes: all loaded, activated via [data-palette="…"] ── */ -}}
   <style>
-  {{- $csData := "" }}{{- if hugo.Data }}{{- $csData = hugo.Data }}{{- else }}{{- $csData = site.Data }}{{- end }}
+  {{- $csData := site.Data }}
   {{- range $name, $colors := index $csData "color-schemes" }}
   [data-palette="{{ $name }}"]{ {{ $colors.light | safeCSS }};{{ with index $colors "syntax-light" }} {{ . | safeCSS }}{{ end }} }
   [data-palette="{{ $name }}"][data-theme="dark"]{ {{ $colors.dark | safeCSS }};{{ with index $colors "syntax-dark" }} {{ . | safeCSS }}{{ end }} }

@@ -6,7 +6,7 @@
   {{- if eq (.Get 0) "block" -}}{{- $type = "block" -}}{{- end -}}
 {{- end -}}
 {{- $key := printf "%s:%s" $type $source | sha256 -}}
-{{- $katexData := "" }}{{- if hugo.Data }}{{- $katexData = hugo.Data }}{{- else }}{{- $katexData = site.Data }}{{- end }}
+{{- $katexData := site.Data }}
 {{- $html := index (index $katexData "katex-cache") $key -}}
 {{- if $html -}}
   {{- $html | safeHTML -}}
