@@ -3541,3 +3541,42 @@ html {
         font-size: 0.95em;
     }
 }
+
+/* About page */
+.about-avatar { display:block; width:72px; height:72px; margin:0 0 1rem; }
+
+/* ── Site settings ── */
+.site-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--border-color);
+  margin: 1.5rem 0;
+}
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1rem;
+  gap: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+.setting-row:last-child { border-bottom: none; }
+.setting-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-color);
+  flex-shrink: 0;
+}
+.setting-desc {
+  font-size: 0.75rem;
+  color: var(--secondary-text);
+  margin-top: 0.15rem;
+}
+.setting-label-wrap { display: flex; flex-direction: column; }
+.setting-btns {
+  display: flex;
+  gap: 0.375rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}

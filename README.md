@@ -151,7 +151,7 @@ Set `viewMode` in frontmatter to change the post layout:
 ---
 title: "Photo Album"
 date: 2024-01-01
-type: gallery
+type: gallery # removed - gallery feature deleted
 album: "/images/cover.jpg"
 gallery:
   - url: "/images/photo1.jpg"
