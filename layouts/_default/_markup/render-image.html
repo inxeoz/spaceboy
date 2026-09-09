@@ -3,7 +3,7 @@
 {{- $title := .Title -}}
 {{- $res := .Page.Resources.GetMatch $dest -}}
 {{- if $res }}
-  {{- $res = $res.Resize "800x" -}}
+  {{- $res = $res.Resize "1200x" -}}
   <img src="{{ $res.RelPermalink }}" alt="{{ $alt }}" {{ with $title}} title="{{ . }}"{{ end }} loading="lazy" width="{{ $res.Width }}" height="{{ $res.Height }}" data-testid="content-image" />
 {{- else }}
   {{- $u := $dest -}}
