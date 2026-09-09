@@ -12,14 +12,18 @@
       {{ $catThumb := "" }}{{ $listThumb := "" }}
       {{ $thumb := .Param "thumbnail" }}
       {{ if $thumb }}
-        {{ if .Param "showThumbnailInCatalog" }}{{ $catThumb = $thumb }}{{ end }}
-        {{ if .Param "showThumbnailInList" }}{{ $listThumb = $thumb }}{{ end }}
+        {{ $t := $thumb }}
+        {{ with .Resources.GetMatch $t }}{{ $t = .RelPermalink }}{{ else }}{{ if and (not (hasPrefix $t "/")) (not (hasPrefix $t "http")) }}{{ $t = printf "%s%s" .RelPermalink $t }}{{ end }}{{ end }}
+        {{ if .Param "showThumbnailInCatalog" }}{{ $catThumb = $t }}{{ end }}
+        {{ if .Param "showThumbnailInList" }}{{ $listThumb = $t }}{{ end }}
       {{ else if or (.Param "showThumbnailInCatalog") (.Param "showThumbnailInList") }}
         {{ $imgMatch := findRE `!\[.*?\]\(.*?\)` .RawContent 1 }}
         {{ if $imgMatch }}
           {{ $url := index $imgMatch 0 }}
           {{ $url = replaceRE `^!\[.*?\]\(` "" $url }}
           {{ $u := replaceRE `\)\s*$` "" $url }}
+          {{ $u = replaceRE `\s+.*$` "" $u }}
+          {{ with .Resources.GetMatch $u }}{{ $u = .RelPermalink }}{{ else }}{{ if and (ne $u "") (not (hasPrefix $u "/")) (not (hasPrefix $u "http")) }}{{ $u = printf "%s%s" .RelPermalink $u }}{{ end }}{{ end }}
           {{ if .Param "showThumbnailInCatalog" }}{{ $catThumb = $u }}{{ end }}
           {{ if .Param "showThumbnailInList" }}{{ $listThumb = $u }}{{ end }}
         {{ end }}
