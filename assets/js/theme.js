@@ -60,6 +60,13 @@
     var isHidden = root.classList.toggle('toc-hidden');
     safeSet('toc', isHidden ? 'hide' : 'show');
     updateTocIcons();
+
+  window.addEventListener('storage', function(e) {
+    if (e.key === 'theme' && e.newValue) {
+      root.setAttribute('data-theme', e.newValue);
+      updateThemeIcons();
+    }
+  });
   };
 
   // Theme/layout/toc/palette are applied to the DOM by the inline script in
@@ -68,6 +75,13 @@
   updateThemeIcons();
   updateLayoutIcons();
   updateTocIcons();
+
+  window.addEventListener('storage', function(e) {
+    if (e.key === 'theme' && e.newValue) {
+      root.setAttribute('data-theme', e.newValue);
+      updateThemeIcons();
+    }
+  });
 
   document.addEventListener('DOMContentLoaded', function() {
     var header = document.getElementById('site-header');
