@@ -277,13 +277,13 @@
 
   window.clearPalette = function () {
     document.documentElement.removeAttribute('data-palette');
-    try { localStorage.removeItem('palette'); saved = null; } catch (_) {}
+    try { sessionStorage.removeItem('palette'); saved = null; } catch (_) {}
     updateUI('');
     updateHeaderUI('');
   };
 
   function init() {
-    try { saved = localStorage.getItem('palette'); } catch (_) {}
+    try { saved = sessionStorage.getItem('palette'); } catch (_) {}
 
     themeBtn = document.getElementById('theme-toggle');
     paletteBtn = document.getElementById('palette-toggle');
@@ -434,7 +434,7 @@
     if (group === 'dark' || group === 'light') {
       var root = document.documentElement;
       root.setAttribute('data-theme', group);
-      try { localStorage.setItem('theme', group); } catch (_) {}
+      try { sessionStorage.setItem('theme', group); } catch (_) {}
       if (window.updateThemeIcons) window.updateThemeIcons();
       if (window.__refreshThemeButtons) window.__refreshThemeButtons();
     }
@@ -596,7 +596,7 @@
   function setPalette(value) {
     value = value || 'Herdr';
     document.documentElement.setAttribute('data-palette', value);
-    try { localStorage.setItem('palette', value); saved = value; } catch (_) {}
+    try { sessionStorage.setItem('palette', value); saved = value; } catch (_) {}
     updateUI(value);
     updateHeaderUI(value);
   }
@@ -620,7 +620,7 @@
     if (group === 'dark' || group === 'light') {
       var root = document.documentElement;
       root.setAttribute('data-theme', group);
-      try { localStorage.setItem('theme', group); } catch (_) {}
+      try { sessionStorage.setItem('theme', group); } catch (_) {}
       if (window.updateThemeIcons) window.updateThemeIcons();
       if (window.__refreshThemeButtons) window.__refreshThemeButtons();
     }
