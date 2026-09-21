@@ -45,8 +45,14 @@
   window.toggleTheme = function() {
     if (window.clearPalette) clearPalette();
     var isDark = root.getAttribute('data-theme') === 'dark';
-    root.setAttribute('data-theme', isDark ? 'light' : 'dark');
-    safeSet(themeKey, isDark ? 'light' : 'dark');
+    var next = isDark ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    var def = (window.__SPACEBOY__ || {})[next === 'dark' ? 'defaultPaletteDark' : 'defaultPaletteLight'];
+    if (def) {
+      root.setAttribute('data-palette', def);
+      safeSet('palette', def);
+    }
+    safeSet(themeKey, next);
     updateThemeIcons();
   };
 

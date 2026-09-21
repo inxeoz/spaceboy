@@ -3,46 +3,8 @@
 
   /* ── palette data ── */
   var PALETTES = [
-    { id: '90s',            label: '90s',            color: '#0860b8' },
-    { id: 'Modern',         label: 'Modern',         color: '#2563eb' },
-    { id: 'Neon',           label: 'Neon',           color: '#c900c9' },
-    { id: 'Anime',          label: 'Anime',          color: '#e84a7a' },
-    { id: 'Maharaja',       label: 'Maharaja',       color: '#c0392b' },
-    { id: 'Nature',         label: 'Nature',         color: '#2d7d46' },
-    { id: 'Galaxy',         label: 'Galaxy',         color: '#7c4dff' },
-    { id: 'Ocean',          label: 'Ocean',          color: '#0077b6' },
-    { id: 'BlackWhite',     label: 'Black & White',  color: '#000000' },
-    { id: 'C-Looney-Tunes', label: 'Looney Tunes',   color: '#7c3aed' },
-    { id: 'C-Disney',       label: 'Disney',         color: '#1a3d7c' },
-    { id: 'Hacker',         label: 'Hacker',         color: '#1a7a1a' },
-    { id: '2d-game',        label: '2D Game',        color: '#e63946' },
-
-    { sep: 'dark' },
-    { id: 'Herdr',           label: 'herdr',          color: '#cba6f7' },
-    { id: 'Taat',            label: 'taat',           color: '#4a9eff' },
-    { id: 'Catppuccin',      label: 'catppuccin',     color: '#89b4fa' },
-    { id: 'Terminal',        label: 'terminal',       color: '#4a9eff' },
-    { id: 'Tokyo-Night',     label: 'tokyo night',    color: '#7aa2f7' },
-    { id: 'Dracula',         label: 'dracula',        color: '#bd93f9' },
-    { id: 'Nord',            label: 'nord',           color: '#88c0d0' },
-    { id: 'Gruvbox',         label: 'gruvbox',        color: '#d79921' },
-    { id: 'One-Dark',        label: 'one dark',       color: '#61afef' },
-    { id: 'Solarized',       label: 'solarized',      color: '#268bd2' },
-    { id: 'Kanagawa',        label: 'kanagawa',       color: '#7e9cd8' },
-    { id: 'Rose-Pine',       label: 'rose pine',      color: '#c4a7e7' },
-    { id: 'mojolang-dark',    label: 'mojo dark',       color: '#ff552a' },
-    { id: 'Vesper',          label: 'vesper',          color: '#ffc799' },
-
-    { sep: 'light' },
-    { id: 'Catppuccin-Latte',   label: 'catppuccin latte',  color: '#1e66f5' },
-    { id: 'Tokyo-Night-Day',    label: 'tokyo day',         color: '#2e7de9' },
-    { id: 'Gruvbox-Light',      label: 'gruvbox light',     color: '#076678' },
-    { id: 'One-Light',          label: 'one light',         color: '#4078f2' },
-    { id: 'Solarized-Light',    label: 'solarized light',   color: '#268bd2' },
-    { id: 'Kanagawa-Lotus',     label: 'kanagawa lotus',    color: '#4d699b' },
-    { id: 'Rose-Pine-Dawn',     label: 'rose pine dawn',    color: '#907aa9' },
-    { id: 'classic-codecademy-light', label: 'codecademy light', color: '#3A10E5' },
-    { id: 'mojolang-light',    label: 'mojo light',      color: '#ff552a' },
+    { id: '90s', label: '90s', color: '#0860b8' },
+    { id: 'Nord', label: 'nord', color: '#88c0d0' },
   ];
 
   var PALETTE_THEME = {};
@@ -61,215 +23,11 @@
         "border": "#c8c8c8",
         "link": "#0860b8"
     },
-    "Modern": {
-        "bg": "#ffffff",
-        "text": "#6b7280",
-        "border": "#d8dbe1",
-        "link": "#2563eb"
-    },
-    "Neon": {
-        "bg": "#f5f5fc",
-        "text": "#15152a",
-        "border": "#d0cfe6",
-        "link": "#bf00bf"
-    },
-    "Anime": {
-        "bg": "#fdf6f0",
-        "text": "#3d2e2a",
-        "border": "#e4d1c3",
-        "link": "#d91c55"
-    },
-    "Maharaja": {
-        "bg": "#faf3e8",
-        "text": "#3a2a1a",
-        "border": "#dcc8a8",
-        "link": "#c0392b"
-    },
-    "Nature": {
-        "bg": "#f5f0e8",
-        "text": "#2a2a1a",
-        "border": "#d0c8b8",
-        "link": "#2a7642"
-    },
-    "Galaxy": {
-        "bg": "#f0edf5",
-        "text": "#1a1830",
-        "border": "#c8c4d8",
-        "link": "#7443ff"
-    },
-    "Ocean": {
-        "bg": "#f0f5f8",
-        "text": "#0a1a28",
-        "border": "#c0d0da",
-        "link": "#0070ac"
-    },
-    "BlackWhite": {
-        "bg": "#ffffff",
-        "text": "#000000",
-        "border": "#d0d0d0",
-        "link": "#000000"
-    },
-    "C-Looney-Tunes": {
-        "bg": "#fff7e8",
-        "text": "#2a1a0a",
-        "border": "#dcc8a8",
-        "link": "#7c3aed"
-    },
-    "C-Disney": {
-        "bg": "#fef8f0",
-        "text": "#2a1a10",
-        "border": "#dccfc0",
-        "link": "#1a3d7c"
-    },
-    "Hacker": {
-        "bg": "#f2f7ec",
-        "text": "#0a1a0a",
-        "border": "#c8d8c0",
-        "link": "#1a7a1a"
-    },
-    "2d-game": {
-        "bg": "#fef8e8",
-        "text": "#1a1a0a",
-        "border": "#dccca8",
-        "link": "#db1c2a"
-    },
-    "Herdr": {
-        "bg": "#17171a",
-        "text": "#eae8ee",
-        "border": "#26262b",
-        "link": "#cba6f7"
-    },
-    "Taat": {
-        "bg": "#0c0c0b",
-        "text": "#f0ece0",
-        "border": "#292926",
-        "link": "#4a9eff"
-    },
-    "Catppuccin": {
-        "bg": "#11111b",
-        "text": "#f5e0dc",
-        "border": "#313244",
-        "link": "#89b4fa"
-    },
-    "Terminal": {
-        "bg": "#0a0a0a",
-        "text": "#e6e6e6",
-        "border": "#222222",
-        "link": "#4a9eff"
-    },
-    "Tokyo-Night": {
-        "bg": "#1a1b26",
-        "text": "#d5dcff",
-        "border": "#2f3549",
-        "link": "#7aa2f7"
-    },
-    "Dracula": {
-        "bg": "#282a36",
-        "text": "#e6e6e6",
-        "border": "#44475a",
-        "link": "#bd93f9"
-    },
     "Nord": {
         "bg": "#2e3440",
         "text": "#e6e6e6",
         "border": "#434c5e",
         "link": "#88c0d0"
-    },
-    "Gruvbox": {
-        "bg": "#282828",
-        "text": "#fbf1c7",
-        "border": "#504945",
-        "link": "#d79921"
-    },
-    "One-Dark": {
-        "bg": "#282c34",
-        "text": "#d7dae0",
-        "border": "#3e4451",
-        "link": "#61afef"
-    },
-    "Solarized": {
-        "bg": "#002b36",
-        "text": "#eee8d5",
-        "border": "#164a57",
-        "link": "#3295da"
-    },
-    "Kanagawa": {
-        "bg": "#1f1f28",
-        "text": "#f3ead3",
-        "border": "#363646",
-        "link": "#7e9cd8"
-    },
-    "Rose-Pine": {
-        "bg": "#191724",
-        "text": "#f4f0ff",
-        "border": "#312f45",
-        "link": "#c4a7e7"
-    },
-    "Vesper": {
-        "bg": "#101010",
-        "text": "#e6e6e6",
-        "border": "#2c2c2c",
-        "link": "#ffc799"
-    },
-    "Catppuccin-Latte": {
-        "bg": "#eff1f5",
-        "text": "#1e1e2e",
-        "border": "#ccd0da",
-        "link": "#145ff5"
-    },
-    "Tokyo-Night-Day": {
-        "bg": "#e1e2e7",
-        "text": "#1f2f66",
-        "border": "#b6bbd1",
-        "link": "#155fc5"
-    },
-    "Gruvbox-Light": {
-        "bg": "#fbf1c7",
-        "text": "#282828",
-        "border": "#d5c4a1",
-        "link": "#076678"
-    },
-    "One-Light": {
-        "bg": "#fafafa",
-        "text": "#202228",
-        "border": "#d9d9db",
-        "link": "#2d6af1"
-    },
-    "Solarized-Light": {
-        "bg": "#fdf6e3",
-        "text": "#073642",
-        "border": "#d6ceb8",
-        "link": "#2074af"
-    },
-    "Kanagawa-Lotus": {
-        "bg": "#f2ecbc",
-        "text": "#2a2a37",
-        "border": "#c7c7cd",
-        "link": "#4d699b"
-    },
-    "Rose-Pine-Dawn": {
-        "bg": "#faf4ed",
-        "text": "#191724",
-        "border": "#ddd2c9",
-        "link": "#7b6298"
-    },
-    "classic-codecademy-light": {
-        "bg": "#FFF0E5",
-        "text": "#10162F",
-        "border": "#E0E0E0",
-        "link": "#3A10E5"
-    },
-    "mojolang-light": {
-        "bg": "#ffffff",
-        "text": "#020c13",
-        "border": "#d4dae4",
-        "link": "#ff552a"
-    },
-    "mojolang-dark": {
-        "bg": "#020c13",
-        "text": "#eef0f4",
-        "border": "#353d42",
-        "link": "#ff552a"
     }
 };
 
@@ -594,7 +352,7 @@
   }
 
   function setPalette(value) {
-    value = value || 'Herdr';
+    value = value || (window.__SPACEBOY__ && window.__SPACEBOY__.defaultPaletteDark) || 'Nord';
     document.documentElement.setAttribute('data-palette', value);
     try { sessionStorage.setItem('palette', value); saved = value; } catch (_) {}
     updateUI(value);

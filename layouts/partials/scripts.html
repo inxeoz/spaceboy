@@ -8,7 +8,9 @@ window.__SPACEBOY__ = {
   fuseJSLocal: {{ default "" .Site.Params.fuseJSLocal | jsonify | safeJS }},
   fuseJSCDN: {{ default "https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js" .Site.Params.fuseJSCDN | jsonify | safeJS }},
   fuseJSCDNIntegrity: {{ default "" .Site.Params.fuseJSCDNIntegrity | jsonify | safeJS }},
-  staticPrefix: "{{ default "" .Site.Params.staticPrefix }}"
+  staticPrefix: "{{ default "" .Site.Params.staticPrefix }}",
+  defaultPaletteDark: "{{ default "Nord" .Site.Params.defaultPaletteDark }}",
+  defaultPaletteLight: "{{ default "90s" .Site.Params.defaultPaletteLight }}"
 };
 </script>
 
