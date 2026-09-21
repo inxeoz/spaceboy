@@ -8,5 +8,5 @@
 {{- else }}
   {{- $u := $dest -}}
   {{- if and (not (hasPrefix $u "/")) (not (hasPrefix $u "http")) }}{{ $u = printf "%s%s" .Page.RelPermalink $u }}{{ end }}
-  <img src="{{ $u | safeURL }}" alt="{{ $alt }}" {{ with $title}} title="{{ . }}"{{ end }} loading="lazy" data-testid="content-image" />
+  <img src="{{ $u | safeURL }}" alt="{{ $alt }}" {{ with $title}} title="{{ . }}"{{ end }} loading="lazy" data-testid="content-image-url" />
 {{- end }}

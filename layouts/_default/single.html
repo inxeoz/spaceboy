@@ -62,6 +62,7 @@
     </aside>
 
     <div class="main-content-wrapper" data-testid="main-content-wrapper">
+  {{ end }}
       <div class="container" data-testid="post-container">
         <div class="main-content-section" data-testid="post-content-section">
           <main id="main-content" data-testid="post-main">
@@ -70,21 +71,13 @@
           {{ partial "footer.html" . }}
         </div>
       </div>
+  {{ if $showTOC }}
     </div>
 
     <aside class="toc-right" id="toc-right-sidebar" data-testid="toc-right-sidebar">
       <div class="toc-resize-handle" data-edge="left" data-testid="toc-resize-handle-left" aria-hidden="true"></div>
       {{ partial "toc-sub.html" . }}
     </aside>
-  </div>
-  {{ else }}
-  <div class="container" data-testid="post-container">
-    <div class="main-content-section" data-testid="post-content-section">
-      <main id="main-content" data-testid="post-main">
-        {{ partial "post-article.html" (dict "ctx" . "opts" $opts) }}
-      </main>
-      {{ partial "footer.html" . }}
-    </div>
   </div>
   {{ end }}
 

@@ -18,23 +18,23 @@
       </time>
       {{ end }}
       {{ if $showLastmod }}
-      <span data-testid="post-meta-sep">·</span>
+      <span>·</span>
       <span data-testid="post-lastmod">Updated {{ $p.Lastmod.Format "02 Jan 2006" }}</span>
       {{ end }}
       {{ if and $p.Site.Params.author.name $o.showAuthor }}
-      {{ if or (and (not $p.Date.IsZero) $o.showDate) $showLastmod }}<span data-testid="post-meta-sep">·</span>{{ end }}
+      {{ if or (and (not $p.Date.IsZero) $o.showDate) $showLastmod }}<span>·</span>{{ end }}
       {{ if $p.Params.author.homepage }}
-      <a href="{{ $p.Params.author.homepage }}" target="_blank" rel="noopener noreferrer" data-testid="post-author">@{{ $p.Site.Params.author.name }}</a>
+      <a href="{{ $p.Params.author.homepage }}" target="_blank" rel="noopener noreferrer" data-testid="post-author-link">@{{ $p.Site.Params.author.name }}</a>
       {{ else }}
       <span data-testid="post-author">@{{ $p.Site.Params.author.name }}</span>
       {{ end }}
       {{ end }}
       {{ if and $o.showReadingTime $p.ReadingTime }}
-      <span data-testid="post-meta-sep">·</span>
+      <span>·</span>
       <span data-testid="reading-time">{{ $p.ReadingTime }} min read</span>
       {{ end }}
       {{ if and $p.WordCount $o.showWordCount }}
-      <span data-testid="post-meta-sep">·</span>
+      <span>·</span>
       <span data-testid="word-count">{{ $p.WordCount }} words</span>
       {{ end }}
     </div>

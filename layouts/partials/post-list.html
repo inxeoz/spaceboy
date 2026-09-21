@@ -35,7 +35,7 @@
           {{ if not $excerpt }}
             {{ $excerpt = .Content | plainify }}
           {{ end }}
-          <span class="post-date" data-testid="post-date">{{ .Date.Format "Jan 02" }}</span>
+          <span class="post-date" data-testid="post-card-date">{{ .Date.Format "Jan 02" }}</span>
           <h3><a href="{{ .RelPermalink }}" class="post-title-link" title="Read more: {{ $excerpt | truncate 100 }}" data-testid="post-title-link">{{ .Title }}</a></h3>
           <a href="{{ .RelPermalink }}" class="post-excerpt post-excerpt-link" data-testid="post-excerpt">{{ $excerpt | truncate 150 }}</a>
           {{ if and $.IsHome $.Site.Params.showCategories }}
