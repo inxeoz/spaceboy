@@ -3,7 +3,14 @@
   if (!S) return;
 
   var root = document.documentElement;
-  var themeKey = 'theme';
+
+  function safeGet(key) {
+    try {
+      return window.sessionStorage && window.sessionStorage.getItem(key);
+    } catch (_err) {
+      return null;
+    }
+  }
 
   function safeSet(key, value) {
     try {
@@ -23,9 +30,31 @@
     }
   }
 
+  // Exactly two states, light or dark — no palette, no third theme.
+  // head.html picks the initial value before first paint: the OS preference,
+  // unless the user pinned one. While unpinned we keep following the OS live;
+  // the header toggle pins the choice for the session.
+  function setTheme(next) {
+    root.setAttribute('data-theme', next);
+  }
+
+  if (!safeGet('theme')) {
+    var systemDark = window.matchMedia('(prefers-color-scheme: dark)');
+    function followSystem(e) {
+      setTheme(e.matches ? 'dark' : 'light');
+    }
+    systemDark.addEventListener('change', followSystem);
+  }
+
   function updateThemeIcons() {
     swapIcons('theme-toggle', '.moon-icon', '.sun-icon', root.getAttribute('data-theme') === 'dark');
   }
+
+  window.toggleTheme = function() {
+    setTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    safeSet('theme', root.getAttribute('data-theme'));
+    updateThemeIcons();
+  };
 
   function updateLayoutIcons() {
     swapIcons('layout-toggle', '.grid-icon', '.list-icon', root.classList.contains('list-layout'));
@@ -39,22 +68,7 @@
     swapIcons('toc-toggle', '.toc-show-icon', '.toc-hide-icon', !hidden);
   }
 
-  window.updateThemeIcons = updateThemeIcons;
   window.updateTocIcons = updateTocIcons;
-
-  window.toggleTheme = function() {
-    if (window.clearPalette) clearPalette();
-    var isDark = root.getAttribute('data-theme') === 'dark';
-    var next = isDark ? 'light' : 'dark';
-    root.setAttribute('data-theme', next);
-    var def = (window.__SPACEBOY__ || {})[next === 'dark' ? 'defaultPaletteDark' : 'defaultPaletteLight'];
-    if (def) {
-      root.setAttribute('data-palette', def);
-      safeSet('palette', def);
-    }
-    safeSet(themeKey, next);
-    updateThemeIcons();
-  };
 
   window.toggleLayout = function() {
     var isList = root.classList.toggle('list-layout');
@@ -68,7 +82,6 @@
     updateTocIcons();
   };
 
-  // Theme/layout/toc/palette are applied to the DOM by the inline script in
   // head.html before first paint (anti-FOUC). Here we only sync the header
   // icons to whatever state is already active.
   updateThemeIcons();

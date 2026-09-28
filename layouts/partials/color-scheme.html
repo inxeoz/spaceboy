@@ -1,6 +1,0 @@
-{{- $cs := .cs -}}
-{{- $csData := site.Data }}
-{{- $scheme := index (index $csData "color-schemes") $cs -}}
-{{- if $scheme -}}
-<style>:root{ {{ $scheme.light | safeCSS }} }[data-theme="dark"]{ {{ $scheme.dark | safeCSS }} }</style>
-{{- end -}}

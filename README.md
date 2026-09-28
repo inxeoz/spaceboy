@@ -1,6 +1,7 @@
 # Spaceboy Hugo Theme
 
-Minimal Hugo blog theme with dark/light mode, 33 color palettes, syntax highlighting, pre-rendered Mermaid diagrams, and pre-rendered KaTeX math.
+Minimal Hugo blog theme with binary light/dark mode (follows the OS by default), with syntax
+highlighting, pre-rendered Mermaid diagrams, and pre-rendered KaTeX math.
 
 ## Quick Start
 
@@ -130,7 +131,7 @@ All options are optional and default to `false` unless noted.
 | `contentWidth` | string | Override content width: `normal`, `wide`, `full`, or CSS value |
 | `codeMaxHeight` | string | Override code block max height (e.g. `48rem`) |
 | `hrStyle` | string | Horizontal rule style: `full`, `small`, or CSS width |
-| `viewMode` | string | Layout mode: `goofy`, `docs`, `poem`, `minimal`, or a palette name |
+| `viewMode` | string | Layout mode: `goofy`, `docs`, `poem`, or `minimal` |
 | `leftSidebarContent` | string | Raw HTML injected into left sidebar (TOC area) |
 | `rightSidebarContent` | string | Raw HTML injected into right sidebar |
 | `tocTitle` | string | Custom title for the mobile TOC toggle (default: "Contents") |
@@ -143,7 +144,6 @@ Set `viewMode` in frontmatter to change the post layout:
 - **`docs`** — Numbered headings, reading time, progress bar, taller code blocks
 - **`poem`** — Centered narrow text, large line height, no meta/footer
 - **`minimal`** — Wide content, no footer, auto-noindex
-- Any other value is treated as a **palette name** (e.g. `viewMode: "Dracula"`)
 
 ### Gallery Page
 
@@ -186,7 +186,7 @@ All callout shortcodes accept an optional `title` parameter:
 ## Diagrams (Mermaid)
 
 Diagrams are **pre-rendered to SVGs at build time** — no browser-side JS required.
-SVGs use CSS variables so they adapt to the active color palette automatically.
+SVGs use CSS variables so they adapt to the active theme automatically.
 
 ### Fenced code block
 
@@ -299,28 +299,30 @@ The template lives in the theme at `layouts/_default/single.markdown.md`.
 >   Content-Type: text/markdown; charset=utf-8
 > ```
 
-## Color Palettes
+## Color Scheme
 
-33 palettes are defined in `data/color-schemes.yaml`. Switch palettes at runtime
-via the palette overlay in the UI. Each palette has 6 fields:
+Two states, no more: **light** or **dark**. There is no palette picker and no
+third theme — the only variable is `data-theme` on `<html>`.
 
-```yaml
-PaletteName:
-  light: '--bg-color:#fff;...'
-  dark: '--bg-color:#111;...'
-  syntax-light: '--syn-bg:#fff;--syn-keyword:#d73a49;...'
-  syntax-dark: '--syn-bg:#282a36;--syn-keyword:#ff79c6;...'
-  mermaid-light: '--link-color:#0070f3;...'   # empty string = use defaults
-  mermaid-dark: '--link-color:#ff79c6;...'
+- On load the OS preference (`prefers-color-scheme`) decides. While unpinned, the
+  page follows the system live, so changing it at the OS level re-themes the open
+  page without a reload.
+- The header toggle button (or the `t` key) flips the state and pins that choice
+  for the session, overriding the system until the session ends.
+
+Colors are CSS custom properties in `assets/css/index.css`, in two blocks:
+
+```css
+:root { --bg-color: #e8e8e8; --text-color: #404040; /* ... */ }
+[data-theme="dark"] { --bg-color: #1e2124; --text-color: #dcdcdd; /* ... */ }
 ```
 
-To add or modify a palette, edit `data/color-schemes.yaml` only — this is the
-single source of truth. Changes take effect on the next Hugo build with no
-template changes required.
+`assets/css/index.css` is the single source of truth. Editing those two blocks
+is the whole customization story — no template changes, no data file.
 
 ## Syntax Highlighting
 
-Token colors use CSS variables (`--syn-*`) so they adapt to the active palette.
+Token colors use CSS variables (`--syn-*`), defined per theme in `assets/css/index.css`.
 
 ```toml
 [markup.highlight]
@@ -363,7 +365,7 @@ relevant templates or restricting which params are allowed.
 
 ---
 
-![Home Dark](./demo/home-dark.png)
+![Home, dark](./demo/home-dark.png)
 
 ---
 

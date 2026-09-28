@@ -1,3 +1,2 @@
 /* Dark syntax token colors are set via --syn-* CSS variables in index.css
-   ([data-theme="dark"] block) and per-palette in color-schemes.yaml.
-   No class-level overrides needed here. */
+   ([data-theme="dark"] block). No class-level overrides needed here. */

@@ -8,9 +8,7 @@ window.__SPACEBOY__ = {
   fuseJSLocal: {{ default "" .Site.Params.fuseJSLocal | jsonify | safeJS }},
   fuseJSCDN: {{ default "https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js" .Site.Params.fuseJSCDN | jsonify | safeJS }},
   fuseJSCDNIntegrity: {{ default "" .Site.Params.fuseJSCDNIntegrity | jsonify | safeJS }},
-  staticPrefix: "{{ default "" .Site.Params.staticPrefix }}",
-  defaultPaletteDark: "{{ default "Nord" .Site.Params.defaultPaletteDark }}",
-  defaultPaletteLight: "{{ default "90s" .Site.Params.defaultPaletteLight }}"
+  staticPrefix: "{{ default "" .Site.Params.staticPrefix }}"
 };
 </script>
 
@@ -31,8 +29,3 @@ window.__SPACEBOY__ = {
 {{ $resize := resources.Get "js/toc-resize.js" | minify | fingerprint }}
 <script src="{{ $resize.RelPermalink }}" integrity="{{ $resize.Data.Integrity }}" defer></script>
 {{- end }}
-
-
-{{- /* palette-switcher.js — always loaded for color scheme overlay */ -}}
-{{ $palette := resources.Get "js/palette-switcher.js" | minify | fingerprint }}
-<script src="{{ $palette.RelPermalink }}" integrity="{{ $palette.Data.Integrity }}" defer></script>

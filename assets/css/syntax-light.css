@@ -1,5 +1,5 @@
 /* Syntax highlighting — token rules use CSS variables defined in index.css.
-   Light/dark colors come from --syn-* vars; palette overrides layer on top. */
+   Light/dark colors come from --syn-* vars, defined per theme in index.css. */
 
 .bg { color: var(--syn-text); background-color: var(--syn-bg); }
 .chroma { color: var(--syn-text); background-color: var(--syn-bg); -webkit-text-size-adjust: none; }
